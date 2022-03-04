@@ -63,8 +63,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         holder.binding.uNamePost.setText("number of request" + list.get(position).getNumber_of_request());
         holder.binding.descriptionPost.setText("" + list.get(position).getDescription());
         holder.binding.numberRequestsPost.setText("number of request =  " + list.get(position).getNumber_of_request());
-        holder.binding.uNamePost.setText("" + list.get(position).getUser().getU_name());
-        Glide.with(context).load(list.get(position).getUser().getU_img()).circleCrop().placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.uImgPost);
+        holder.binding.uNamePost.setText("" + list.get(position).getUser().getImg());
+        Glide.with(context).load(list.get(position).getUser().getImg()).circleCrop().placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.uImgPost);
         setImagesRv(holder, position);
         if (list.get(position).getIs_available() == 0) {
             holder.binding.isAvailable.setBackgroundColor(Color.red(0));

@@ -42,16 +42,16 @@ public class MainActivity extends AppCompatActivity {
         listImages.add("https://mir-s3-cdn-cf.behance.net/project_modules/1400/ebcdfd44216545.56076cdf0ed14.jpg");
         listImages.add("https://mir-s3-cdn-cf.behance.net/project_modules/1400/ebcdfd44216545.56076cdf0ed14.jpg");
         listImages.add("https://mir-s3-cdn-cf.behance.net/project_modules/1400/ebcdfd44216545.56076cdf0ed14.jpg");
-        list.add(new Post("book", "Book in good condition"
-                , new User("maryam", "Khan Younis", "https://png.pngtree.com/png-vector/20190114/ourlarge/pngtree-vector-add-user-icon-png-image_313043.jpg"
-                , "maryam@hotmail.com", null, null)
-                , 4, 0, 0, 2
-                , listImages));
-        list.add(new Post("book", "Book in good condition"
-                , new User("maryam", "Khan Younis", "https://png.pngtree.com/png-vector/20190114/ourlarge/pngtree-vector-add-user-icon-png-image_313043.jpg"
-                , "maryam@hotmail.com", null, null)
-                , 8, 1, 1, 2
-                , listImages));
+//        list.add(new Post("book", "Book in good condition"
+//                , new User("maryam", "Khan Younis", "https://png.pngtree.com/png-vector/20190114/ourlarge/pngtree-vector-add-user-icon-png-image_313043.jpg"
+//                , "maryam@hotmail.com", null, null)
+//                , 4, 0, 0, 2
+//                , listImages));
+//        list.add(new Post("book", "Book in good condition"
+//                , new User("maryam", "Khan Younis", "https://png.pngtree.com/png-vector/20190114/ourlarge/pngtree-vector-add-user-icon-png-image_313043.jpg"
+//                , "maryam@hotmail.com", null, null)
+//                , 8, 1, 1, 2
+//                , listImages));
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 context, RecyclerView.VERTICAL, false);
         binding.rvPost.setLayoutManager(layoutManager);
