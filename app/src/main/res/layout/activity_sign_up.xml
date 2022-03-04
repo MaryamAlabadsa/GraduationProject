@@ -16,6 +16,7 @@
             android:layout_height="match_parent">
 
             <ImageView
+                android:id="@+id/pick_image"
                 android:layout_width="151dp"
                 android:layout_height="137dp"
                 android:layout_alignParentTop="true"
