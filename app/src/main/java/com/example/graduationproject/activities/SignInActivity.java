@@ -7,11 +7,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -36,7 +38,7 @@ public class SignInActivity extends AppCompatActivity {
     String cameraPermission[];
     String storagePermission[];
     ActivitySignInBinding binding;
-
+Context context=SignInActivity.this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +92,8 @@ public class SignInActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-
+                Log.e("onFailure",call.toString());
+                t.printStackTrace();
             }
         });
     }

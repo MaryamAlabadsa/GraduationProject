@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/size_14"
+    android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
     android:background="@color/primaryLight"
     tools:context=".activities.MainActivity">
 
