@@ -3,21 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/samee/Documents/GitHub/GraduationProject/app/src/main/res/layout/activity_confirm_password.xml" value="0.12681159420289856" />
-        <entry key="..\:/Users/samee/Documents/GitHub/GraduationProject/app/src/main/res/layout/activity_main.xml" value="0.12681159420289856" />
-        <entry key="..\:/Users/samee/Documents/GitHub/GraduationProject/app/src/main/res/layout/activity_sign_in.xml" value="0.22" />
-        <entry key="..\:/Users/samee/Documents/GitHub/GraduationProject/app/src/main/res/layout/activity_sign_up.xml" value="0.18" />
-        <entry key="..\:/Users/samee/Documents/GitHub/GraduationProject/app/src/main/res/layout/activity_splash.xml" value="0.12681159420289856" />
-        <entry key="..\:/Users/samee/Documents/GitHub/GraduationProject/app/src/main/res/layout/category_item.xml" value="0.18070652173913043" />
-        <entry key="..\:/Users/samee/Documents/GitHub/GraduationProject/app/src/main/res/layout/images_post_item.xml" value="0.18070652173913043" />
-        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/drawable/btn_shape.xml" value="0.1455" />
-        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/activity_login.xml" value="0.1381340579710145" />
-        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/activity_main.xml" value="0.18115942028985507" />
-        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/activity_register.xml" value="0.18115942028985507" />
-        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/category_item.xml" value="0.1" />
-        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/category_layout.xml" value="0.18115942028985507" />
-        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/images_post_item.xml" value="0.19791666666666666" />
-        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/post_item.xml" value="0.19791666666666666" />
+        <entry key="..\:/Users/samee/Desktop/GitHub/GraduationProject/app/src/main/res/drawable/add.xml" value="0.1515" />
+        <entry key="..\:/Users/samee/Desktop/GitHub/GraduationProject/app/src/main/res/layout/activity_add_post2.xml" value="0.20416666666666666" />
       </map>
     </option>
   </component>

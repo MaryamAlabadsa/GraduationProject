@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.AddPost">
+    
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:id="@+id/tool_bar_create"
+        android:background="@color/white">
+
+        <EditText
+            android:id="@+id/title_note"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Enter Your Tittle"
+            android:paddingTop="12dp"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColorHint="@color/black"
+            android:typeface="serif" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="20sp"
+        android:background="@color/white"
+        android:gravity="top|left"
+        android:textColor="@color/black"
+        android:hint="Enter You Description Here"
+        android:layout_below="@id/tool_bar_create"
+        android:padding="15dp"
+        android:typeface="serif"
+        android:textColorHint="@color/black"
+        android:id="@+id/create_content"
+        >
+
+    </EditText>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp"
+        android:backgroundTint="#7C98C2"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/add"
+        android:tint="@color/white"
+        app:maxImageSize="40dp">
+
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/add"
+        android:layout_alignEnd="@+id/add"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:tint="@color/white"
+        android:backgroundTint="#7C98C2"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_edit" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_edit"
+        android:layout_alignEnd="@+id/btn_edit"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="16dp"
+        android:focusable="true"
+        android:tint="@color/white"
+        android:clickable="true"
+        android:backgroundTint="#7C98C2"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_image" />
+
+<!--    <ProgressBar-->
+<!--        android:id="@+id/progressbar_create"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:indeterminateTint="#EDEFA421"-->
+<!--        android:visibility="invisible" />-->
+
+</RelativeLayout>
