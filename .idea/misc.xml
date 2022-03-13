@@ -4,7 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/samee/Desktop/GitHub/GraduationProject/app/src/main/res/drawable/add.xml" value="0.1515" />
-        <entry key="..\:/Users/samee/Desktop/GitHub/GraduationProject/app/src/main/res/layout/activity_add_post2.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/samee/Desktop/GitHub/GraduationProject/app/src/main/res/drawable/button_publish.xml" value="0.1675" />
+        <entry key="..\:/Users/samee/Desktop/GitHub/GraduationProject/app/src/main/res/drawable/image_add_post.xml" value="0.1755" />
+        <entry key="..\:/Users/samee/Desktop/GitHub/GraduationProject/app/src/main/res/layout/activity_add_post.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/samee/Desktop/GitHub/GraduationProject/app/src/main/res/layout/activity_add_post2.xml" value="0.2" />
       </map>
     </option>
   </component>

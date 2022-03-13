@@ -6,14 +6,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.CompoundButton;
+import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.graduationproject.R;
+import com.example.graduationproject.Spinner.DataSpinner;
+import com.example.graduationproject.adapters.SpinnerCategoriesAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class AddPost extends AppCompatActivity {
     FloatingActionButton fab, fab1, fab2;
     Animation fab_open, fab_close, fab_from, fab_to;
+    Switch req,don;
+    Spinner sp_cate;
+    private SpinnerCategoriesAdapter adapter;
 
     boolean isOpen = false; // by default is false
 
@@ -21,11 +29,47 @@ public class AddPost extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_post2);
+        setContentView(R.layout.activity_add_post);
 
         fab = findViewById(R.id.add);
         fab1 = findViewById(R.id.btn_edit);
         fab2 = findViewById(R.id.btn_image);
+        req = findViewById(R.id.request_post_switch);
+        don = findViewById(R.id.donation_post_switch);
+        sp_cate = findViewById(R.id.spinner);
+
+
+        // Spinner code
+        adapter = new SpinnerCategoriesAdapter(AddPost.this, DataSpinner.getCategoriesSpinner());
+        sp_cate.setAdapter(adapter);
+
+
+        //Switch code
+        req.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    Toast.makeText(AddPost.this, "You Are Request This", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(AddPost.this, "You Are Cancelled Request This", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+
+        don.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    Toast.makeText(AddPost.this, "You Are Donations ", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(AddPost.this, "You Are Cancelled Donations ", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+
+
 
         // Animation
         fab_open = AnimationUtils.loadAnimation(this,R.anim.rotate_open_anim);

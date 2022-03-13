@@ -1,92 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/image_post"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.AddPostActivity"
-    android:background="#7C98C2">
+    android:background="#E0E4EC"
+    tools:context=".activities.AddPost">
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="90dp"
+        android:layout_marginTop="133dp"
+        android:layout_marginRight="20dp"
+         />
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="250dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/button_publish"
+        android:text="Published"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:typeface="serif" />
+
+
+    <!--    <androidx.appcompat.widget.Toolbar-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="?attr/actionBarSize"-->
+<!--        android:id="@+id/tool_bar_create"-->
+<!--        android:background="@color/white">-->
+
+<!--        <EditText-->
+<!--            android:id="@+id/title_note"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:hint="Enter Your Tittle"-->
+<!--            android:paddingTop="12dp"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textSize="20sp"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColorHint="@color/black"-->
+<!--            android:typeface="serif" />-->
+
+<!--    </androidx.appcompat.widget.Toolbar>-->
+
+<!--    <EditText-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:textSize="20sp"-->
+<!--        android:background="@color/white"-->
+<!--        android:gravity="top|left"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:hint="Enter You Description Here"-->
+<!--        android:layout_below="@id/tool_bar_create"-->
+<!--        android:padding="15dp"-->
+<!--        android:typeface="serif"-->
+<!--        android:textColorHint="@color/black"-->
+<!--        android:id="@+id/create_content"-->
+<!--        >-->
+
+<!--    </EditText>-->
+
+
+    <ImageView
+        android:id="@+id/image_profile"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginRight="330dp"
+        android:layout_marginBottom="570dp"
+        android:background="@drawable/image_add_post"
+        android:src="@drawable/ic_launcher_foreground" />
+
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginLeft="90dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="600dp"
+        android:paddingLeft="10dp"
+        android:text="Username"
+        android:textColor="#6A6F91"
+        android:textSize="20dp"
+        android:typeface="serif" />
+
+    <ImageView
+        android:id="@+id/image_post"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#7C98C2">
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="180dp"
+        android:layout_marginEnd="300dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="250dp"
+        android:src="@drawable/ic_launcher_foreground" />
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="0dp"
-            android:layout_height="250dp"
-            android:layout_marginBottom="16dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toTopOf="@+id/tv_tittle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_launcher_background" />
+    <EditText
+        android:id="@+id/description_post"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="500dp"
+        android:layout_marginEnd="300dp"
+        android:layout_marginRight="20dp"
+        android:hint="Description"
+        android:paddingLeft="10sp"
+        android:textColor="@color/black"
+        android:textColorHint="#6A6F91"
+        android:textSize="20sp"
+        android:typeface="serif" />
 
-        <TextView
-            android:id="@+id/tv_tittle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:lineSpacingExtra="4dp"
-            android:text="TextView"
-            android:textColor="#FFFFFF"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/description_post"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center">
 
-        <View
-            android:id="@+id/view"
-            android:background="#FFFFFF"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_tittle" />
-
-        <TextView
-            android:id="@+id/tv_data_name"
+        <Switch
+            android:id="@+id/request_post_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="TextView"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view"
-            tools:text="18 Jan 2022 | by Razan Sameer"
-            />
+            android:layout_below="@+id/description_post"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Request   "
+            android:textColor="#6A6F91"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:typeface="serif"
+            android:theme="@style/mySwitch"
+            android:checked="true"/>
 
-        <TextView
-            android:id="@+id/tv_des"
-            android:layout_width="0dp"
+
+        <Switch
+            android:id="@+id/donation_post_switch"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintEnd_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_data_name">
+            android:layout_below="@+id/request_post_switch"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Donation "
+            android:textColor="#6A6F91"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:typeface="serif"
+            android:theme="@style/mySwitch"
+            android:checked="true"/>
 
-        </TextView>
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp"
+        android:backgroundTint="#6A6F91"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/add"
+        android:tint="@color/white"
+        app:maxImageSize="40dp">
+
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/add"
+        android:layout_alignEnd="@+id/add"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:tint="@color/white"
+        android:backgroundTint="#DE9D3C"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_edit" />
 
-</androidx.core.widget.NestedScrollView>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_edit"
+        android:layout_alignEnd="@+id/btn_edit"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#DE9D3C"
+        android:clickable="true"
+        android:focusable="true"
+        android:tint="@color/white"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_image" />
+
+
+
+    <!--    <ProgressBar-->
+<!--        android:id="@+id/progressbar_create"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:indeterminateTint="#EDEFA421"-->
+<!--        android:visibility="invisible" />-->
+
+</RelativeLayout>

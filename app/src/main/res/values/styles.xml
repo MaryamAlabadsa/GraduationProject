@@ -13,4 +13,9 @@
         <item name="cornerSizeBottomRight">15dp</item>
         <item name="cornerSizeBottomLeft">15dp</item>
     </style>
+
+    <!-- change color of switch-->
+    <style name="mySwitch">
+        <item name="colorControlActivated">#6A6F91</item>
+    </style>
 </resources>

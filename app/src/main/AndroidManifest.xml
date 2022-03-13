@@ -17,9 +17,6 @@
         <activity
             android:name=".activities.AddPost"
             android:exported="false" />
-        <activity
-            android:name=".activities.AddPostActivity"
-            android:exported="false" />
         <activity android:name=".activities.SplashActivity" />
         <activity android:name=".activities.ConfirmPasswordActivity" />
         <activity android:name=".activities.SignUpActivity" />
