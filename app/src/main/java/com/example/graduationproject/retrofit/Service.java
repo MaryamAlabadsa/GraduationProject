@@ -1,6 +1,8 @@
 package com.example.graduationproject.retrofit;
 
+import com.example.graduationproject.models.ChangePassResponse;
 import com.example.graduationproject.models.LoginResponse;
+import com.example.graduationproject.requests.ChangePassBody;
 import com.example.graduationproject.requests.LoginRequestBody;
 
 import java.util.concurrent.TimeUnit;
@@ -17,6 +19,8 @@ public interface Service {
 //    Call<RegisterResponse> register(@Body PostRequestBody user);
    @POST("login")
    Call<LoginResponse> login(@Body LoginRequestBody user);
+    @POST("changePassword")
+    Call<ChangePassResponse> changePassword(@Body ChangePassBody changePassBody);
 
     class RetrofitClient {
         private static final String BASE_URL = "http://54.210.44.4/api/";

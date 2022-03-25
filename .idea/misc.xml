@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/GraduationProject/app/src/main/res/layout/activity_confirm_password.xml" value="0.1213768115942029" />
+        <entry key="..\:/GraduationProject/app/src/main/res/layout/activity_notifcation.xml" value="0.161231884057971" />
+        <entry key="..\:/GraduationProject/app/src/main/res/layout/notifcation_item.xml" value="0.161231884057971" />
         <entry key="..\:/Users/samee/Documents/GitHub/GraduationProject/app/src/main/res/layout/activity_confirm_password.xml" value="0.12681159420289856" />
         <entry key="..\:/Users/samee/Documents/GitHub/GraduationProject/app/src/main/res/layout/activity_main.xml" value="0.12681159420289856" />
         <entry key="..\:/Users/samee/Documents/GitHub/GraduationProject/app/src/main/res/layout/activity_sign_in.xml" value="0.12681159420289856" />
@@ -21,7 +24,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
