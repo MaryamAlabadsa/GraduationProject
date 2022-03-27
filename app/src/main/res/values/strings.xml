@@ -7,4 +7,13 @@
     <string name="password">password</string>
     <string name="confirm_password">confirm password</string>
     <string name="sign_up">Sign up</string>
+
+
+    <string-array name="Donations">
+        <item>Categories</item>
+        <item>Clothes</item>
+        <item>Money</item>
+
+    </string-array>
+
 </resources>

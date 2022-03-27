@@ -16,6 +16,6 @@
 
     <!-- change color of switch-->
     <style name="mySwitch">
-        <item name="colorControlActivated">#6A6F91</item>
+        <item name="colorControlActivated">#7C98C2</item>
     </style>
 </resources>

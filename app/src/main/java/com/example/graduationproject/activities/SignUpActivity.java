@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 public class SignUpActivity extends AppCompatActivity {
+
     public ImageView pick;
     public static final int CAMERA_REQUEST=100;
     public static final int STORAGE_REQUEST=101;
