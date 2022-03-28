@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.SplashActivity" />
-        <activity android:name=".activities.ConfirmPasswordActivity" />
+        <activity android:name=".activities.ForgetPasswordActivity" />
         <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.SignInActivity" />
         <activity android:name=".activities.MainActivity"
