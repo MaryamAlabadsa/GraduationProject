@@ -2,6 +2,9 @@ package com.example.graduationproject.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +21,7 @@ import com.example.graduationproject.listener.PostRequestInterface;
 import com.example.graduationproject.models.Category;
 import com.example.graduationproject.models.Post;
 import com.example.graduationproject.models.User;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -25,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     Context context = MainActivity.this;
     int category_id;
+
+
+    boolean isOpen = false; // by default is false
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

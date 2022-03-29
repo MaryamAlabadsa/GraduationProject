@@ -17,15 +17,16 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.graduationproject.R;
+import com.google.android.material.textfield.TextInputLayout;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 public class SignUpActivity extends AppCompatActivity {
-    public ImageView pick;
-    public static final int CAMERA_REQUEST=100;
-    public static final int STORAGE_REQUEST=101;
-    String cameraPermission[];
-    String storagePermission[];
+
+    public ImageView image;
+    TextInputLayout email,username,location,phone,password;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,58 +34,65 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         getSupportActionBar().hide();
 
-        cameraPermission = new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        image = findViewById(R.id.pick_image);
+        email = findViewById(R.id.email);
+        username = findViewById(R.id.username);
+        location = findViewById(R.id.location);
+        phone = findViewById(R.id.phone);
+        password = findViewById(R.id.password);
 
-        pick = findViewById(R.id.pick_image);
-        pick.setOnClickListener(new View.OnClickListener() {
+        image.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                int picked = 0;
-                if (picked==0){
-                    if (!chekCameraPermission()){
+                boolean pick = true;
+                if(pick==true){
+                    if (!checkCameraPermission()){
                         requestCameraPermission();
-                    }else {
-                        pickFromGallery();
-                    }
-                }else if (picked == 1){
-                    if(!chekStoragePermission()){
+                    }else PickImage();
+                }
+                else {
+                    if (!checkStoragePermission()){
                         requestStoragePermission();
-                    }else {
-                        pickFromGallery();
-                    }
+                    }else PickImage();
                 }
             }
         });
-    }
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestStoragePermission() {
-        requestPermissions(storagePermission,STORAGE_REQUEST);
+
+
 
     }
 
-    private boolean chekStoragePermission() {
-        boolean result = ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == (PackageManager.PERMISSION_DENIED);
-        return result;
-    }
-
-    private void pickFromGallery() {
+    private void PickImage() {
         CropImage.activity().start(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestCameraPermission() {
-        requestPermissions(cameraPermission,CAMERA_REQUEST);
+    private void requestStoragePermission() {
+        requestPermissions(new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
     }
 
-    private boolean chekCameraPermission() {
-        boolean result = ContextCompat.checkSelfPermission(this,Manifest.permission.CAMERA)
-                ==(PackageManager.PERMISSION_DENIED);
-        boolean result1 = ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                ==(PackageManager.PERMISSION_DENIED);
-        return result && result1;
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestCameraPermission() {
+        requestPermissions(new String[]{Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+    }
+
+    private boolean checkStoragePermission() {
+        boolean res2 = ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                ==PackageManager.PERMISSION_GRANTED;
+        return res2;
+    }
+
+    private boolean checkCameraPermission(){
+        boolean res1 = ContextCompat.checkSelfPermission(this,Manifest.permission.CAMERA)
+                ==PackageManager.PERMISSION_GRANTED;
+        boolean res2 = ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                ==PackageManager.PERMISSION_GRANTED;
+        return res1 && res2;
+
+
     }
 
     @Override
@@ -94,39 +102,18 @@ public class SignUpActivity extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK){
                 Uri resultUri = result.getUri();
-                Picasso.with(this).load(resultUri).into(pick);
+                Picasso.with(this).load(resultUri).into(image);
+//                try {
+//                    InputStream stream = getContentResolver().openInputStream(resultUri);
+//                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
+//                    image.setImageBitmap(bitmap);
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+            }else if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
+                Exception error = result.getError();
+            }
 
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case CAMERA_REQUEST:{
-                if (grantResults.length>0){
-                    boolean camera_accepted=grantResults[0]==(PackageManager.PERMISSION_DENIED);
-                    boolean storage_accepted=grantResults[1]==(PackageManager.PERMISSION_DENIED);
-                    if (camera_accepted&&storage_accepted){
-                        pickFromGallery();
-                    }else {
-                        Toast.makeText(this, "Please enable camera and storage permission", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-            break;
-            case STORAGE_REQUEST:{
-                if (grantResults.length>0){
-                    boolean storage_accepted=grantResults[1]==(PackageManager.PERMISSION_DENIED);
-                    if (storage_accepted){
-                        pickFromGallery();
-                    }else {
-                        Toast.makeText(this, "Please enable storage permission", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-            break;
         }
     }
 }

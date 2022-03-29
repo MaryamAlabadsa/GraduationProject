@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SignUpActivity"
-    android:background="#7C98C2">
+    android:background="#E0E4EC"
+    tools:context=".activities.SignUpActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,9 +25,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="28dp"
                 android:layout_marginRight="30dp"
-                android:src="@drawable/a13"/>
-
-
+                android:src="@drawable/profile_image" />
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -40,18 +38,19 @@
                 android:layout_marginEnd="20dp"
                 android:hint="Write Your Email"
                 android:typeface="serif"
-                app:helperText="*Required"
                 app:counterEnabled="true"
                 app:counterMaxLength="30"
                 app:endIconMode="clear_text"
+                app:helperText="*Required"
                 app:helperTextTextColor="#FF0000"
                 app:startIconDrawable="@drawable/email">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/email"
-                    android:maxLength="30"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:maxLength="30"
 
                     />
             </com.google.android.material.textfield.TextInputLayout>
@@ -61,26 +60,25 @@
                 style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/textInput_email"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:hint="Write Your Username"
                 android:typeface="serif"
-                app:helperText="*Required"
                 app:counterEnabled="true"
                 app:counterMaxLength="20"
                 app:endIconMode="clear_text"
+                app:helperText="*Required"
                 app:helperTextTextColor="#FF0000"
-                android:layout_below="@+id/textInput_email"
                 app:startIconDrawable="@drawable/person">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/username"
-                    android:maxLength="20"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
-                    />
+                    android:background="@color/white"
+                    android:maxLength="20" />
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInput_location"
@@ -102,6 +100,7 @@
                     android:id="@+id/location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
 
                     />
             </com.google.android.material.textfield.TextInputLayout>
@@ -128,6 +127,7 @@
                     android:inputType="number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
 
                     />
             </com.google.android.material.textfield.TextInputLayout>
@@ -137,36 +137,36 @@
                 style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/textInput_phone"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:hint="Write Your Password"
                 android:typeface="serif"
-                app:helperText="*Required"
                 app:counterEnabled="true"
                 app:counterMaxLength="25"
                 app:endIconMode="password_toggle"
+                app:helperText="*Required"
                 app:helperTextTextColor="#FF0000"
-                android:layout_below="@+id/textInput_phone"
                 app:startIconDrawable="@drawable/password">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password"
-                    android:maxLength="25"
-                    android:inputType="textPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
-                    />
+                    android:background="@color/white"
+                    android:inputType="textPassword"
+                    android:maxLength="25" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <RelativeLayout
                 android:id="@+id/login"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="750dp"
-                android:layout_marginBottom="60dp"
                 android:layout_marginRight="40dp"
+                android:layout_marginBottom="60dp"
                 android:background="@drawable/button2">
 
                 <TextView
@@ -176,13 +176,12 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:text="Create An Account"
-                    android:textColor="#7C98C2"
+                    android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:typeface="serif">
-                </TextView>
+                    android:typeface="serif" />
+
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

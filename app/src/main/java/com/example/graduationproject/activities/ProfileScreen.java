@@ -18,13 +18,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+<<<<<<< HEAD:app/src/main/java/com/example/graduationproject/activities/ConfirmPasswordActivity.java
 public class ConfirmPasswordActivity extends AppCompatActivity {
     private EditText editTextCurrentPassword, editTextNewPassword, editTextConfirmPassword;
     private Button changePassBtn;
+=======
+public class ProfileScreen extends AppCompatActivity {
+>>>>>>> origin/razan2:app/src/main/java/com/example/graduationproject/activities/ProfileScreen.java
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+<<<<<<< HEAD:app/src/main/java/com/example/graduationproject/activities/ConfirmPasswordActivity.java
         setContentView(R.layout.activity_confirm_password);
         editTextCurrentPassword = findViewById(R.id.editTextCurrentPassword);
         editTextNewPassword = findViewById(R.id.editTextNewPassword);
@@ -76,5 +81,8 @@ public class ConfirmPasswordActivity extends AppCompatActivity {
                         t.printStackTrace();
                     }
                 });
+=======
+        setContentView(R.layout.activity_profile_screen);
+>>>>>>> origin/razan2:app/src/main/java/com/example/graduationproject/activities/ProfileScreen.java
     }
 }

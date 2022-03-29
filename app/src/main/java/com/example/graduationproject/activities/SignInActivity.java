@@ -13,17 +13,28 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.util.Log;
+=======
+import android.provider.ContactsContract;
+>>>>>>> origin/razan2
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.ActivityMainBinding;
 import com.example.graduationproject.databinding.ActivitySignInBinding;
+<<<<<<< HEAD
 import com.example.graduationproject.models.LoginResponse;
 import com.example.graduationproject.requests.LoginRequestBody;
 import com.example.graduationproject.retrofit.Service;
+=======
+import com.google.android.material.textfield.TextInputLayout;
+>>>>>>> origin/razan2
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -32,6 +43,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignInActivity extends AppCompatActivity {
+<<<<<<< HEAD
     public ImageView pick;
     public static final int CAMERA_REQUEST = 100;
     public static final int STORAGE_REQUEST = 101;
@@ -103,13 +115,33 @@ Context context=SignInActivity.this;
         requestPermissions(storagePermission, STORAGE_REQUEST);
 
     }
+=======
+//    ActivitySignInBinding binding;
 
-    private boolean chekStoragePermission() {
-        boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == (PackageManager.PERMISSION_DENIED);
-        return result;
-    }
+    ImageView icon_image;
+    TextInputLayout username,password;
+    TextView forget;
+    RelativeLayout login;
 
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sign_in);
+//        binding = ActivitySignInBinding.inflate(getLayoutInflater());
+//        setContentView(binding.getRoot());
+        getSupportActionBar().hide();
+
+        icon_image = findViewById(R.id.icon_img);
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
+        forget = findViewById(R.id.forget);
+        login = findViewById(R.id.login);
+>>>>>>> origin/razan2
+
+
+<<<<<<< HEAD
     private void pickFromGallery() {
         CropImage.activity().start(this);
     }
@@ -169,5 +201,8 @@ Context context=SignInActivity.this;
             break;
         }
     }
+=======
+   }
+>>>>>>> origin/razan2
 
 }
