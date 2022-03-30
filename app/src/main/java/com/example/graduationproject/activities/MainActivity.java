@@ -2,35 +2,36 @@ package com.example.graduationproject.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.graduationproject.R;
-import com.example.graduationproject.adapters.CategoriesAdapter;
-import com.example.graduationproject.adapters.ImagesPostsAdapter;
-import com.example.graduationproject.adapters.PostsAdapter;
 import com.example.graduationproject.databinding.ActivityMainBinding;
-import com.example.graduationproject.listener.CategoryInterface;
-import com.example.graduationproject.listener.PostRequestInterface;
-import com.example.graduationproject.models.Category;
-import com.example.graduationproject.models.Post;
-import com.example.graduationproject.models.User;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.graduationproject.databinding.LayoutToolbarBinding;
+import com.example.graduationproject.fragments.ui.AddPostFragment;
+import com.example.graduationproject.fragments.ui.AllPostsFragment;
+import com.example.graduationproject.fragments.BaseFragment;
+import com.example.graduationproject.fragments.FragmentSwitcher;
+import com.example.graduationproject.fragments.ui.NotificationFragment;
+import com.example.graduationproject.fragments.PagesFragment;
+import com.example.graduationproject.fragments.ui.ProfileFragment;
+import com.google.android.material.navigation.NavigationView;
+import static com.example.graduationproject.fragments.PagesFragment.ALL_POSTS;
 
-import java.util.ArrayList;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentSwitcher {
     ActivityMainBinding binding;
     Context context = MainActivity.this;
     int category_id;
-
-
+    DrawerLayout drawer;
     boolean isOpen = false; // by default is false
 
     @Override
@@ -38,58 +39,139 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        Toast.makeText(context, "nnn", Toast.LENGTH_SHORT).show();
-        setCategoryRv();
-        setPostsRv();
-    }
+        LayoutToolbarBinding toolbarBinding = binding.mainToolbar;
+//        NavLayoutBinding navLayoutBinding = binding.navLayout;
+//     //   NavHeaderBinding navHeaderBinding = NavHeaderBinding.inflate(getLayoutInflater());
+        drawer = binding.mainDrawer;
 
-    private void setPostsRv() {
-        ArrayList<String> listImages = new ArrayList<>();
-        ArrayList<Post> list = new ArrayList<>();
-        listImages.add("https://mir-s3-cdn-cf.behance.net/project_modules/1400/ebcdfd44216545.56076cdf0ed14.jpg");
-        listImages.add("https://mir-s3-cdn-cf.behance.net/project_modules/1400/ebcdfd44216545.56076cdf0ed14.jpg");
-        listImages.add("https://mir-s3-cdn-cf.behance.net/project_modules/1400/ebcdfd44216545.56076cdf0ed14.jpg");
-//        list.add(new Post("book", "Book in good condition"
-//                , new User("maryam", "Khan Younis", "https://png.pngtree.com/png-vector/20190114/ourlarge/pngtree-vector-add-user-icon-png-image_313043.jpg"
-//                , "maryam@hotmail.com", null, null)
-//                , 4, 0, 0, 2
-//                , listImages));
-//        list.add(new Post("book", "Book in good condition"
-//                , new User("maryam", "Khan Younis", "https://png.pngtree.com/png-vector/20190114/ourlarge/pngtree-vector-add-user-icon-png-image_313043.jpg"
-//                , "maryam@hotmail.com", null, null)
-//                , 8, 1, 1, 2
-//                , listImages));
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
-                context, RecyclerView.VERTICAL, false);
-        binding.rvPost.setLayoutManager(layoutManager);
-        PostsAdapter adapter = new PostsAdapter(context, new PostRequestInterface() {
+        toolbarBinding.toolbar.setTitle("");
+        setSupportActionBar(toolbarBinding.toolbar);
+
+//
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, binding.mainDrawer, toolbarBinding.toolbar, 0, 0);
+
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+        toggle.setDrawerIndicatorEnabled(true);
+//        toggle.setHomeAsUpIndicator(R.drawable.ic_menu);
+        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
             @Override
-            public void layout(Post post) {
-
+            public void onClick(View view) {
+                drawer.openDrawer(GravityCompat.START);
             }
         });
-        adapter.setList(list);
-        binding.rvPost.setAdapter(adapter);
+
+//
+        NavigationView navigationView = binding.navView;
+        navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView = navigationView.inflateHeaderView(R.layout.nav_header);
+
+        ImageView userImage = headerView.findViewById(R.id.user_image);
+        TextView username = headerView.findViewById(R.id.user_profile);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            switchFragment(PagesFragment.getValue(bundle.getInt("type", 0)), null);
+        } else
+            switchFragment(ALL_POSTS, null);
+
+
     }
 
-    private void setCategoryRv() {
-        ArrayList<Category> list = new ArrayList<>();
-        list.add(new Category(0, "all", ""));
-        list.add(new Category(1, "books", ""));
-        list.add(new Category(1, "books", ""));
-        list.add(new Category(1, "books", ""));
-        list.add(new Category(1, "books", ""));
-        list.add(new Category(2, "cash", ""));
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
-                context, RecyclerView.HORIZONTAL, false);
-        binding.rvCategory.setLayoutManager(layoutManager);
-        CategoriesAdapter adapter = new CategoriesAdapter(context, new CategoryInterface() {
-            @Override
-            public void layout(int id) {
-                category_id = id;
-            }
-        });
-//        adapter.setList(list.get(position).getImagesList());
-        binding.rvCategory.setAdapter(adapter);
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.profile:
+                switchFragment(PagesFragment.PROFILE, null);
+                break;
+
+            case R.id.notifcation:
+                switchFragment(PagesFragment.NOTIFICATION, null);
+                break;
+
+            case R.id.allPosts:
+                switchFragment(ALL_POSTS, null);
+                break;
+
+            case R.id.add_post:
+                switchFragment(PagesFragment.ADD_POSTS, null);
+                break;
+
+            case R.id.nav_logout:
+                requestLogout();
+                break;
+
+            case R.id.nav_settings:
+//                Intent intent = new Intent(this,
+//                        SettingsActivity.class);
+//                startActivity(intent);
+                break;
+
+
+        }
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
+
+
+
+    @Override
+    public void switchFragment(PagesFragment pagesFragment, Object object) {
+        BaseFragment fragment = null;
+        String tag = AllPostsFragment.TAG;
+        switch (pagesFragment) {
+            case ADD_POSTS:
+                fragment = new AddPostFragment();
+                break;
+            case ALL_POSTS:
+                tag = AllPostsFragment.TAG;
+                fragment = new AllPostsFragment();
+                break;
+
+            case NOTIFICATION:
+                fragment = new NotificationFragment();
+                break;
+            case PROFILE:
+                fragment = new ProfileFragment();
+                break;
+
+
+        }
+        setTitle(fragment.getFragmentTitle());
+
+        if (ALL_POSTS != pagesFragment) {
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, tag).addToBackStack(null).commit();
+            } else{
+                Toast.makeText(context, "2", Toast.LENGTH_SHORT).show();
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, tag).commit();
+        }} else{
+            Toast.makeText(context, "3", Toast.LENGTH_SHORT).show();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, tag).commit();
+
+        }
+
+    }
+
+
+    private void requestLogout() {
+        Toast.makeText(context, "log out", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
+
 }

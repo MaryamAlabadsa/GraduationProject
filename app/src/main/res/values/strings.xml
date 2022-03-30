@@ -7,6 +7,13 @@
     <string name="password">password</string>
     <string name="confirm_password">confirm password</string>
     <string name="sign_up">Sign up</string>
+    <string name="account_setting">Account setting</string>
+    <string name="setting">Setting</string>
+    <string name="log_out">Log out</string>
+    <string name="see_your_profile">see your profile</string>
+    <string name="add_post">new Post</string>
+    <string name="notification">notification</string>
+    <string name="allPosts">all posts</string>
 
 
     <string-array name="Donations">
@@ -15,5 +22,7 @@
         <item>Money</item>
 
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

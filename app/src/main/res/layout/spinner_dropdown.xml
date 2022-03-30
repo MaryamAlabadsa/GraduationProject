@@ -6,7 +6,7 @@
     android:textSize="20sp"
     android:padding="10dp"
     android:textColor="#7C98C2"
-    android:textStyle="bold"
+    android:fontFamily="@font/din_next_arabic_light"
     android:typeface="serif">
 
 </TextView>
