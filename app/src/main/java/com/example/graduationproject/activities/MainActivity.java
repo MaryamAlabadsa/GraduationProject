@@ -116,42 +116,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-
+    String tag;
 
     @Override
     public void switchFragment(PagesFragment pagesFragment, Object object) {
         BaseFragment fragment = null;
-        String tag = AllPostsFragment.TAG;
+//         tag = AllPostsFragment.TAG;
         switch (pagesFragment) {
             case ADD_POSTS:
                 fragment = new AddPostFragment();
                 break;
             case ALL_POSTS:
-                tag = AllPostsFragment.TAG;
+//                tag = AllPostsFragment.TAG;
                 fragment = new AllPostsFragment();
                 break;
-
             case NOTIFICATION:
                 fragment = new NotificationFragment();
                 break;
             case PROFILE:
                 fragment = new ProfileFragment();
                 break;
-
-
         }
         setTitle(fragment.getFragmentTitle());
 
         if (ALL_POSTS != pagesFragment) {
             if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-                Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, tag).addToBackStack(null).commit();
             } else{
-                Toast.makeText(context, "2", Toast.LENGTH_SHORT).show();
-
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, tag).commit();
         }} else{
-            Toast.makeText(context, "3", Toast.LENGTH_SHORT).show();
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, tag).commit();
 
         }
