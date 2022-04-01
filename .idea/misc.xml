@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/ucas/Desktop/GraduationProject/app/src/main/res/drawable-v24/mylogolayerlist.xml" value="0.157" />
+        <entry key="..\:/Users/ucas/Desktop/GraduationProject/app/src/main/res/drawable/email.xml" value="0.157" />
+        <entry key="..\:/Users/ucas/Desktop/GraduationProject/app/src/main/res/layout/activity_change_password.xml" value="0.14666666666666667" />
+        <entry key="..\:/Users/ucas/Desktop/GraduationProject/app/src/main/res/layout/activity_forget_password.xml" value="0.12771739130434784" />
+        <entry key="..\:/Users/ucas/Desktop/GraduationProject/app/src/main/res/layout/activity_sign_in.xml" value="0.14666666666666667" />
+        <entry key="..\:/Users/ucas/Desktop/GraduationProject/app/src/main/res/layout/activity_sign_up.xml" value="0.13903985507246377" />
+        <entry key="..\:/Users/ucas/Desktop/GraduationProject/app/src/main/res/layout/activity_splash.xml" value="0.17708333333333334" />
+        <entry key="..\:/Users/ucas/Desktop/GraduationProject/app/src/main/res/layout/fragment_all_posts.xml" value="0.11775362318840579" />
+        <entry key="..\:/Users/ucas/Desktop/GraduationProject/app/src/main/res/menu/nav_menu.xml" value="0.1796875" />
+      </map>
+    </option>
+  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>

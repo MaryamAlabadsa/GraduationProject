@@ -1,7 +1,11 @@
 package com.example.graduationproject.retrofit;
 
 import com.example.graduationproject.retrofit.categories.AllCategories;
+import com.example.graduationproject.retrofit.change.password.ChangePassword;
 import com.example.graduationproject.retrofit.login.SendLogin;
+import com.example.graduationproject.retrofit.logout.LogOut;
+import com.example.graduationproject.retrofit.post.AllPosts;
+import com.example.graduationproject.retrofit.post.Post;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
 
 import okhttp3.MultipartBody;
@@ -18,8 +22,11 @@ public interface ServiceApi {
     String ENDPOINT = "http://54.234.87.126/api/";
 
     // TODO: get
-    @GET("getAllCategories")
+    @GET("Category")
     Call<AllCategories> getAllCategories(
+            @Header("Authorization") String token);
+    @GET("Post")
+    Call<AllPosts> getAllPosts(
             @Header("Authorization") String token);
 
     // TODO: post
@@ -27,6 +34,14 @@ public interface ServiceApi {
     Call<RegisterResponse> login
             (@Header("Accept") String accept
                     , @Body SendLogin fields);
+    @POST("changePassword")
+    Call<RegisterResponse> changePassword
+            (@Header("Authorization") String token
+                    , @Body ChangePassword fields);
+    @POST("logout")
+    Call<LogOut> logout(
+            @Header("Authorization") String token);
+
 
     @Multipart
     @POST("register")

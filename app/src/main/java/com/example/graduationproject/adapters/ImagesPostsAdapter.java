@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.ImagesPostItemBinding;
-import com.example.graduationproject.databinding.PostItemBinding;
-import com.example.graduationproject.models.Post;
 
 import java.util.ArrayList;
 

@@ -14,7 +14,7 @@
             android:id="@+id/notifcation"
             android:icon="@drawable/notification"
             android:title="@string/notification" />
- <item
+        <item
             android:id="@+id/profile"
             android:icon="@drawable/profile"
             android:title="@string/see_your_profile" />
@@ -31,6 +31,10 @@
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/location"
                 android:title="@string/log_out" />
+            <item
+                android:id="@+id/nav_change_password"
+                android:icon="@drawable/location"
+                android:title="@string/changePassword" />
 
 
         </menu>

@@ -2,25 +2,22 @@ package com.example.graduationproject.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.graduationproject.databinding.CategoryItemBinding;
 import com.example.graduationproject.listener.CategoryInterface;
-import com.example.graduationproject.models.Category;
+import com.example.graduationproject.retrofit.categories.Category;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.MyViewHolder> {
 
     Context context;
-    ArrayList<Category> list;
+    List<Category> list;
 CategoryInterface categoryInterface;
 
     public CategoriesAdapter(Context context, CategoryInterface categoryInterface) {
@@ -28,11 +25,11 @@ CategoryInterface categoryInterface;
         this.categoryInterface = categoryInterface;
     }
 
-    public ArrayList<Category> getList() {
+    public List<Category> getList() {
         return list;
     }
 
-    public void setList(ArrayList<Category> list) {
+    public void setList(List<Category> list) {
         this.list = list;
         notifyDataSetChanged();
     }

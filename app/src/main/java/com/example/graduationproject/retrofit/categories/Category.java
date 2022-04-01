@@ -11,20 +11,13 @@ import javax.annotation.Generated;
 @Generated("jsonschema2pojo")
 public class Category implements Serializable
 {
-
     @SerializedName("id")
     @Expose
     private Integer id;
-    @SerializedName("type")
+    @SerializedName("name")
     @Expose
-    private String type;
-    @SerializedName("created_at")
-    @Expose
-    private String createdAt;
-    @SerializedName("updated_at")
-    @Expose
-    private String updatedAt;
-    private final static long serialVersionUID = -4616572691862518797L;
+    private String name;
+    private final static long serialVersionUID = 815187577766770285L;
 
     public Integer getId() {
         return id;
@@ -34,28 +27,12 @@ public class Category implements Serializable
         this.id = id;
     }
 
-    public String getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setName(String name) {
+        this.name = name;
     }
 
 }

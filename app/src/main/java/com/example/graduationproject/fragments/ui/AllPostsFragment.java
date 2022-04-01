@@ -4,17 +4,45 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.graduationproject.R;
+import com.example.graduationproject.adapters.CategoriesAdapter;
+import com.example.graduationproject.adapters.PostsAdapter;
 import com.example.graduationproject.databinding.FragmentAddPostBinding;
 import com.example.graduationproject.databinding.FragmentAllPostsBinding;
 import com.example.graduationproject.fragments.BaseFragment;
+import com.example.graduationproject.listener.CategoryInterface;
+import com.example.graduationproject.listener.PostRequestInterface;
+import com.example.graduationproject.retrofit.Creator;
+import com.example.graduationproject.retrofit.ServiceApi;
+import com.example.graduationproject.retrofit.categories.AllCategories;
+import com.example.graduationproject.retrofit.categories.Category;
+import com.example.graduationproject.retrofit.post.AllPosts;
+import com.example.graduationproject.retrofit.post.Post;
+import com.example.graduationproject.utils.AppSharedPreferences;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AllPostsFragment extends BaseFragment {
+    AppSharedPreferences sharedPreferences;
+    String token;
+    ServiceApi serviceApi;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -57,7 +85,12 @@ public class AllPostsFragment extends BaseFragment {
         binding = FragmentAllPostsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         context = getActivity();
-
+        serviceApi = Creator.getClient().create(ServiceApi.class);
+        sharedPreferences = new AppSharedPreferences(getActivity().getApplicationContext());
+        token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
+//        setCategoryRv();
+        getAllCategories();
+        getAllPosts();
         return view;
     }
 
@@ -65,53 +98,107 @@ public class AllPostsFragment extends BaseFragment {
     public int getFragmentTitle() {
         return R.string.allPosts;
     }
-//    private void setPostsRv() {
-//        ArrayList<String> listImages = new ArrayList<>();
-//        ArrayList<Post> list = new ArrayList<>();
-//        listImages.add("https://mir-s3-cdn-cf.behance.net/project_modules/1400/ebcdfd44216545.56076cdf0ed14.jpg");
-//        listImages.add("https://mir-s3-cdn-cf.behance.net/project_modules/1400/ebcdfd44216545.56076cdf0ed14.jpg");
-//        listImages.add("https://mir-s3-cdn-cf.behance.net/project_modules/1400/ebcdfd44216545.56076cdf0ed14.jpg");
-////        list.add(new Post("book", "Book in good condition"
-////                , new User("maryam", "Khan Younis", "https://png.pngtree.com/png-vector/20190114/ourlarge/pngtree-vector-add-user-icon-png-image_313043.jpg"
-////                , "maryam@hotmail.com", null, null)
-////                , 4, 0, 0, 2
-////                , listImages));
-////        list.add(new Post("book", "Book in good condition"
-////                , new User("maryam", "Khan Younis", "https://png.pngtree.com/png-vector/20190114/ourlarge/pngtree-vector-add-user-icon-png-image_313043.jpg"
-////                , "maryam@hotmail.com", null, null)
-////                , 8, 1, 1, 2
-////                , listImages));
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
-//                context, RecyclerView.VERTICAL, false);
-//        binding.rvPost.setLayoutManager(layoutManager);
-//        PostsAdapter adapter = new PostsAdapter(context, new PostRequestInterface() {
-//            @Override
-//            public void layout(Post post) {
-//
-//            }
-//        });
-//        adapter.setList(list);
-//        binding.rvPost.setAdapter(adapter);
-//    }
-//
-//    private void setCategoryRv() {
-//        ArrayList<Category> list = new ArrayList<>();
-//        list.add(new Category(0, "all", ""));
-//        list.add(new Category(1, "books", ""));
-//        list.add(new Category(1, "books", ""));
-//        list.add(new Category(1, "books", ""));
-//        list.add(new Category(1, "books", ""));
-//        list.add(new Category(2, "cash", ""));
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
-//                context, RecyclerView.HORIZONTAL, false);
-//        binding.rvCategory.setLayoutManager(layoutManager);
-//        CategoriesAdapter adapter = new CategoriesAdapter(context, new CategoryInterface() {
-//            @Override
-//            public void layout(int id) {
+
+    List<Category> data;
+
+    private void getAllCategories() {
+//        data = new ArrayList<>();
+        Call<AllCategories> call = serviceApi.getAllCategories(
+                "Bearer " + token);
+        call.enqueue(new Callback<AllCategories>() {
+            @Override
+            public void onResponse(Call<AllCategories> call, Response<AllCategories> response) {
+                Log.d("response code", response.code() + "");
+                if (response.isSuccessful()) {
+                    Log.d("Success", new Gson().toJson(response.body()));
+                    AllCategories getAllCategories = response.body();
+                    data = getAllCategories.getData().getCategory();
+                    setCategoryRv(data);
+                    binding.progressBar2.setVisibility(View.GONE);
+                } else {
+                    String errorMessage = parseError(response);
+                    Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
+                    Log.e("errorMessage", errorMessage + "");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AllCategories> call, Throwable t) {
+                Log.d("onFailure", t.getMessage() + "");
+                call.cancel();
+            }
+        });
+    }
+    private void getAllPosts() {
+//        data = new ArrayList<>();
+        Call<AllPosts> call = serviceApi.getAllPosts(
+                "Bearer " + token);
+        call.enqueue(new Callback<AllPosts>() {
+            @Override
+            public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
+                Log.d("response code", response.code() + "");
+                if (response.isSuccessful()) {
+                    Log.d("Success", new Gson().toJson(response.body()));
+                    AllPosts getAllPosts = response.body();
+                    List<Post> posts =  getAllPosts.getData().getPost();
+                    setPostsRv(posts);
+                    binding.progressBar2.setVisibility(View.GONE);
+                } else {
+                    String errorMessage = parseError(response);
+                    Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
+                    Log.e("errorMessage", errorMessage + "");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AllPosts> call, Throwable t) {
+                Log.d("onFailure2", t.getMessage() + "");
+                call.cancel();
+            }
+        });
+    }
+
+    public static String parseError(Response<?> response) {
+        String errorMsg = null;
+        try {
+            JSONObject jObjError = new JSONObject(response.errorBody().string());
+            errorMsg = jObjError.getString("message");
+            return errorMsg;
+        } catch (Exception e) {
+        }
+        return errorMsg;
+    }
+
+
+        private void setPostsRv(List<Post> postList) {
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
+                context, RecyclerView.VERTICAL, false);
+        binding.rvPost.setLayoutManager(layoutManager);
+        PostsAdapter adapter = new PostsAdapter(context, new PostRequestInterface() {
+            @Override
+            public void layout(Post post) {
+
+            }
+        });
+        adapter.setList(postList);
+        binding.rvPost.setAdapter(adapter);
+    }
+
+    private void setCategoryRv(List<Category> data) {
+//        Log.e("setCategoryRv", data.get(0).getName());
+//        getAllCategories();
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
+                context, RecyclerView.HORIZONTAL, false);
+        binding.rvCategory.setLayoutManager(layoutManager);
+        CategoriesAdapter adapter = new CategoriesAdapter(context, new CategoryInterface() {
+            @Override
+            public void layout(int id) {
 //                category_id = id;
-//            }
-//        });
-////        adapter.setList(list.get(position).getImagesList());
-//        binding.rvCategory.setAdapter(adapter);
-//    }
+                Toast.makeText(context, id + "", Toast.LENGTH_SHORT).show();
+            }
+        });
+        adapter.setList(data);
+        binding.rvCategory.setAdapter(adapter);
+    }
 }
