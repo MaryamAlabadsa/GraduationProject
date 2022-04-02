@@ -1,12 +1,13 @@
 
-package com.example.graduationproject.models;
+package com.example.graduationproject.retrofit.profile.donation.posts;
 
 import java.io.Serializable;
+import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-
-public class LoginResponse implements Serializable
+@Generated("jsonschema2pojo")
+public class AllDonationsPosts implements Serializable
 {
 
     @SerializedName("message")
@@ -15,7 +16,7 @@ public class LoginResponse implements Serializable
     @SerializedName("data")
     @Expose
     private Data data;
-    private final static long serialVersionUID = 2422163769309400492L;
+    private final static long serialVersionUID = 498130550140930862L;
 
     public String getMessage() {
         return message;

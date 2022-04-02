@@ -1,6 +1,7 @@
 package com.example.graduationproject.fragments.ui;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,6 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,10 +30,30 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.FragmentAddPostBinding;
 import com.example.graduationproject.fragments.BaseFragment;
+import com.example.graduationproject.retrofit.Creator;
+import com.example.graduationproject.retrofit.ServiceApi;
+import com.example.graduationproject.retrofit.post.AllPosts;
+import com.example.graduationproject.retrofit.post.Post;
+import com.example.graduationproject.retrofit.register.User;
+import com.example.graduationproject.utils.AppSharedPreferences;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AddPostFragment extends BaseFragment implements AdapterView.OnItemSelectedListener {
 
@@ -45,6 +67,9 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
     static final int CAMERA_REQUEST_CODE = 103;
     FragmentAddPostBinding binding;
     Context context;
+    private ProgressDialog progressDialog;
+    Uri postImg;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -52,7 +77,6 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
     public AddPostFragment() {
         // Required empty public constructor
     }
-
 
     // TODO: Rename and change types and number of parameters
     public static AddPostFragment newInstance(String param1, String param2) {
@@ -79,6 +103,18 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
         binding = FragmentAddPostBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         context = getActivity();
+        serviceApi = Creator.getClient().create(ServiceApi.class);
+        sharedPreferences = new AppSharedPreferences(getActivity().getApplicationContext());
+        token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
+
+        String user = sharedPreferences.readUser(AppSharedPreferences.USER);
+        Gson gson = new Gson();
+        if (!user.isEmpty()) {
+            User user1 = gson.fromJson(user, User.class);
+            Glide.with(context).load(user1.getImageLink()).circleCrop()
+                    .placeholder(R.drawable.ic_launcher_foreground).into(binding.imageProfile);
+            binding.userName.setText(user1.getName());
+        }
 
         // Spinner code
         ArrayAdapter adapter = ArrayAdapter.createFromResource(context, R.array.Donations, R.layout.color_spinner);
@@ -109,7 +145,6 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
                 startActivityForResult(gallery, TAKE_IMAGE_ACTIVITY);
             }
         });
-
         binding.fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,8 +153,72 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
 //                Toast.makeText(AddPost.this, "Click To Write", Toast.LENGTH_SHORT).show();
             }
         });
+
+        binding.postButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                progressDialog = new ProgressDialog(getActivity());
+                progressDialog.setMessage("Please Wait");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+                String uTitle = binding.titlePost.getText().toString();
+                String uDescription = binding.titlePost.getText().toString();
+
+//                addPostRequest(postImg,uTitle,uDescription,);
+            }
+        });
         return view;
 
+    }
+
+    private void addPostRequest(File resourceFile, String uTitle, String uDescription, int uIsDonation, int uCategoryId) {
+        MultipartBody.Part body = null;
+        if (resourceFile != null) {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), resourceFile);
+            body = MultipartBody.Part.createFormData("assets", resourceFile.getName(), requestFile);
+        }
+        RequestBody title = RequestBody.create(MediaType.parse("multipart/form-data"), uTitle);
+        RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), uDescription);
+        RequestBody is_donation = RequestBody.create(MediaType.parse("multipart/form-data"), uIsDonation + "");
+        RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), uCategoryId + "");
+        Call<AllPosts> call = serviceApi.addPost("Bearer " + token
+//                "application/json"
+                , title
+                , description
+                , is_donation
+                , category_id
+                , body);
+        call.enqueue(new Callback<AllPosts>() {
+            @Override
+            public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
+                Log.d("response code", response.code() + "");
+                if (response.isSuccessful()) {
+                    Log.d("Success", new Gson().toJson(response.body()));
+                    progressDialog.dismiss();
+                } else {
+                    String errorMessage = parseError(response);
+                    Toast.makeText(context, errorMessage + "o", Toast.LENGTH_SHORT).show();
+                    Log.e("errorMessage", errorMessage + "");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AllPosts> call, Throwable t) {
+                Log.d("onFailure", t.getMessage() + "");
+                call.cancel();
+            }
+        });
+    }
+
+    public static String parseError(Response<?> response) {
+        String errorMsg = null;
+        try {
+            JSONObject jObjError = new JSONObject(response.errorBody().string());
+            errorMsg = jObjError.getString("message");
+            return errorMsg;
+        } catch (Exception e) {
+        }
+        return errorMsg;
     }
 
 
@@ -175,8 +274,8 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
         if (requestCode == TAKE_IMAGE_ACTIVITY || requestCode == CAMERA_REQUEST_CODE && resultCode == getActivity().RESULT_OK) {
 
             binding.imagePost.setImageBitmap((Bitmap) data.getExtras().get("data"));
-            Uri uri = data.getData();
-            binding.imagePost.setImageURI(uri);
+            postImg = data.getData();
+            binding.imagePost.setImageURI(postImg);
 
         } else if (resultCode == getActivity().RESULT_CANCELED) {
             Toast.makeText(context, "THE USER CANCELLED", Toast.LENGTH_LONG).show();
@@ -185,23 +284,31 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
 
 
     //spinner code
+    String category;
+
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        String text = adapterView.getSelectedItem().toString();
-//        Toast.makeText(adapterView.getContext(), text, Toast.LENGTH_SHORT).show();
+        String category = adapterView.getSelectedItem().toString();
+        Toast.makeText(adapterView.getContext(), category, Toast.LENGTH_SHORT).show();
+    }
+
+    int getCategoryName() {
+        switch (category) {
+//            case R.array.Donations.:
+
+        }
+        return 4;
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
     }
-
+RadioButton radioButton;
     public void checkButton(View view) {
         int radioId = binding.radioGroup.getCheckedRadioButtonId();
-        Toast.makeText(context, radioId+"", Toast.LENGTH_SHORT).show();
-//        radioButton = findViewById(radioId);
+        Toast.makeText(context, radioId + "", Toast.LENGTH_SHORT).show();
+        radioButton = radioButton.findViewById(radioId);
     }
-
-
 
 
     @Override

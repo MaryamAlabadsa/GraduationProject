@@ -9,6 +9,9 @@ import android.os.Handler;
 import android.os.Bundle;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 
 
 import com.example.graduationproject.R;
@@ -22,11 +25,20 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         sharedPreferences = new AppSharedPreferences(getApplicationContext());
+        RotateAnimation rotateAnimation = new RotateAnimation(0, 360f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+
+        rotateAnimation.setInterpolator(new LinearInterpolator());
+        rotateAnimation.setDuration(500);
+        rotateAnimation.setRepeatCount(Animation.RESTART);
+
+        findViewById(R.id.image).startAnimation(rotateAnimation);
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(2000);
                    if (isLogin()) {
                       // new WebService().startRequest(WebService.RequestAPI.PROFILE, SplashScreen.this);
                        startActivity(new Intent(SplashActivity.this,MainActivity.class));

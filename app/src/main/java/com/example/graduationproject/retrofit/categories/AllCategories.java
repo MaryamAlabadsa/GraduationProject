@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.annotation.Generated;
 
@@ -17,8 +18,8 @@ public class AllCategories implements Serializable
     private String message;
     @SerializedName("data")
     @Expose
-    private Data data;
-    private final static long serialVersionUID = -5914029478388490072L;
+    private List<Category> data = null;
+    private final static long serialVersionUID = 5871166225427591388L;
 
     public String getMessage() {
         return message;
@@ -28,11 +29,11 @@ public class AllCategories implements Serializable
         this.message = message;
     }
 
-    public Data getData() {
+    public List<Category> getData() {
         return data;
     }
 
-    public void setData(Data data) {
+    public void setData(List<Category> data) {
         this.data = data;
     }
 

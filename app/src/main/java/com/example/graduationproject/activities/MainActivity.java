@@ -18,6 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.ActivityMainBinding;
 import com.example.graduationproject.databinding.LayoutToolbarBinding;
@@ -33,6 +34,7 @@ import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.login.SendLogin;
 import com.example.graduationproject.retrofit.logout.LogOut;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
+import com.example.graduationproject.retrofit.register.User;
 import com.example.graduationproject.utils.AppSharedPreferences;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
@@ -53,6 +55,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     boolean isOpen = false; // by default is false
     boolean isAllPost = true;
     PagesFragment fragmentSelcted = ALL_POSTS;
+    AppSharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         setContentView(binding.getRoot());
         sharedPreferences = new AppSharedPreferences(getApplicationContext());
         serviceApi = Creator.getClient().create(ServiceApi.class);
+        token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
 
         LayoutToolbarBinding toolbarBinding = binding.mainToolbar;
 //        NavLayoutBinding navLayoutBinding = binding.navLayout;
@@ -93,13 +97,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         ImageView userImage = headerView.findViewById(R.id.user_image);
         TextView username = headerView.findViewById(R.id.user_profile);
+        String user = sharedPreferences.readUser(AppSharedPreferences.USER);
+        Gson gson = new Gson();
+        if (!user.isEmpty()) {
+            User user1 = gson.fromJson(user, User.class);
+            Glide.with(context).load(user1.getImageLink()).circleCrop()
+                    .placeholder(R.drawable.ic_launcher_foreground).into(userImage);
+            username.setText(user1.getName());
+        }
 
 //        Bundle bundle = getIntent().getExtras();
 //        if (bundle != null) {
 //            switchFragment(PagesFragment.getValue(bundle.getInt("type", 0)), null);
 //        } else
         switchFragment(ALL_POSTS, null);
-//        Toast.makeText(context, token+"", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, token + "token ", Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -35,16 +35,17 @@
             android:textStyle="bold"
             android:typeface="serif" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/full_name"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/profile_image"
-            android:includeFontPadding="false"
-            android:text="Android Programmer"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
+    <TextView
+        android:id="@+id/user_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/full_name"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/profile_image"
+        android:includeFontPadding="false"
+        android:text="Android Programmer"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
     </RelativeLayout>
 
     <LinearLayout

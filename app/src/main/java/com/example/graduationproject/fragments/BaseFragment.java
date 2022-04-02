@@ -10,9 +10,9 @@ import com.example.graduationproject.utils.AppSharedPreferences;
 
 public abstract class BaseFragment extends Fragment {
 
-    AppSharedPreferences sharedPreferences;
-    String token;
-    ServiceApi serviceApi;
+    public AppSharedPreferences sharedPreferences;
+    public String token;
+    public ServiceApi serviceApi;
 
     @Override
     public void onResume() {

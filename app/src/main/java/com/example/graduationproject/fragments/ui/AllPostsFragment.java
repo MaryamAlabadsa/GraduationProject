@@ -112,12 +112,11 @@ public class AllPostsFragment extends BaseFragment {
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     AllCategories getAllCategories = response.body();
-                    data = getAllCategories.getData().getCategory();
+                    data = getAllCategories.getData();
                     setCategoryRv(data);
                     binding.progressBar2.setVisibility(View.GONE);
                 } else {
                     String errorMessage = parseError(response);
-                    Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
                     Log.e("errorMessage", errorMessage + "");
                 }
             }
@@ -129,6 +128,7 @@ public class AllPostsFragment extends BaseFragment {
             }
         });
     }
+
     private void getAllPosts() {
 //        data = new ArrayList<>();
         Call<AllPosts> call = serviceApi.getAllPosts(
@@ -140,12 +140,12 @@ public class AllPostsFragment extends BaseFragment {
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     AllPosts getAllPosts = response.body();
-                    List<Post> posts =  getAllPosts.getData().getPost();
+                    List<Post> posts = getAllPosts.getData().getPost();
                     setPostsRv(posts);
                     binding.progressBar2.setVisibility(View.GONE);
                 } else {
                     String errorMessage = parseError(response);
-                    Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, errorMessage + "o", Toast.LENGTH_SHORT).show();
                     Log.e("errorMessage", errorMessage + "");
                 }
             }
@@ -170,7 +170,7 @@ public class AllPostsFragment extends BaseFragment {
     }
 
 
-        private void setPostsRv(List<Post> postList) {
+    private void setPostsRv(List<Post> postList) {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 context, RecyclerView.VERTICAL, false);
@@ -195,7 +195,7 @@ public class AllPostsFragment extends BaseFragment {
             @Override
             public void layout(int id) {
 //                category_id = id;
-                Toast.makeText(context, id + "", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, id + "", Toast.LENGTH_SHORT).show();
             }
         });
         adapter.setList(data);

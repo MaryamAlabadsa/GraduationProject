@@ -9,9 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.FragmentProfileBinding;
 import com.example.graduationproject.fragments.BaseFragment;
+import com.example.graduationproject.retrofit.Creator;
+import com.example.graduationproject.retrofit.ServiceApi;
+import com.example.graduationproject.retrofit.register.User;
+import com.example.graduationproject.utils.AppSharedPreferences;
+import com.google.gson.Gson;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,10 +61,23 @@ public class ProfileFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         binding =FragmentProfileBinding.inflate(inflater,container,false);
         View view=binding.getRoot();
+        context = getActivity();
+        serviceApi = Creator.getClient().create(ServiceApi.class);
+        sharedPreferences = new AppSharedPreferences(getActivity().getApplicationContext());
+        token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
 
+        String user = sharedPreferences.readUser(AppSharedPreferences.USER);
+        Gson gson = new Gson();
+        if (!user.isEmpty()) {
+            User user1 = gson.fromJson(user, User.class);
+            Glide.with(context).load(user1.getImageLink()).circleCrop()
+                    .placeholder(R.drawable.ic_launcher_foreground).into(binding.profileImage);
+            binding.fullName.setText(user1.getName());
+            binding.userData.setText(user1.getAddress());
+
+        }
 
         return view;
     }

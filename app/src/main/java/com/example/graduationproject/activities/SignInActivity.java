@@ -29,6 +29,7 @@ import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.login.SendLogin;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
+import com.example.graduationproject.retrofit.register.User;
 import com.example.graduationproject.utils.AppSharedPreferences;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
@@ -48,8 +49,8 @@ public class SignInActivity extends BaseActivity {
     ActivitySignInBinding binding;
 
     ServiceApi serviceApi;
-    Context context=SignInActivity.this;
-//    private AppSharedPreferences sharedPreferences;
+    Context context = SignInActivity.this;
+    private AppSharedPreferences sharedPreferences;
 
 
     @Override
@@ -64,20 +65,25 @@ public class SignInActivity extends BaseActivity {
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email=binding.email.getText().toString();
-                String password=binding.password.getText().toString();
-                if (email!=null&&password!=null){
-                    login(email,password);
+                String email = binding.email.getText().toString();
+                String password = binding.password.getText().toString();
+                if (email != null && password != null) {
+                    login(email, password);
                     Toast.makeText(context, "login", Toast.LENGTH_SHORT).show();
 //                    finish();
                 }
             }
         });
 
-
+        binding.registerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(context,SignUpActivity.class ));
+            }
+        });
     }
 
-    private void login(String email,String password) {
+    private void login(String email, String password) {
         SendLogin sendLogin = new SendLogin();
         sendLogin.setEmail(email);
         sendLogin.setPassword(password); /** GET List Resources **/
@@ -89,13 +95,20 @@ public class SignInActivity extends BaseActivity {
                 Log.d("response code", response.code() + "");
                 if (response.isSuccessful()) {
                     Log.e("Success", new Gson().toJson(response.body()));
-                    startActivity(new Intent(context,MainActivity.class));
-                    Toast.makeText(SignInActivity.this, response.body().getData().getToken()+"", Toast.LENGTH_SHORT).show();
+                    assert response.body() != null;
+                    User user = response.body().getData().getUser();
+                    Gson gson = new Gson();
+                    String userString = gson.toJson(user);
+
+                    sharedPreferences.writeString(AppSharedPreferences.USER, userString);
+                    startActivity(new Intent(context, MainActivity.class));
+                    Toast.makeText(SignInActivity.this, response.body().getData().getToken() + "", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignInActivity.this, userString + "", Toast.LENGTH_SHORT).show();
                     sharedPreferences.writeString(AppSharedPreferences.AUTHENTICATION, response.body().getData().getToken());
 
                 } else {
                     String errorMessage = parseError2(response);
-                    Toast.makeText(SignInActivity.this, errorMessage+"", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignInActivity.this, errorMessage + "", Toast.LENGTH_SHORT).show();
                     binding.email.setError(errorMessage);
 
                     Log.e("errorMessage", errorMessage + "");
@@ -114,12 +127,12 @@ public class SignInActivity extends BaseActivity {
         String errorMsg = null;
         try {
             assert response.errorBody() != null;
-            JSONObject  jsonObject = new JSONObject(response.errorBody().string());
+            JSONObject jsonObject = new JSONObject(response.errorBody().string());
             JSONObject jsonObject2 = jsonObject.getJSONObject("errors");
             JSONArray jsonArray = jsonObject2.getJSONArray("email");
             return jsonArray.getString(0);
         } catch (Exception ignored) {
-            Log.e(errorMsg,ignored.getMessage()+"");
+            Log.e(errorMsg, ignored.getMessage() + "");
             return ignored.getMessage();
         }
     }

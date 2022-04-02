@@ -11,6 +11,7 @@ import javax.annotation.Generated;
 @Generated("jsonschema2pojo")
 public class Category implements Serializable
 {
+
     @SerializedName("id")
     @Expose
     private Integer id;

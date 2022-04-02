@@ -1,5 +1,6 @@
 package com.example.graduationproject.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -57,13 +58,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PostsAdapter.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull PostsAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         holder.binding.titlePost.setText("" + list.get(position).getTitle());
 //        holder.binding.uNamePost.setText("number of request" + list.get(position).getPostFirstUser());
         holder.binding.descriptionPost.setText("" + list.get(position).getDescription());
         holder.binding.numberRequestsPost.setText("number of request =  " + list.get(position).getNumberOfRequests());
         holder.binding.uNamePost.setText("" + list.get(position).getPostFirstUser());
-//        Glide.with(context).load(list.get(position).g()).circleCrop().placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.uImgPost);
+        Glide.with(context).load(list.get(position).getPostMedia().get(0)).circleCrop()
+                .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.uImgPost);
 //        setImagesRv(holder, position);
         if (list.get(position).getIsDonation() ) {
             holder.binding.isAvailable.setBackgroundColor(Color.red(0));

@@ -2,10 +2,9 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="Categories"
-    android:textSize="20sp"
-    android:padding="10dp"
-    android:textColor="#7C98C2"
+    android:text="Category"
+    android:textSize="18sp"
+    android:textColor="@color/primary_text"
     android:fontFamily="@font/din_next_arabic_light"
     android:typeface="serif">
 

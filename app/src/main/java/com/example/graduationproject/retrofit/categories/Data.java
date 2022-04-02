@@ -13,17 +13,29 @@ import javax.annotation.Generated;
 public class Data implements Serializable
 {
 
-    @SerializedName("category")
-    @Expose
-    private List<Category> category = null;
-    private final static long serialVersionUID = -3667179674338133491L;
 
-    public List<Category> getCategory() {
-        return category;
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    private final static long serialVersionUID = 815187577766770285L;
+
+    public Integer getId() {
+        return id;
     }
 
-    public void setCategory(List<Category> category) {
-        this.category = category;
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 }

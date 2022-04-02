@@ -17,9 +17,10 @@
 
 
     <string-array name="Donations">
-        <item>Categories</item>
-        <item>Clothes</item>
-        <item>Money</item>
+        <item>cash</item>
+        <item>clothes</item>
+        <item>books</item>
+        <item>Kitchen tools</item>
 
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->

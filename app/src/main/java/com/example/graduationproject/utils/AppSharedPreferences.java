@@ -29,11 +29,23 @@ public class AppSharedPreferences {
 
         SharedPreferences.Editor prefEditor = pref.edit();
         prefEditor.putString(key, value);
-        prefEditor.commit();
+        prefEditor.apply();
 
     }
 
     public String readString(String key) {
+        return pref.getString(key, "");
+    }
+
+    public void writeUser(String key, String value) {
+
+        SharedPreferences.Editor prefEditor = pref.edit();
+        prefEditor.putString(key, value);
+        prefEditor.apply();
+
+    }
+
+    public String readUser(String key) {
         return pref.getString(key, "");
     }
 

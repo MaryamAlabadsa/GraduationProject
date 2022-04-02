@@ -6,6 +6,7 @@ import com.example.graduationproject.retrofit.login.SendLogin;
 import com.example.graduationproject.retrofit.logout.LogOut;
 import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.post.Post;
+import com.example.graduationproject.retrofit.profile.donation.posts.AllDonationsPosts;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
 
 import okhttp3.MultipartBody;
@@ -25,19 +26,35 @@ public interface ServiceApi {
     @GET("Category")
     Call<AllCategories> getAllCategories(
             @Header("Authorization") String token);
+
     @GET("Post")
     Call<AllPosts> getAllPosts(
             @Header("Authorization") String token);
 
+    @GET("donationPosts")
+    Call<AllDonationsPosts> getDonationPosts(
+            @Header("Authorization") String token);
+
     // TODO: post
+    @POST("Post")
+    Call<AllPosts> addPost(
+            @Header("Authorization") String token,
+            @Part("title") RequestBody title
+            , @Part("description") RequestBody description
+            , @Part("is_donation") RequestBody is_donation
+            , @Part("category_id") RequestBody category_id
+            , @Part MultipartBody.Part image);
+
     @POST("login")
     Call<RegisterResponse> login
             (@Header("Accept") String accept
                     , @Body SendLogin fields);
+
     @POST("changePassword")
     Call<RegisterResponse> changePassword
             (@Header("Authorization") String token
                     , @Body ChangePassword fields);
+
     @POST("logout")
     Call<LogOut> logout(
             @Header("Authorization") String token);

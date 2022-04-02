@@ -43,7 +43,7 @@
                 app:endIconMode="clear_text"
                 app:helperText="*Required"
                 app:helperTextTextColor="#FF0000"
-                app:startIconDrawable="@drawable/email">
+                >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/email"
@@ -78,7 +78,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:maxLength="20" />
+                     />
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInput_location"
@@ -128,7 +128,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-
+                    android:maxLength="9"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -156,7 +156,8 @@
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:inputType="textPassword"
-                    android:maxLength="25" />
+                    android:maxLength="25"
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
             <RelativeLayout
