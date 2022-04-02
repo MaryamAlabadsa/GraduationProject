@@ -6,9 +6,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.annotation.Generated;
-
 @Generated("jsonschema2pojo")
 public class AllPosts implements Serializable
 {
@@ -18,8 +18,8 @@ public class AllPosts implements Serializable
     private String message;
     @SerializedName("data")
     @Expose
-    private Data data;
-    private final static long serialVersionUID = -5914029478388490072L;
+    private List<Post> data = null;
+    private final static long serialVersionUID = 4954625670901394698L;
 
     public String getMessage() {
         return message;
@@ -29,11 +29,11 @@ public class AllPosts implements Serializable
         this.message = message;
     }
 
-    public com.example.graduationproject.retrofit.post.Data getData() {
+    public List<Post> getData() {
         return data;
     }
 
-    public void setData(Data data) {
+    public void setData(List<Post> data) {
         this.data = data;
     }
 

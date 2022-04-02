@@ -64,18 +64,20 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         holder.binding.descriptionPost.setText("" + list.get(position).getDescription());
         holder.binding.numberRequestsPost.setText("number of request =  " + list.get(position).getNumberOfRequests());
         holder.binding.uNamePost.setText("" + list.get(position).getPostFirstUser());
-        Glide.with(context).load(list.get(position).getPostMedia().get(0)).circleCrop()
+        Glide.with(context).load(list.get(position).getFirstUserImageLink()).circleCrop()
                 .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.uImgPost);
+        Glide.with(context).load(list.get(position).getPostMedia().get(0))
+                .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.postImage);
 //        setImagesRv(holder, position);
-        if (list.get(position).getIsDonation() ) {
-            holder.binding.isAvailable.setBackgroundColor(Color.red(0));
-            holder.binding.isAvailable.setTextColor(Color.RED);
-            holder.binding.isAvailable.setText("not Available");
-
-        } else if (list.get(position).getIsDonation() ) {
+      if (list.get(position).getPostSecondUser()=="not found") {
             holder.binding.isAvailable.setBackgroundColor(Color.WHITE);
             holder.binding.isAvailable.setTextColor(Color.BLACK);
             holder.binding.isAvailable.setText("Available");
+
+        }else{
+            holder.binding.isAvailable.setBackgroundColor(Color.red(0));
+            holder.binding.isAvailable.setTextColor(Color.RED);
+            holder.binding.isAvailable.setText("not Available");
 
         }
 

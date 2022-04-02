@@ -12,6 +12,7 @@ import com.google.gson.annotations.SerializedName;
 @Generated("jsonschema2pojo")
 public class Post implements Serializable {
 
+
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -41,8 +42,11 @@ public class Post implements Serializable {
     private String postSecondUserEmail;
     @SerializedName("post_media")
     @Expose
-    private ArrayList<String> postMedia = null;
-    private final static long serialVersionUID = -8140478434341603263L;
+    private List<String> postMedia = null;
+    @SerializedName("first_user_image_link")
+    @Expose
+    private String firstUserImageLink;
+    private final static long serialVersionUID = 2964213240315325669L;
 
     public Integer getId() {
         return id;
@@ -116,12 +120,20 @@ public class Post implements Serializable {
         this.postSecondUserEmail = postSecondUserEmail;
     }
 
-    public ArrayList<String> getPostMedia() {
+    public List<String> getPostMedia() {
         return postMedia;
     }
 
-    public void setPostMedia(ArrayList<String> postMedia) {
+    public void setPostMedia(List<String> postMedia) {
         this.postMedia = postMedia;
+    }
+
+    public String getFirstUserImageLink() {
+        return firstUserImageLink;
+    }
+
+    public void setFirstUserImageLink(String firstUserImageLink) {
+        this.firstUserImageLink = firstUserImageLink;
     }
 
 }

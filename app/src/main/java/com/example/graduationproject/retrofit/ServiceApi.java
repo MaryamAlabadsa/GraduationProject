@@ -27,7 +27,7 @@ public interface ServiceApi {
     Call<AllCategories> getAllCategories(
             @Header("Authorization") String token);
 
-    @GET("Post")
+    @GET("post")
     Call<AllPosts> getAllPosts(
             @Header("Authorization") String token);
 
@@ -36,7 +36,7 @@ public interface ServiceApi {
             @Header("Authorization") String token);
 
     // TODO: post
-    @POST("Post")
+    @POST("post")
     Call<AllPosts> addPost(
             @Header("Authorization") String token,
             @Part("title") RequestBody title

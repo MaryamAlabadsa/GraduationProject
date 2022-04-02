@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
     android:background="@color/white"
-    android:padding="@dimen/size_14">
+    android:layout_margin="8dp"
 
+    app:cardCornerRadius="@dimen/size_14"
+    >
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="wrap_content"
+    android:padding="@dimen/size_14"
+    android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/u_img_post"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -21,7 +26,7 @@
         android:id="@+id/u_name_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="18dp"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/u_img_post"
         app:layout_constraintStart_toEndOf="@+id/u_img_post"
@@ -33,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:text="Button"
-        android:textSize="24sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/u_name_post"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/u_name_post" />
@@ -56,15 +61,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_post" />
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_img_post"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description_post" />
+    <ImageView
+        android:id="@+id/post_image"
+        android:layout_width="350dp"
+        android:layout_height="150dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/description_post" />
 
     <TextView
         android:id="@+id/number_requests_post"
@@ -75,16 +78,27 @@
         android:text="TextView"
         android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rv_img_post" />
+        app:layout_constraintTop_toBottomOf="@+id/post_image" />
 
     <Button
         android:id="@+id/request_post_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/colorPrimaryDark"
         android:text="request"
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/number_requests_post"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/number_requests_post" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/primaryLight"
+        app:layout_constraintTop_toBottomOf="@id/request_post_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

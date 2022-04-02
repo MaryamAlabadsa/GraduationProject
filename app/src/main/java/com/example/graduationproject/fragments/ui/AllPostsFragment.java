@@ -133,14 +133,17 @@ public class AllPostsFragment extends BaseFragment {
 //        data = new ArrayList<>();
         Call<AllPosts> call = serviceApi.getAllPosts(
                 "Bearer " + token);
+        Toast.makeText(context, "posts", Toast.LENGTH_SHORT).show();
         call.enqueue(new Callback<AllPosts>() {
             @Override
             public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
-                Log.d("response code", response.code() + "");
+                Log.d("response1 code", response.code() + "");
+                Toast.makeText(context, response.code() +"", Toast.LENGTH_SHORT).show();
+
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     AllPosts getAllPosts = response.body();
-                    List<Post> posts = getAllPosts.getData().getPost();
+                    List<Post> posts = getAllPosts.getData();
                     setPostsRv(posts);
                     binding.progressBar2.setVisibility(View.GONE);
                 } else {
