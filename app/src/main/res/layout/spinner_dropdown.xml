@@ -3,9 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="Category"
-    android:textSize="18sp"
+    android:textSize="20sp"
     android:textColor="@color/primary_text"
     android:fontFamily="@font/din_next_arabic_light"
-    android:typeface="serif">
+    android:typeface="serif"
+    android:padding="7dp"
+    android:textStyle="bold">
 
 </TextView>

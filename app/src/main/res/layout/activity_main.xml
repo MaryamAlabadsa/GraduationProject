@@ -20,7 +20,8 @@ tools:context=".activities.MainActivity">
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <include layout="@layout/layout_toolbar" android:id="@+id/main_toolbar" />
+        <include layout="@layout/layout_toolbar"
+            android:id="@+id/main_toolbar" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

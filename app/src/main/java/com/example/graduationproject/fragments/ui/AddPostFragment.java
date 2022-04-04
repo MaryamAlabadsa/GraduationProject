@@ -2,6 +2,7 @@ package com.example.graduationproject.fragments.ui;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -56,15 +57,17 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AddPostFragment extends BaseFragment implements AdapterView.OnItemSelectedListener {
-
     public static final String TAG = "ADD_POSTS";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Animation fab_open, fab_close, rotate_forward, rotate_back;
     boolean isOpen = false; // by default is false
-    static final int TAKE_IMAGE_ACTIVITY = 101;
-    static final int CAMERA_FROM_CODE = 102;
-    static final int CAMERA_REQUEST_CODE = 103;
+    static final int TAKE_IMAGE_ACTIVITY = 100;
+    static final int CODE_IMAGE_GALLERY = 101;
+    static final int CODE_MULTIPLE_IMAGE_GALLERY = 102;
+    static final int CODE_MULTIPLE_IMG_GALLERY = 103;
+//    static final int CAMERA_FROM_CODE = 103;
+//    static final int CAMERA_REQUEST_CODE = 104;
     FragmentAddPostBinding binding;
     Context context;
     private ProgressDialog progressDialog;
@@ -77,6 +80,7 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
     public AddPostFragment() {
         // Required empty public constructor
     }
+
 
     // TODO: Rename and change types and number of parameters
     public static AddPostFragment newInstance(String param1, String param2) {
@@ -97,6 +101,7 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -107,6 +112,43 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
         sharedPreferences = new AppSharedPreferences(getActivity().getApplicationContext());
         token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
 
+
+        //Images Multiple
+        binding.imagePost1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(Intent.createChooser(new Intent()
+                        .setAction(Intent.ACTION_GET_CONTENT)
+                        .setType("image/*"), "Selected an Image")
+                        ,CODE_IMAGE_GALLERY);
+            }
+        });
+
+        binding.imagePost2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Multiple
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,"Selected an Image")
+                        ,CODE_MULTIPLE_IMAGE_GALLERY);
+
+            }
+        });
+        binding.imagePost3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,"Selected an Image")
+                        ,CODE_MULTIPLE_IMG_GALLERY);
+            }
+        });
+
         String user = sharedPreferences.readUser(AppSharedPreferences.USER);
         Gson gson = new Gson();
         if (!user.isEmpty()) {
@@ -116,43 +158,44 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
             binding.userName.setText(user1.getName());
         }
 
+
         // Spinner code
         ArrayAdapter adapter = ArrayAdapter.createFromResource(context, R.array.Donations, R.layout.color_spinner);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown);
         binding.spinner.setAdapter(adapter);
         binding.spinner.setOnItemSelectedListener(this);
 
-
-        // Animation
-        fab_open = AnimationUtils.loadAnimation(context, R.anim.rotate_open_anim);
-        fab_close = AnimationUtils.loadAnimation(context, R.anim.rotate_close_anim);
-        rotate_forward = AnimationUtils.loadAnimation(context, R.anim.from_bottom_anim);
-        rotate_back = AnimationUtils.loadAnimation(context, R.anim.to_bottom_anim);
-
-        // set the click listener on the main fab
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AnimationFab();
-            }
-        });
-        binding.fab1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AnimationFab();
-                //Add photo from gallery
-                Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                startActivityForResult(gallery, TAKE_IMAGE_ACTIVITY);
-            }
-        });
-        binding.fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AnimationFab();
-                askCameraPermission();
-//                Toast.makeText(AddPost.this, "Click To Write", Toast.LENGTH_SHORT).show();
-            }
-        });
+//
+//        // Animation
+//        fab_open = AnimationUtils.loadAnimation(context, R.anim.rotate_open_anim);
+//        fab_close = AnimationUtils.loadAnimation(context, R.anim.rotate_close_anim);
+//        rotate_forward = AnimationUtils.loadAnimation(context, R.anim.from_bottom_anim);
+//        rotate_back = AnimationUtils.loadAnimation(context, R.anim.to_bottom_anim);
+//
+//        // set the click listener on the main fab
+//        binding.fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                AnimationFab();
+//            }
+//        });
+//        binding.fab1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                AnimationFab();
+//                //Add photo from gallery
+//                Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+//                startActivityForResult(gallery, TAKE_IMAGE_ACTIVITY);
+//            }
+//        });
+//        binding.fab2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                AnimationFab();
+//                askCameraPermission();
+////                Toast.makeText(AddPost.this, "Click To Write", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         binding.postButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,6 +213,7 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
         return view;
 
     }
+
 
     private void addPostRequest(File resourceFile, String uTitle, String uDescription, int uIsDonation, int uCategoryId) {
         MultipartBody.Part body = null;
@@ -217,70 +261,62 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
             errorMsg = jObjError.getString("message");
             return errorMsg;
         } catch (Exception e) {
+
         }
         return errorMsg;
     }
 
 
-    private void AnimationFab() {
-        if (isOpen) {
-            binding.fab.startAnimation(rotate_forward);
-            binding.fab1.startAnimation(fab_close);
-            binding.fab2.startAnimation(fab_close);
-            binding.fab1.setClickable(false);
-            binding.fab2.setClickable(false);
-            isOpen = false;
-        } else {
-            binding.fab.startAnimation(rotate_back);
-            binding.fab1.startAnimation(fab_open);
-            binding.fab2.startAnimation(fab_open);
-            binding.fab1.setClickable(true);
-            binding.fab2.setClickable(true);
-            isOpen = true;
-        }
-    }
+//    private void AnimationFab() {
+//        if (isOpen) {
+//            binding.fab.startAnimation(rotate_forward);
+//            binding.fab1.startAnimation(fab_close);
+//            binding.fab2.startAnimation(fab_close);
+//            binding.fab1.setClickable(false);
+//            binding.fab2.setClickable(false);
+//            isOpen = false;
+//        } else {
+//            binding.fab.startAnimation(rotate_back);
+//            binding.fab1.startAnimation(fab_open);
+//            binding.fab2.startAnimation(fab_open);
+//            binding.fab1.setClickable(true);
+//            binding.fab2.setClickable(true);
+//            isOpen = true;
+//        }
+//    }
 
-    //camera
-    private void askCameraPermission() {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_FROM_CODE);
-        } else {
-            openCamera();
-        }
-    }
+//    //camera
+//    private void askCameraPermission() {
+//        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions
+//                    (this.getActivity(),
+//                     new String[]{Manifest.permission.CAMERA},
+//                      CAMERA_FROM_CODE);
+//        } else {
+//            openCamera();
+//        }
+//    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CAMERA_FROM_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openCamera();
-            } else {
-                Toast.makeText(context, "Camera", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-
-    private void openCamera() {
-        Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(camera, CAMERA_REQUEST_CODE);
-    }
+   // @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        if (requestCode == CAMERA_FROM_CODE) {
+//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                openCamera();
+//            } else {
+//                Toast.makeText(context, "Camera", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == TAKE_IMAGE_ACTIVITY || requestCode == CAMERA_REQUEST_CODE && resultCode == getActivity().RESULT_OK) {
+//    private void openCamera() {
+//        Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        startActivityForResult(camera, CAMERA_REQUEST_CODE);
+//    }
 
-            binding.imagePost.setImageBitmap((Bitmap) data.getExtras().get("data"));
-            postImg = data.getData();
-            binding.imagePost.setImageURI(postImg);
 
-        } else if (resultCode == getActivity().RESULT_CANCELED) {
-            Toast.makeText(context, "THE USER CANCELLED", Toast.LENGTH_LONG).show();
-        }
-    }
+
 
 
     //spinner code
@@ -289,7 +325,7 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String category = adapterView.getSelectedItem().toString();
-        Toast.makeText(adapterView.getContext(), category, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(adapterView.getContext(), category, Toast.LENGTH_SHORT).show();
     }
 
     int getCategoryName() {
@@ -303,13 +339,38 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
     }
-RadioButton radioButton;
-    public void checkButton(View view) {
-        int radioId = binding.radioGroup.getCheckedRadioButtonId();
-        Toast.makeText(context, radioId + "", Toast.LENGTH_SHORT).show();
-        radioButton = radioButton.findViewById(radioId);
-    }
+//    RadioButton radioButton;
+//
+//    public void checkButton(View view) {
+//        int radioId = binding.radioGroup.getCheckedRadioButtonId();
+//        Toast.makeText(context, radioId + "", Toast.LENGTH_SHORT).show();
+//        radioButton = radioButton.findViewById(radioId);
+//    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CODE_IMAGE_GALLERY  && resultCode == getActivity().RESULT_OK) {
+            Uri uriImage = data.getData();
+            if (uriImage != null) {
+                binding.imagePost1.setImageURI(uriImage);
+            }
+
+        } else  if (requestCode == CODE_MULTIPLE_IMAGE_GALLERY || requestCode == CODE_MULTIPLE_IMG_GALLERY
+                && resultCode == getActivity().RESULT_OK) {
+            ClipData clipData = data.getClipData();
+            if (clipData != null){
+                binding.imagePost1.setImageURI(clipData.getItemAt(0).getUri());
+                binding.imagePost2.setImageURI(clipData.getItemAt(1).getUri());
+                binding.imagePost3.setImageURI(clipData.getItemAt(2).getUri());
+
+                for (int i = 0; i<clipData.getItemCount(); i++){
+                    ClipData.Item item = clipData.getItemAt(i);
+                    Uri uri = item.getUri();
+                }
+            }
+        }
+    }
 
     @Override
     public int getFragmentTitle() {

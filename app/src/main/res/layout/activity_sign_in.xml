@@ -41,7 +41,8 @@
                 android:fontFamily="@font/din_next_arabic_bold"
                 android:text="@string/Login"
                 android:textColor="@color/primary_text"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                android:typeface="serif"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInput_username"
@@ -52,12 +53,12 @@
                 android:background="@color/white"
                 android:hint="Email"
                 android:typeface="serif"
-                app:endIconMode="clear_text">
+                app:endIconMode="clear_text"
+                app:startIconDrawable="@drawable/ic_baseline_email_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/email"
                     android:layout_width="match_parent"
-
                     android:layout_height="wrap_content"
                     android:background="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>

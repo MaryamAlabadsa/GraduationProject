@@ -16,6 +16,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,6 +45,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -59,6 +62,7 @@ public class SignUpActivity extends AppCompatActivity {
     ActivitySignUpBinding binding;
     Context context=SignUpActivity.this;
     private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -211,14 +215,18 @@ public class SignUpActivity extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 Uri userImg = result.getUri();
-                Picasso.with(this).load(userImg).into(binding.pickImage);
+//                Picasso.with(this).load(userImg).into(binding.pickImage);
+                try {
+                    InputStream stream = getContentResolver().openInputStream(userImg);
+                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                    binding.pickImage.setImageBitmap(bitmap);
+//                    file = FileUtil.from(context, result.getUri());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 //                    Intent data = result.getData();
 //                    Log.e("data", data.getDataString() + "");
-                    try {
-                        file = FileUtil.from(context, result.getUri());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();

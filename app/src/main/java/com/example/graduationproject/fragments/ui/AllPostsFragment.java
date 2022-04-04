@@ -35,6 +35,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import ahmed.easyslider.EasySlider;
+import ahmed.easyslider.SliderItem;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,6 +78,13 @@ public class AllPostsFragment extends BaseFragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        EasySlider easySlider = findViewById(R.id.slider);
+
+        List<SliderItem> sliderItems = new ArrayList<>();
+        sliderItems.add(new SliderItem("title1",R.drawable.slide2));
+        sliderItems.add(new SliderItem("title2",R.drawable.slide3));
+        sliderItems.add(new SliderItem("title3",R.drawable.slide4));
+        easySlider.setPages(sliderItems);
     }
 
     @Override
