@@ -483,7 +483,7 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
         View selectedView = binding.spinner.getSelectedView();
 
         if (binding.spinner.getSelectedItem().toString().trim().equals("Pick one")) {
-            Toast.makeText(context, "Error Sp", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Error Spinner", Toast.LENGTH_SHORT).show();
         }
         if(uTitle.isEmpty()) {
             binding.titlePost.requestFocus();
@@ -496,10 +496,10 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
             Toast.makeText(context, "PLEASE SELECTED REQUEST OR DONATION", Toast.LENGTH_SHORT).show();
         }
         if (imagesList.isEmpty()) {
-            Toast.makeText(context, "error3", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "PLEASE UPLOAD PHOTO", Toast.LENGTH_SHORT).show();
         }
         else {
-            Toast.makeText(context, "Validation Successful", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "VALIDATION  SUCCESSFUL", Toast.LENGTH_SHORT).show();
         }
         return "";
     }
