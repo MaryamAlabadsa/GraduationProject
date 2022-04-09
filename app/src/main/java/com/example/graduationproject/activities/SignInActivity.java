@@ -33,7 +33,6 @@ import com.example.graduationproject.retrofit.register.User;
 import com.example.graduationproject.utils.AppSharedPreferences;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import org.json.JSONArray;

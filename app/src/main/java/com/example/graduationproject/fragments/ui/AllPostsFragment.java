@@ -45,6 +45,8 @@ public class AllPostsFragment extends BaseFragment {
     AppSharedPreferences sharedPreferences;
     String token;
     ServiceApi serviceApi;
+    EasySlider easySlider;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -78,13 +80,12 @@ public class AllPostsFragment extends BaseFragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        EasySlider easySlider = findViewById(R.id.slider);
-
-        List<SliderItem> sliderItems = new ArrayList<>();
-        sliderItems.add(new SliderItem("title1",R.drawable.slide2));
-        sliderItems.add(new SliderItem("title2",R.drawable.slide3));
-        sliderItems.add(new SliderItem("title3",R.drawable.slide4));
-        easySlider.setPages(sliderItems);
+//
+//        List<SliderItem> sliderItems = new ArrayList<>();
+//        sliderItems.add(new SliderItem("title1",R.drawable.slide2));
+//        sliderItems.add(new SliderItem("title2",R.drawable.slide3));
+//        sliderItems.add(new SliderItem("title3",R.drawable.slide4));
+//        easySlider.setPages(sliderItems);
     }
 
     @Override
