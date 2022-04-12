@@ -15,6 +15,12 @@ public class Category implements Serializable
     @SerializedName("id")
     @Expose
     private Integer id;
+
+    public Category(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     @SerializedName("name")
     @Expose
     private String name;
@@ -35,5 +41,11 @@ public class Category implements Serializable
     public void setName(String name) {
         this.name = name;
     }
-
+    /**
+     * @return name
+     */
+    @Override
+    public String toString() {
+        return name;
+    }
 }
