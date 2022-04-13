@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -19,9 +20,6 @@ import com.example.graduationproject.retrofit.post.Post;
 import java.util.ArrayList;
 import java.util.List;
 
-import ahmed.easyslider.EasySlider;
-import ahmed.easyslider.SliderItem;
-
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder> {
 
     Context context;
@@ -29,20 +27,17 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     PostRequestInterface postRequestInterface;
 
     public PostsAdapter(Context context, PostRequestInterface postRequestInterface) {
-        list = new ArrayList<>();
         this.context = context;
         this.postRequestInterface = postRequestInterface;
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     public void setList(List<Post> list) {
-        list.clear();
-        list.addAll(list);
+        this.list = list;
         notifyDataSetChanged();
 
     }
 
-    static class MyViewHolder extends RecyclerView.ViewHolder {
+    class MyViewHolder extends RecyclerView.ViewHolder {
         PostItemBinding binding;
 
         public MyViewHolder(PostItemBinding binding) {
@@ -58,10 +53,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         PostItemBinding binding = PostItemBinding.inflate(LayoutInflater
                         .from(parent.getContext())
                 , parent, false);
-        return new MyViewHolder(binding);
+        MyViewHolder myViewHolder = new MyViewHolder(binding);
+        return myViewHolder;
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull PostsAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         holder.binding.titlePost.setText("" + list.get(position).getTitle());
@@ -71,16 +66,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         holder.binding.uNamePost.setText("" + list.get(position).getPostFirstUser());
         Glide.with(context).load(list.get(position).getFirstUserImageLink()).circleCrop()
                 .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.uImgPost);
-//        Glide.with(context).load(list.get(position).getPostMedia().get(0))
-//                .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.postImage);
+        Glide.with(context).load(list.get(position).getPostMedia().get(0))
+                .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.postImage);
 //        setImagesRv(holder, position);
-        setPostImages(holder, position);
-        if (list.get(position).getPostSecondUser().equals("not found")) {
+      if (list.get(position).getPostSecondUser()=="not found") {
             holder.binding.isAvailable.setBackgroundColor(Color.WHITE);
             holder.binding.isAvailable.setTextColor(Color.BLACK);
             holder.binding.isAvailable.setText("Available");
 
-        } else {
+        }else{
             holder.binding.isAvailable.setBackgroundColor(Color.red(0));
             holder.binding.isAvailable.setTextColor(Color.RED);
             holder.binding.isAvailable.setText("not Available");
@@ -96,17 +90,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
 
     }
 
-    private void setPostImages(PostsAdapter.MyViewHolder holder, int position) {
-        EasySlider easySlider = holder.binding.slider;
-
-        List<SliderItem> sliderItems = new ArrayList<>();
-        for (String images : list.get(position).getPostMedia()) {
-            sliderItems.add(new SliderItem("", images));
-
-        }
-        easySlider.setPages(sliderItems);
-
-    }
+//    private void setImagesRv(PostsAdapter.MyViewHolder holder, int position) {
+//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
+//                context, RecyclerView.HORIZONTAL, false);
+//        holder.binding.rvImgPost.setLayoutManager(layoutManager);
+//        ImagesPostsAdapter adapter = new ImagesPostsAdapter(context);
+////        adapter.setList(list.get(position).getImagesList());
+//        holder.binding.rvImgPost.setAdapter(adapter);
+//    }
 
     @Override
     public int getItemCount() {
