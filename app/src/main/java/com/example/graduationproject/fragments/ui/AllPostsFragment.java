@@ -3,7 +3,6 @@ package com.example.graduationproject.fragments.ui;
 import android.content.Context;
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,41 +10,33 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.graduationproject.R;
-import com.example.graduationproject.adapters.CategoriesAdapter;
+import com.example.graduationproject.adapters.CategoryAdapter;
 import com.example.graduationproject.adapters.PostsAdapter;
-import com.example.graduationproject.databinding.FragmentAddPostBinding;
 import com.example.graduationproject.databinding.FragmentAllPostsBinding;
 import com.example.graduationproject.fragments.BaseFragment;
 import com.example.graduationproject.listener.CategoryInterface;
 import com.example.graduationproject.listener.PostRequestInterface;
-import com.example.graduationproject.retrofit.Creator;
-import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.categories.AllCategories;
 import com.example.graduationproject.retrofit.categories.Category;
 import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.post.Post;
-import com.example.graduationproject.utils.AppSharedPreferences;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import ahmed.easyslider.EasySlider;
-import ahmed.easyslider.SliderItem;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AllPostsFragment extends BaseFragment {
-    AppSharedPreferences sharedPreferences;
-    String token;
-    ServiceApi serviceApi;
-    EasySlider easySlider;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -80,12 +71,6 @@ public class AllPostsFragment extends BaseFragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-//
-//        List<SliderItem> sliderItems = new ArrayList<>();
-//        sliderItems.add(new SliderItem("title1",R.drawable.slide2));
-//        sliderItems.add(new SliderItem("title2",R.drawable.slide3));
-//        sliderItems.add(new SliderItem("title3",R.drawable.slide4));
-//        easySlider.setPages(sliderItems);
     }
 
     @Override
@@ -95,14 +80,38 @@ public class AllPostsFragment extends BaseFragment {
         binding = FragmentAllPostsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         context = getActivity();
-        serviceApi = Creator.getClient().create(ServiceApi.class);
-        sharedPreferences = new AppSharedPreferences(getActivity().getApplicationContext());
-        token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
-//        setCategoryRv();
+        showDialog();
         getAllCategories();
         getAllPosts();
+
         return view;
+
     }
+
+    int isDonation = -1;
+
+
+    public void rbClick() {
+        Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
+        int radioButtonID = binding.radioGroup.getCheckedRadioButtonId();
+//        RadioButton radioButton =(RadioButton) findViewById(radioButtonID);
+//        int idx = binding.radioGroup.indexOfChild(radioButton);
+//        RadioButton r = (RadioButton) binding.radioGroup.getChildAt(idx);
+//        String selectedtext = radioButton.getText().toString();
+//        if (selectedtext.equals("Donation")) {
+//            Toast.makeText(context, "Donation", Toast.LENGTH_SHORT).show();
+//            showDialog();
+//            getPostDividedByIsDonation(1);
+//        } else if (selectedtext.equals("Request")) {
+//            Toast.makeText(context, "Request", Toast.LENGTH_SHORT).show();
+//            showDialog();
+//            getPostDividedByIsDonation(0);
+//        }
+        Toast.makeText(context, radioButtonID+"1", Toast.LENGTH_SHORT).show();
+
+
+    }
+
 
     @Override
     public int getFragmentTitle() {
@@ -124,7 +133,7 @@ public class AllPostsFragment extends BaseFragment {
                     AllCategories getAllCategories = response.body();
                     data = getAllCategories.getData();
                     setCategoryRv(data);
-                    binding.progressBar2.setVisibility(View.GONE);
+                    binding.isDonationLinear.setVisibility(View.VISIBLE);
                 } else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
@@ -140,25 +149,81 @@ public class AllPostsFragment extends BaseFragment {
     }
 
     private void getAllPosts() {
-//        data = new ArrayList<>();
-        Call<AllPosts> call = serviceApi.getAllPosts(
-                "Bearer " + token);
+        Call<AllPosts> call = serviceApi.getAllPosts("Bearer " + token);
         Toast.makeText(context, "posts", Toast.LENGTH_SHORT).show();
         call.enqueue(new Callback<AllPosts>() {
             @Override
             public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
                 Log.d("response1 code", response.code() + "");
-                Toast.makeText(context, response.code() +"", Toast.LENGTH_SHORT).show();
 
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     AllPosts getAllPosts = response.body();
-                    List<Post> posts = getAllPosts.getData();
-                    setPostsRv(posts);
-                    binding.progressBar2.setVisibility(View.GONE);
+                    setPostsRv(response.body().getData());
+                    Log.e("maryam", getAllPosts.getData().size() + "");
+                    progressDialog.dismiss();
                 } else {
                     String errorMessage = parseError(response);
-//                    Toast.makeText(context, errorMessage + "o", Toast.LENGTH_SHORT).show();
+                    Log.e("errorMessage", errorMessage + "");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AllPosts> call, Throwable t) {
+                Log.d("onFailure2", t.getMessage() + "");
+                call.cancel();
+            }
+        });
+    }
+
+    private void getPostsByCategory(int id) {
+        RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), id + "");
+
+        Call<AllPosts> call = serviceApi.getPostByCategory(
+                "Bearer " + token, category_id);
+        call.enqueue(new Callback<AllPosts>() {
+            @Override
+            public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
+                Log.d("response3 code", response.code() + "");
+
+                if (response.isSuccessful()) {
+                    Log.d("Success", new Gson().toJson(response.body()));
+                    AllPosts getAllPosts = response.body();
+                    setPostsRv(getAllPosts.getData());
+                    progressDialog.dismiss();
+
+                } else {
+                    String errorMessage = parseError(response);
+                    Log.e("errorMessage", errorMessage + "");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AllPosts> call, Throwable t) {
+                Log.d("onFailure2", t.getMessage() + "");
+                call.cancel();
+            }
+        });
+    }
+
+    private void getPostDividedByIsDonation(int id) {
+        RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), id + "");
+
+        Call<AllPosts> call = serviceApi.getPostDividedByIsDonation(
+                "Bearer " + token, category_id);
+        call.enqueue(new Callback<AllPosts>() {
+            @Override
+            public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
+                Log.d("response3 code", response.code() + "");
+
+                if (response.isSuccessful()) {
+                    Log.d("Success", new Gson().toJson(response.body()));
+                    AllPosts getAllPosts = response.body();
+                    setPostsRv(getAllPosts.getData());
+                    progressDialog.dismiss();
+
+                } else {
+                    String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
                 }
             }
@@ -182,7 +247,6 @@ public class AllPostsFragment extends BaseFragment {
         return errorMsg;
     }
 
-
     private void setPostsRv(List<Post> postList) {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
@@ -196,22 +260,31 @@ public class AllPostsFragment extends BaseFragment {
         });
         adapter.setList(postList);
         binding.rvPost.setAdapter(adapter);
+        Log.e("rv2", postList.size() + "");
+
     }
 
     private void setCategoryRv(List<Category> data) {
 //        Log.e("setCategoryRv", data.get(0).getName());
 //        getAllCategories();
+
+        data.add(0, new Category(0, "All"));
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 context, RecyclerView.HORIZONTAL, false);
         binding.rvCategory.setLayoutManager(layoutManager);
-        CategoriesAdapter adapter = new CategoriesAdapter(context, new CategoryInterface() {
+        CategoryAdapter adapter = new CategoryAdapter(context, new CategoryInterface() {
             @Override
             public void layout(int id) {
-//                category_id = id;
-//                Toast.makeText(context, id + "", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, id + "", Toast.LENGTH_SHORT).show();
+                if (id == 0)
+                    getAllPosts();
+                else
+                    getPostsByCategory(id);
             }
         });
         adapter.setList(data);
         binding.rvCategory.setAdapter(adapter);
     }
+
+
 }

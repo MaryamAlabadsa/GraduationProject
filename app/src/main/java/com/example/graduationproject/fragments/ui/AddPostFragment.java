@@ -1,18 +1,14 @@
 package com.example.graduationproject.fragments.ui;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,16 +16,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.FragmentAddPostBinding;
 import com.example.graduationproject.fragments.BaseFragment;
-import com.example.graduationproject.retrofit.Creator;
-import com.example.graduationproject.retrofit.ServiceApi;
+import com.example.graduationproject.fragments.FragmentSwitcher;
+import com.example.graduationproject.fragments.PagesFragment;
+import com.example.graduationproject.retrofit.categories.AllCategories;
+import com.example.graduationproject.retrofit.categories.Category;
 import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.register.User;
 import com.example.graduationproject.utils.AppSharedPreferences;
@@ -41,6 +38,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -49,32 +47,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddPostFragment extends BaseFragment implements AdapterView.OnItemSelectedListener {
+public class AddPostFragment extends BaseFragment {
     FragmentAddPostBinding binding;
     public static final String TAG = "ADD_POSTS";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    static final int CODE_IMAGE_GALLERY = 101;
-    static final int CODE_MULTIPLE_IMAGE_GALLERY = 102;
-    static final int CODE_MULTIPLE_IMG_GALLERY = 103;
-    private ProgressDialog progressDialog;
     Context context;
-    String[] categories = new String[]
-            { "cash", "clothes",
-            "books", "Kitchen tools"};
+    List<Category> categories;
     ArrayList<File> imagesList;
     int imageNum = 0;
-
-
-
-
-//    Spinner spinner;
-//    static final int CAMERA_FROM_CODE = 103;
-//    static final int CAMERA_REQUEST_CODE = 104;
-//    Animation fab_open, fab_close, rotate_forward, rotate_back;
-//    static final int TAKE_IMAGE_ACTIVITY = 100;
-//    boolean isOpen = false; // by default is false
-//    Uri postImg;
+    private FragmentSwitcher fragmentSwitcher;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -95,6 +77,13 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
         return fragment;
     }
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        fragmentSwitcher = (FragmentSwitcher) context;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,11 +102,10 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
         binding = FragmentAddPostBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         context = getActivity();
-        serviceApi = Creator.getClient().create(ServiceApi.class);
-        sharedPreferences = new AppSharedPreferences(getActivity().getApplicationContext());
-        token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
-
-        imagesList = new ArrayList();
+        categories = new ArrayList<>();
+        imagesList = new ArrayList<>();
+        showDialog();
+        getAllCategories();
 
         binding.imagePost1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,46 +139,6 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
             }
         });
 
-//        //Images Multiple
-//        binding.imagePost1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivityForResult(Intent.createChooser(new Intent()
-//                        .setAction(Intent.ACTION_GET_CONTENT)
-//                        .setType("image/*"), "Selected an Image")
-//                        ,CODE_IMAGE_GALLERY);
-//                imageNum = 1;
-//
-//            }
-//        });
-//
-//        binding.imagePost2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //Multiple
-//                Intent intent = new Intent();
-//                intent.setType("image/*");
-//                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(Intent.createChooser(intent,"Selected an Image")
-//                        ,CODE_MULTIPLE_IMAGE_GALLERY);
-//                imageNum = 2;
-//
-//            }
-//        });
-//        binding.imagePost3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent();
-//                intent.setType("image/*");
-//                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(Intent.createChooser(intent,"Selected an Image")
-//                        ,CODE_MULTIPLE_IMG_GALLERY);
-//                imageNum = 2;
-//
-//            }
-//        });
 
         String user = sharedPreferences.readUser(AppSharedPreferences.USER);
         Gson gson = new Gson();
@@ -200,119 +148,139 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
                     .placeholder(R.drawable.ic_launcher_foreground).into(binding.imageProfile);
             binding.userName.setText(user1.getName());
         }
-
         //Spinner Code
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, categories);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.spinner.setAdapter(adapter);
+//        spinnerCode();
 
-        // Spinner code
-//        ArrayAdapter adapter = ArrayAdapter.createFromResource(context, R.array.Donations, R.layout.color_spinner);
-//        adapter.setDropDownViewResource(R.layout.spinner_dropdown);
-//        binding.spinner.setAdapter(adapter);
-//        binding.spinner.setOnItemSelectedListener(this);
-
-
-//
-//        // Animation
-//        fab_open = AnimationUtils.loadAnimation(context, R.anim.rotate_open_anim);
-//        fab_close = AnimationUtils.loadAnimation(context, R.anim.rotate_close_anim);
-//        rotate_forward = AnimationUtils.loadAnimation(context, R.anim.from_bottom_anim);
-//        rotate_back = AnimationUtils.loadAnimation(context, R.anim.to_bottom_anim);
-//
-//        // set the click listener on the main fab
-//        binding.fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                AnimationFab();
-//            }
-//        });
-//        binding.fab1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                AnimationFab();
-//                //Add photo from gallery
-//                Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-//                startActivityForResult(gallery, TAKE_IMAGE_ACTIVITY);
-//            }
-//        });
-//        binding.fab2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                AnimationFab();
-//                askCameraPermission();
-////                Toast.makeText(AddPost.this, "Click To Write", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
+//        Log.e("category", category);
         binding.postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                progressDialog = new ProgressDialog(getActivity());
-//                progressDialog.setMessage("Please Wait");
-//                progressDialog.setCancelable(false);
-//                progressDialog.show();
+                showDialog();
+                pTitle = binding.titlePost.getText().toString();
+                pDescription = binding.descriptionPost.getText().toString();
+                int radioButtonID = binding.radioGroup.getCheckedRadioButtonId();
+                View radioButton = binding.radioGroup.findViewById(radioButtonID);
+                int idx = binding.radioGroup.indexOfChild(radioButton);
+                RadioButton r = (RadioButton) binding.radioGroup.getChildAt(idx);
 
-                ValidationAllFields();
 
-//                String uTitle = binding.titlePost.getText().toString();
-//                String uDescription = binding.titlePost.getText().toString();
-//                String don = binding.radioDon.getText().toString();
-//                String req = binding.radioReq.getText().toString();
-//
-//                if(uTitle.length()==0)
-//                {
-//                    binding.titlePost.requestFocus();
-//                    binding.titlePost.setError("FIELD CANNOT BE EMPTY IN TITTLE");
-//                }
-//               if(uDescription.length()==0)
-//                {
-//                    binding.descriptionPost.requestFocus();
-//                    binding.descriptionPost.setError("FIELD CANNOT BE EMPTY IN DESCRIPTION");
-//                }
-//                if (don.length()==0 || req.length()==0){
-//                    binding.radioReq.requestFocus();
-//                    binding.radioReq.setError("FIELD CANNOT BE EMPTY IN Request");
-//                }
-//                else {
-//                    Toast.makeText(context, "Validation Successful", Toast.LENGTH_SHORT).show();
-//                }
+                if (ValidationAllFields().equals("")) {
+                    String selectedtext = r.getText().toString();
+                    if (selectedtext.equals("Donation"))
+                        isDonation = 1;
+                    else if (selectedtext.equals("Request"))
+                        isDonation = 0;
+                    addPostRequest(imagesList, pTitle, pDescription, category, isDonation);
+                } else {
+                    progressDialog.dismiss();
 
-//                addPostRequest(postImg,uTitle,uDescription,);
+                }
+
+
             }
         });
         return view;
     }
 
 
-    private void addPostRequest(File resourceFile, String uTitle, String uDescription, int uIsDonation, int uCategoryId) {
-        MultipartBody.Part body = null;
-        if (resourceFile != null) {
-            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), resourceFile);
-            body = MultipartBody.Part.createFormData("assets", resourceFile.getName(), requestFile);
+    String pTitle, pDescription;
+    int isDonation=-1;
+    Integer category;
+
+    private void spinnerCode(List<Category> categories) {
+        ArrayAdapter<Category> adapter =
+                new ArrayAdapter<Category>(context, android.R.layout.simple_spinner_dropdown_item, categories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        binding.spinner.setAdapter(adapter);
+
+        binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                category = categories.get(position).getId();
+                Toast.makeText(context, category + "", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+    }
+
+    public String ValidationAllFields() {
+
+        if (binding.spinner.getSelectedItem().toString().trim().equals("Pick one")) {
+            Toast.makeText(context, "Error Spinner", Toast.LENGTH_SHORT).show();
+            return "error1";
+        } else if (pTitle.isEmpty()) {
+            binding.titlePost.requestFocus();
+            binding.titlePost.setError("FIELD CANNOT BE EMPTY IN TITTLE");
+            return "error1";
+        } else if (pDescription.isEmpty()) {
+            binding.descriptionPost.requestFocus();
+            binding.descriptionPost.setError("FIELD CANNOT BE EMPTY IN DESCRIPTION");
+            return "error2";
         }
+//        else if (isDonation == -1) {
+//            Toast.makeText(context, "PLEASE SELECTED REQUEST OR DONATION", Toast.LENGTH_SHORT).show();
+//            return "error3";
+//        }
+        else if (imagesList.isEmpty()) {
+            Toast.makeText(context, "PLEASE UPLOAD PHOTO", Toast.LENGTH_SHORT).show();
+            return "error4";
+
+        } else {
+            Toast.makeText(context, "VALIDATION  SUCCESSFUL", Toast.LENGTH_SHORT).show();
+            return "";
+        }
+
+    }
+
+
+    private void addPostRequest(ArrayList<File> imagesList, String uTitle, String uDescription, int pCategory, int pIsDonation) {
+
+
+        List<MultipartBody.Part> resourceBody = new ArrayList<>();
+        for (int i = 0; i < imagesList.size(); i++) {
+            MultipartBody.Part body = null;
+            RequestBody requestFile =
+                    RequestBody.create(MediaType.parse("multipart/form-data")
+                            , imagesList.get(i));
+            body = MultipartBody.Part.createFormData(
+                    "assets[" + i + "]", imagesList.get(i).getName(), requestFile);
+            resourceBody.add(body);
+
+        }
+
         RequestBody title = RequestBody.create(MediaType.parse("multipart/form-data"), uTitle);
         RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), uDescription);
-        RequestBody is_donation = RequestBody.create(MediaType.parse("multipart/form-data"), uIsDonation + "");
-        RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), uCategoryId + "");
+        RequestBody is_donation = RequestBody.create(MediaType.parse("multipart/form-data"), pIsDonation + "");
+        RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), pCategory + "");
         Call<AllPosts> call = serviceApi.addPost("Bearer " + token
-//                "application/json"
                 , title
                 , description
                 , is_donation
                 , category_id
-                , body);
+                , resourceBody);
         call.enqueue(new Callback<AllPosts>() {
             @Override
             public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
                 Log.d("response code", response.code() + "");
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
+                    fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null);
+                    Toast.makeText(context, "tamm", Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                 } else {
                     String errorMessage = parseError(response);
-                    Toast.makeText(context, errorMessage + "o", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+
                     Log.e("errorMessage", errorMessage + "");
                 }
             }
@@ -328,179 +296,76 @@ public class AddPostFragment extends BaseFragment implements AdapterView.OnItemS
     public static String parseError(Response<?> response) {
         String errorMsg = null;
         try {
+            assert response.errorBody() != null;
             JSONObject jObjError = new JSONObject(response.errorBody().string());
             errorMsg = jObjError.getString("message");
             return errorMsg;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
         return errorMsg;
     }
 
-//    private void AnimationFab() {
-//        if (isOpen) {
-//            binding.fab.startAnimation(rotate_forward);
-//            binding.fab1.startAnimation(fab_close);
-//            binding.fab2.startAnimation(fab_close);
-//            binding.fab1.setClickable(false);
-//            binding.fab2.setClickable(false);
-//            isOpen = false;
-//        } else {
-//            binding.fab.startAnimation(rotate_back);
-//            binding.fab1.startAnimation(fab_open);
-//            binding.fab2.startAnimation(fab_open);
-//            binding.fab1.setClickable(true);
-//            binding.fab2.setClickable(true);
-//            isOpen = true;
-//        }
-//    }
-
-//    //camera
-//    private void askCameraPermission() {
-//        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions
-//                    (this.getActivity(),
-//                     new String[]{Manifest.permission.CAMERA},
-//                      CAMERA_FROM_CODE);
-//        } else {
-//            openCamera();
-//        }
-//    }
-
-   // @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (requestCode == CAMERA_FROM_CODE) {
-//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                openCamera();
-//            } else {
-//                Toast.makeText(context, "Camera", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
-
-
-//    private void openCamera() {
-//        Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        startActivityForResult(camera, CAMERA_REQUEST_CODE);
-//    }
-
-
-    //spinner code
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//        String category = adapterView.getSelectedItem().toString();
-//        Toast.makeText(adapterView.getContext(), category, Toast.LENGTH_SHORT).show();
-    }
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-    }
-
-//    String category;
-//
-//    int getCategoryName() {
-//        switch (category) {
-////            case R.array.Donations.:
-//        }
-//        return 4;
-//    }
-
-
-
-//    RadioButton radioButton;
-//
-//    public void checkButton(View view) {
-//        int radioId = binding.radioGroup.getCheckedRadioButtonId();
-//        Toast.makeText(context, radioId + "", Toast.LENGTH_SHORT).show();
-//        radioButton = radioButton.findViewById(radioId);
-//    }
-        //photo
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == CODE_IMAGE_GALLERY  && resultCode == getActivity().RESULT_OK) {
-//            Uri uriImage = data.getData();
-//            if (uriImage != null) {
-//                binding.imagePost1.setImageURI(uriImage);
-//            }
-//
-//
-//        } else  if (requestCode == CODE_MULTIPLE_IMAGE_GALLERY || requestCode == CODE_MULTIPLE_IMG_GALLERY
-//                && resultCode == getActivity().RESULT_OK) {
-//            ClipData clipData = data.getClipData();
-//            if (clipData != null){
-//                binding.imagePost2.setImageURI(clipData.getItemAt(0).getUri());
-//                binding.imagePost3.setImageURI(clipData.getItemAt(1).getUri());
-//
-//                for (int i = 0; i<clipData.getItemCount(); i++){
-//                    ClipData.Item item = clipData.getItemAt(i);
-//                    Uri uri = item.getUri();
-//                }
-//            }
-//        }
-//    }
 
     ActivityResultLauncher<Intent> someActivityResultLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                     new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-            if (result.getResultCode() == Activity.RESULT_OK) { // There are no request codes
-                Intent data = result.getData();
-                Log.e("data", data.getDataString() + "");
-                File file = null;
-                try {
-                    if (imageNum == 1) {
-                        binding.imagePost1.setImageURI(data.getData());
-                    } else if (imageNum == 2) {
-                        binding.imagePost2.setImageURI(data.getData());
-                    } else if (imageNum == 3) {
-                        binding.imagePost3.setImageURI(data.getData());
-                    }
-                    file = FileUtil.from(context, data.getData());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                imagesList.add(file);
+                        @Override
+                        public void onActivityResult(ActivityResult result) {
+                            if (result.getResultCode() == Activity.RESULT_OK) { // There are no request codes
+                                Intent data = result.getData();
+                                Log.e("data", data.getDataString() + "");
+                                File file = null;
+                                try {
+                                    if (imageNum == 1) {
+                                        binding.imagePost1.setImageURI(data.getData());
+                                    } else if (imageNum == 2) {
+                                        binding.imagePost2.setImageURI(data.getData());
+                                    } else if (imageNum == 3) {
+                                        binding.imagePost3.setImageURI(data.getData());
+                                    }
+                                    file = FileUtil.from(context, data.getData());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                imagesList.add(file);
 
-            }
-        }
-    });
+                            }
+                        }
+                    });
 
     @Override
     public int getFragmentTitle() {
         return R.string.add_post;
     }
 
+    private void getAllCategories() {
+        Call<AllCategories> call = serviceApi.getAllCategories(
+                "Bearer " + token);
+        call.enqueue(new Callback<AllCategories>() {
+            @Override
+            public void onResponse(Call<AllCategories> call, Response<AllCategories> response) {
+                Log.d("response code", response.code() + "");
+                if (response.isSuccessful()) {
+                    Log.d("Success", new Gson().toJson(response.body()));
+                    AllCategories getAllCategories = response.body();
+                    assert getAllCategories != null;
+                    categories = getAllCategories.getData();
+                    spinnerCode(categories);
+                    progressDialog.dismiss();
 
+                } else {
+                    String errorMessage = parseError(response);
+                    Log.e("errorMessage", errorMessage + "");
+                }
+            }
 
-
-    public String ValidationAllFields(){
-        String uTitle = binding.titlePost.getText().toString();
-        String uDescription = binding.titlePost.getText().toString();
-        int isSelected = binding.radioGroup.getCheckedRadioButtonId();
-        View selectedView = binding.spinner.getSelectedView();
-
-        if (binding.spinner.getSelectedItem().toString().trim().equals("Pick one")) {
-            Toast.makeText(context, "Error Spinner", Toast.LENGTH_SHORT).show();
-        }
-        if(uTitle.isEmpty()) {
-            binding.titlePost.requestFocus();
-            binding.titlePost.setError("FIELD CANNOT BE EMPTY IN TITTLE");
-        }if(uDescription.isEmpty()) {
-            binding.descriptionPost.requestFocus();
-            binding.descriptionPost.setError("FIELD CANNOT BE EMPTY IN DESCRIPTION");
-        }
-        if (isSelected == -1){
-            Toast.makeText(context, "PLEASE SELECTED REQUEST OR DONATION", Toast.LENGTH_SHORT).show();
-        }
-        if (imagesList.isEmpty()) {
-            Toast.makeText(context, "PLEASE UPLOAD PHOTO", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            Toast.makeText(context, "VALIDATION  SUCCESSFUL", Toast.LENGTH_SHORT).show();
-        }
-        return "";
+            @Override
+            public void onFailure(Call<AllCategories> call, Throwable t) {
+                Log.d("onFailure", t.getMessage() + "");
+                call.cancel();
+            }
+        });
     }
+
 }

@@ -75,7 +75,6 @@ public class ProfileFragment extends BaseFragment {
             Glide.with(context).load(user1.getImageLink()).circleCrop()
                     .placeholder(R.drawable.ic_launcher_foreground).into(binding.profileImage);
             binding.fullName.setText(user1.getName());
-            binding.userData.setText(user1.getAddress());
 
         }
 
