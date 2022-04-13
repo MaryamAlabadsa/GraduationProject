@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Eng.Nabil/AppData/Local/Android/Sdk/platforms/android-31/data/res/layout/simple_spinner_item.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/WAFAco/AppData/Local/Android/Sdk/platforms/android-31/data/res/layout/simple_spinner_dropdown_item.xml" value="0.20244565217391305" />
         <entry key="..\:/Users/WAFAco/AppData/Local/Android/Sdk/platforms/android-31/data/res/layout/simple_spinner_item.xml" value="0.20244565217391305" />
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1855" />
@@ -48,6 +49,11 @@
         <entry key="..\:/Users/ucas/Desktop/GraduationProject/app/src/main/res/layout/post_item.xml" value="0.14673913043478262" />
         <entry key="..\:/Users/ucas/Desktop/GraduationProject/app/src/main/res/layout/spinner_dropdown.xml" value="0.1796875" />
         <entry key="..\:/Users/ucas/Desktop/GraduationProject/app/src/main/res/menu/nav_menu.xml" value="0.1796875" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/category_item.xml" value="0.33" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/fragment_add_post.xml" value="0.22447916666666667" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/fragment_all_posts.xml" value="0.19202898550724637" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/fragment_profile.xml" value="0.1" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/post_item.xml" value="0.14175724637681159" />
       </map>
     </option>
   </component>
