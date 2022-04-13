@@ -20,7 +20,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 public interface ServiceApi {
-    String ENDPOINT = "http://54.234.87.126/api/";
+    String ENDPOINT = "http://3.84.126.63/api/";
 
     // TODO: get
     @GET("Category")

@@ -18,7 +18,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
 
     Context context;
     List<Category> list;
-CategoryInterface categoryInterface;
+    CategoryInterface categoryInterface;
 
     public CategoriesAdapter(Context context, CategoryInterface categoryInterface) {
         this.context = context;
