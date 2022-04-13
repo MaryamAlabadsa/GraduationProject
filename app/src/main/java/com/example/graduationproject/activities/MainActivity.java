@@ -111,7 +111,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //            switchFragment(PagesFragment.getValue(bundle.getInt("type", 0)), null);
 //        } else
         switchFragment(ALL_POSTS, null);
-        Toast.makeText(context, token + "token ", Toast.LENGTH_SHORT).show();
     }
 
     @Override

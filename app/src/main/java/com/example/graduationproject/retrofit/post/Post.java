@@ -1,17 +1,16 @@
+
 package com.example.graduationproject.retrofit.post;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Generated;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("jsonschema2pojo")
-public class Post implements Serializable {
-
+public class Post implements Serializable
+{
 
     @SerializedName("id")
     @Expose
@@ -25,6 +24,12 @@ public class Post implements Serializable {
     @SerializedName("is_donation")
     @Expose
     private Boolean isDonation;
+    @SerializedName("category_id")
+    @Expose
+    private Integer categoryId;
+    @SerializedName("category_name")
+    @Expose
+    private String categoryName;
     @SerializedName("number_of_requests")
     @Expose
     private Integer numberOfRequests;
@@ -42,11 +47,14 @@ public class Post implements Serializable {
     private String postSecondUserEmail;
     @SerializedName("post_media")
     @Expose
-    private List<String> postMedia = null;
+    private List<String> postMedia = new ArrayList<String>();
     @SerializedName("first_user_image_link")
     @Expose
     private String firstUserImageLink;
-    private final static long serialVersionUID = 2964213240315325669L;
+    @SerializedName("is_ordered")
+    @Expose
+    private Boolean isOrdered;
+    private final static long serialVersionUID = 5525744854795357644L;
 
     public Integer getId() {
         return id;
@@ -78,6 +86,22 @@ public class Post implements Serializable {
 
     public void setIsDonation(Boolean isDonation) {
         this.isDonation = isDonation;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public Integer getNumberOfRequests() {
@@ -134,6 +158,14 @@ public class Post implements Serializable {
 
     public void setFirstUserImageLink(String firstUserImageLink) {
         this.firstUserImageLink = firstUserImageLink;
+    }
+
+    public Boolean getIsOrdered() {
+        return isOrdered;
+    }
+
+    public void setIsOrdered(Boolean isOrdered) {
+        this.isOrdered = isOrdered;
     }
 
 }

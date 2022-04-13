@@ -5,9 +5,10 @@ import com.example.graduationproject.retrofit.change.password.ChangePassword;
 import com.example.graduationproject.retrofit.login.SendLogin;
 import com.example.graduationproject.retrofit.logout.LogOut;
 import com.example.graduationproject.retrofit.post.AllPosts;
-import com.example.graduationproject.retrofit.post.Post;
 import com.example.graduationproject.retrofit.profile.donation.posts.AllDonationsPosts;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
+
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -20,7 +21,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 public interface ServiceApi {
-    String ENDPOINT = "http://54.234.87.126/api/";
+    String ENDPOINT = "http://3.84.126.63/api/";
 
     // TODO: get
     @GET("Category")
@@ -36,6 +37,7 @@ public interface ServiceApi {
             @Header("Authorization") String token);
 
     // TODO: post
+    @Multipart
     @POST("post")
     Call<AllPosts> addPost(
             @Header("Authorization") String token,
@@ -43,7 +45,14 @@ public interface ServiceApi {
             , @Part("description") RequestBody description
             , @Part("is_donation") RequestBody is_donation
             , @Part("category_id") RequestBody category_id
-            , @Part MultipartBody.Part image);
+            , @Part List<MultipartBody.Part> resources);
+
+    @POST("PostByCategory")
+    Call<AllPosts> getPostByCategory(
+            @Header("Authorization") String token
+            , @Part("category_id") RequestBody category_id
+    );
+
 
     @POST("login")
     Call<RegisterResponse> login
