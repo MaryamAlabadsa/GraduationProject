@@ -103,6 +103,7 @@ public class AddPostFragment extends BaseFragment {
         View view = binding.getRoot();
         context = getActivity();
         categories = new ArrayList<>();
+        imagesList = new ArrayList<>();
         showDialog();
         getAllCategories();
 
@@ -163,11 +164,11 @@ public class AddPostFragment extends BaseFragment {
                 RadioButton r = (RadioButton) binding.radioGroup.getChildAt(idx);
 
 
-                if (ValidationAllFields() == "") {
+                if (ValidationAllFields().equals("")) {
                     String selectedtext = r.getText().toString();
-                    if (selectedtext == "Donation")
+                    if (selectedtext.equals("Donation"))
                         isDonation = 1;
-                    else if (selectedtext == "Request")
+                    else if (selectedtext.equals("Request"))
                         isDonation = 0;
                     addPostRequest(imagesList, pTitle, pDescription, category, isDonation);
                 } else {
@@ -183,7 +184,7 @@ public class AddPostFragment extends BaseFragment {
 
 
     String pTitle, pDescription;
-    int isDonation;
+    int isDonation=-1;
     Integer category;
 
     private void spinnerCode(List<Category> categories) {
@@ -293,10 +294,11 @@ public class AddPostFragment extends BaseFragment {
     public static String parseError(Response<?> response) {
         String errorMsg = null;
         try {
+            assert response.errorBody() != null;
             JSONObject jObjError = new JSONObject(response.errorBody().string());
             errorMsg = jObjError.getString("message");
             return errorMsg;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
         return errorMsg;
@@ -345,6 +347,7 @@ public class AddPostFragment extends BaseFragment {
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     AllCategories getAllCategories = response.body();
+                    assert getAllCategories != null;
                     categories = getAllCategories.getData();
                     spinnerCode(categories);
                     progressDialog.dismiss();

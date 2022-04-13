@@ -46,11 +46,17 @@ public interface ServiceApi {
             , @Part("is_donation") RequestBody is_donation
             , @Part("category_id") RequestBody category_id
             , @Part List<MultipartBody.Part> resources);
-
+    @Multipart
     @POST("PostByCategory")
     Call<AllPosts> getPostByCategory(
             @Header("Authorization") String token
             , @Part("category_id") RequestBody category_id
+    );
+    @Multipart
+    @POST("getPostDividedByIsDonation")
+    Call<AllPosts> getPostDividedByIsDonation(
+            @Header("Authorization") String token
+            , @Part("is_donation") RequestBody is_donation
     );
 
 

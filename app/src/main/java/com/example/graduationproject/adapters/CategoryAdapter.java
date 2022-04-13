@@ -60,12 +60,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull CategoryAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.binding.categoryName.setText("" + list.get(position).getName());
-        holder.binding.card.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                categoryInterface.layout(list.get(position).getId());
-            }
-        });
+
         setUpActions(holder, position);
         if (position == selectedPosition) {
             holder.binding.card.setBackgroundColor(context.getColor(R.color.colorPrimary));
@@ -79,6 +74,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View v) {
+                categoryInterface.layout(list.get(position).getId());
                 selectedPosition = position;
                 notifyDataSetChanged();
             }

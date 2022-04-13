@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.graduationproject.R;
@@ -79,11 +80,38 @@ public class AllPostsFragment extends BaseFragment {
         binding = FragmentAllPostsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         context = getActivity();
-
+        showDialog();
         getAllCategories();
         getAllPosts();
+
         return view;
+
     }
+
+    int isDonation = -1;
+
+
+    public void rbClick() {
+        Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
+        int radioButtonID = binding.radioGroup.getCheckedRadioButtonId();
+//        RadioButton radioButton =(RadioButton) findViewById(radioButtonID);
+//        int idx = binding.radioGroup.indexOfChild(radioButton);
+//        RadioButton r = (RadioButton) binding.radioGroup.getChildAt(idx);
+//        String selectedtext = radioButton.getText().toString();
+//        if (selectedtext.equals("Donation")) {
+//            Toast.makeText(context, "Donation", Toast.LENGTH_SHORT).show();
+//            showDialog();
+//            getPostDividedByIsDonation(1);
+//        } else if (selectedtext.equals("Request")) {
+//            Toast.makeText(context, "Request", Toast.LENGTH_SHORT).show();
+//            showDialog();
+//            getPostDividedByIsDonation(0);
+//        }
+        Toast.makeText(context, radioButtonID+"1", Toast.LENGTH_SHORT).show();
+
+
+    }
+
 
     @Override
     public int getFragmentTitle() {
@@ -105,7 +133,7 @@ public class AllPostsFragment extends BaseFragment {
                     AllCategories getAllCategories = response.body();
                     data = getAllCategories.getData();
                     setCategoryRv(data);
-//                    binding.progressBar2.setVisibility(View.GONE);
+                    binding.isDonationLinear.setVisibility(View.VISIBLE);
                 } else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
@@ -132,9 +160,8 @@ public class AllPostsFragment extends BaseFragment {
                     Log.d("Success", new Gson().toJson(response.body()));
                     AllPosts getAllPosts = response.body();
                     setPostsRv(response.body().getData());
-                    Log.e("maryam", getAllPosts.getData().size()+"" );
-
-                    binding.progressBar2.setVisibility(View.GONE);
+                    Log.e("maryam", getAllPosts.getData().size() + "");
+                    progressDialog.dismiss();
                 } else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
@@ -150,21 +177,50 @@ public class AllPostsFragment extends BaseFragment {
     }
 
     private void getPostsByCategory(int id) {
-        RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(id));
+        RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), id + "");
 
         Call<AllPosts> call = serviceApi.getPostByCategory(
-                "Bearer " + token,category_id);
+                "Bearer " + token, category_id);
         call.enqueue(new Callback<AllPosts>() {
             @Override
             public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
-                Log.d("response2 code", response.code() + "");
+                Log.d("response3 code", response.code() + "");
 
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     AllPosts getAllPosts = response.body();
-                    assert getAllPosts != null;
                     setPostsRv(getAllPosts.getData());
-                    binding.progressBar2.setVisibility(View.GONE);
+                    progressDialog.dismiss();
+
+                } else {
+                    String errorMessage = parseError(response);
+                    Log.e("errorMessage", errorMessage + "");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AllPosts> call, Throwable t) {
+                Log.d("onFailure2", t.getMessage() + "");
+                call.cancel();
+            }
+        });
+    }
+
+    private void getPostDividedByIsDonation(int id) {
+        RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), id + "");
+
+        Call<AllPosts> call = serviceApi.getPostDividedByIsDonation(
+                "Bearer " + token, category_id);
+        call.enqueue(new Callback<AllPosts>() {
+            @Override
+            public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
+                Log.d("response3 code", response.code() + "");
+
+                if (response.isSuccessful()) {
+                    Log.d("Success", new Gson().toJson(response.body()));
+                    AllPosts getAllPosts = response.body();
+                    setPostsRv(getAllPosts.getData());
+                    progressDialog.dismiss();
 
                 } else {
                     String errorMessage = parseError(response);
@@ -204,7 +260,7 @@ public class AllPostsFragment extends BaseFragment {
         });
         adapter.setList(postList);
         binding.rvPost.setAdapter(adapter);
-        Log.e("rv2", postList.size()+"" );
+        Log.e("rv2", postList.size() + "");
 
     }
 
@@ -219,9 +275,11 @@ public class AllPostsFragment extends BaseFragment {
         CategoryAdapter adapter = new CategoryAdapter(context, new CategoryInterface() {
             @Override
             public void layout(int id) {
-                Toast.makeText(context, id+"", Toast.LENGTH_SHORT).show();
-                binding.progressBar2.setVisibility(View.VISIBLE);
-                getPostsByCategory(id);
+                Toast.makeText(context, id + "", Toast.LENGTH_SHORT).show();
+                if (id == 0)
+                    getAllPosts();
+                else
+                    getPostsByCategory(id);
             }
         });
         adapter.setList(data);

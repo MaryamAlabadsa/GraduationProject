@@ -36,8 +36,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
 
     @SuppressLint("NotifyDataSetChanged")
     public void setList(List<Post> list) {
-        list.clear();
-        list.addAll(list);
+        this.list=list;
         notifyDataSetChanged();
 
     }
