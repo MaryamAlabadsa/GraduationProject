@@ -145,7 +145,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-//                Toast.makeText(AllPostsFragment.class, comment.getText().toString(), Toast.LENGTH_SHORT).show();
             }
         });
         dialog.setContentView(view);
