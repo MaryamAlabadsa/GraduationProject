@@ -10,10 +10,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.graduationproject.R;
+import com.example.graduationproject.activities.MainActivity;
 import com.example.graduationproject.adapters.CategoryAdapter;
 import com.example.graduationproject.adapters.PostsAdapter;
 import com.example.graduationproject.databinding.FragmentAllPostsBinding;
@@ -24,6 +28,7 @@ import com.example.graduationproject.retrofit.categories.AllCategories;
 import com.example.graduationproject.retrofit.categories.Category;
 import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.post.Post;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -46,6 +51,8 @@ public class AllPostsFragment extends BaseFragment {
     public static final String TAG = "ALL_POSTS";
     FragmentAllPostsBinding binding;
     Context context;
+
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -71,6 +78,8 @@ public class AllPostsFragment extends BaseFragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
@@ -85,6 +94,8 @@ public class AllPostsFragment extends BaseFragment {
         getAllPosts();
 
         return view;
+
+
 
     }
 
@@ -262,6 +273,8 @@ public class AllPostsFragment extends BaseFragment {
         binding.rvPost.setAdapter(adapter);
         Log.e("rv2", postList.size() + "");
 
+
+
     }
 
     private void setCategoryRv(List<Category> data) {
@@ -285,6 +298,8 @@ public class AllPostsFragment extends BaseFragment {
         adapter.setList(data);
         binding.rvCategory.setAdapter(adapter);
     }
+
+
 
 
 }

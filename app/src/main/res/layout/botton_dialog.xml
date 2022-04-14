@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:paddingHorizontal="20dp"
+    android:paddingBottom="100dp"
+    android:background="#E0E4EC">
+    
+    <EditText
+        android:id="@+id/write_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Write Your Comment"
+        android:typeface="serif"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:textColor="@color/white"
+        android:typeface="serif"
+        android:backgroundTint="@color/colorPrimary"/>
+
+
+
+</LinearLayout>

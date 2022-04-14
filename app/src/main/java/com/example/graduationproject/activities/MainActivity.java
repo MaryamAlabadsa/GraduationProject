@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.ActivityMainBinding;
+import com.example.graduationproject.databinding.BottonDialogBinding;
 import com.example.graduationproject.databinding.LayoutToolbarBinding;
 import com.example.graduationproject.fragments.ui.AddPostFragment;
 import com.example.graduationproject.fragments.ui.AllPostsFragment;
@@ -36,6 +40,7 @@ import com.example.graduationproject.retrofit.logout.LogOut;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
 import com.example.graduationproject.retrofit.register.User;
 import com.example.graduationproject.utils.AppSharedPreferences;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 
@@ -49,6 +54,7 @@ import retrofit2.Response;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentSwitcher {
     ActivityMainBinding binding;
+    BottonDialogBinding dialogBinding;
     Context context = MainActivity.this;
     int category_id;
     DrawerLayout drawer;
@@ -65,6 +71,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         sharedPreferences = new AppSharedPreferences(getApplicationContext());
         serviceApi = Creator.getClient().create(ServiceApi.class);
         token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
+
+
+
+
+
 
         LayoutToolbarBinding toolbarBinding = binding.mainToolbar;
 //        NavLayoutBinding navLayoutBinding = binding.navLayout;
@@ -112,7 +123,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //        } else
         switchFragment(ALL_POSTS, null);
         Toast.makeText(context, token + "token ", Toast.LENGTH_SHORT).show();
+
+
+
+
+
     }
+
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

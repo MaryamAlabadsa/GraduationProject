@@ -80,11 +80,11 @@
         app:layout_constraintTop_toBottomOf="@+id/slider" />
 
     <Button
-        android:id="@+id/request_post_btn"
+        android:id="@+id/comment_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimaryDark"
-        android:text="request"
+        android:text="Comment"
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/number_requests_post"
         app:layout_constraintEnd_toEndOf="parent"
@@ -94,7 +94,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/primaryLight"
-        app:layout_constraintTop_toBottomOf="@id/request_post_btn"
+        app:layout_constraintTop_toBottomOf="@id/comment_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

@@ -6,15 +6,22 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
+import com.example.graduationproject.activities.MainActivity;
 import com.example.graduationproject.databinding.PostItemBinding;
+import com.example.graduationproject.fragments.ui.AllPostsFragment;
 import com.example.graduationproject.listener.PostRequestInterface;
 import com.example.graduationproject.retrofit.post.Post;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +34,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     Context context;
     List<Post> list;
     PostRequestInterface postRequestInterface;
+    BottomSheetDialog dialog;
+
 
     public PostsAdapter(Context context, PostRequestInterface postRequestInterface) {
         list = new ArrayList<>();
@@ -58,6 +67,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
                         .from(parent.getContext())
                 , parent, false);
         return new MyViewHolder(binding);
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -86,12 +96,23 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
 
         }
 
-        holder.binding.requestPostBtn.setOnClickListener(new View.OnClickListener() {
+
+
+        dialog = new BottomSheetDialog(context);
+        // inflate view
+        createDialog();
+
+
+        holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog.show();
+
                 postRequestInterface.layout(list.get(position));
             }
         });
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+
 
     }
 
@@ -112,4 +133,21 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         return list != null ? list.size() : 0;
     }
 
+
+    // Dialog Comment
+    private void createDialog() {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.botton_dialog,null,false);
+        Button submit = view.findViewById(R.id.submit);
+        EditText comment = view.findViewById(R.id.comment_btn);
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+//                Toast.makeText(AllPostsFragment.class, comment.getText().toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        dialog.setContentView(view);
+    }
 }
