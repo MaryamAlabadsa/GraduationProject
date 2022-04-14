@@ -128,6 +128,7 @@ public class SignUpActivity extends AppCompatActivity {
                 , password
                 , passwordConfirmation
                 , body);
+
         call.enqueue(new Callback<RegisterResponse>() {
             @Override
             public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
