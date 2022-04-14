@@ -20,6 +20,7 @@ import com.example.graduationproject.R;
 import com.example.graduationproject.activities.MainActivity;
 import com.example.graduationproject.adapters.CategoryAdapter;
 import com.example.graduationproject.adapters.PostsAdapter;
+import com.example.graduationproject.databinding.BottonDialogBinding;
 import com.example.graduationproject.databinding.FragmentAllPostsBinding;
 import com.example.graduationproject.fragments.BaseFragment;
 import com.example.graduationproject.listener.CategoryInterface;
@@ -51,6 +52,8 @@ public class AllPostsFragment extends BaseFragment {
     public static final String TAG = "ALL_POSTS";
     FragmentAllPostsBinding binding;
     Context context;
+    BottomSheetDialog dialog;
+    BottonDialogBinding dialogBinding;
 
 
     // TODO: Rename and change types of parameters
@@ -60,7 +63,6 @@ public class AllPostsFragment extends BaseFragment {
     public AllPostsFragment() {
         // Required empty public constructor
     }
-
 
     public static AllPostsFragment newInstance(String param1, String param2) {
         AllPostsFragment fragment = new AllPostsFragment();
@@ -88,6 +90,8 @@ public class AllPostsFragment extends BaseFragment {
         // Inflate the layout for this fragment
         binding = FragmentAllPostsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+        dialogBinding=BottonDialogBinding.inflate(inflater, container, false);
+
         context = getActivity();
         showDialog();
         getAllCategories();
@@ -100,7 +104,6 @@ public class AllPostsFragment extends BaseFragment {
     }
 
     int isDonation = -1;
-
 
     public void rbClick() {
         Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
@@ -263,23 +266,40 @@ public class AllPostsFragment extends BaseFragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 context, RecyclerView.VERTICAL, false);
         binding.rvPost.setLayoutManager(layoutManager);
+        dialog = new BottomSheetDialog(context);
+        // inflate view
+        createDialog();
+
         PostsAdapter adapter = new PostsAdapter(context, new PostRequestInterface() {
             @Override
             public void layout(Post post) {
-
+                dialog.show();
+                Toast.makeText(context, "dia", Toast.LENGTH_SHORT).show();
             }
         });
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+
         adapter.setList(postList);
         binding.rvPost.setAdapter(adapter);
         Log.e("rv2", postList.size() + "");
 
+    }
+    
+    private void createDialog() {
+        View view = dialogBinding.getRoot();
 
-
+        dialogBinding.submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+                String massege =dialogBinding.writeComment.getText().toString();
+                dialog.dismiss();
+            }
+        });
+        dialog.setContentView(view);
     }
 
     private void setCategoryRv(List<Category> data) {
-//        Log.e("setCategoryRv", data.get(0).getName());
-//        getAllCategories();
 
         data.add(0, new Category(0, "All"));
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(

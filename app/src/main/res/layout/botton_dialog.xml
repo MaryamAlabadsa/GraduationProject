@@ -6,7 +6,9 @@
     android:gravity="center_horizontal"
     android:paddingHorizontal="20dp"
     android:paddingBottom="100dp"
-    android:background="#E0E4EC">
+    android:layout_marginStart="@dimen/size_14"
+    android:layout_marginEnd="@dimen/size_14"
+    android:background="@color/icons">
     
     <EditText
         android:id="@+id/write_comment"

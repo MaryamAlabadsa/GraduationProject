@@ -98,20 +98,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
 
 
 
-        dialog = new BottomSheetDialog(context);
-        // inflate view
-        createDialog();
-
 
         holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.show();
-
                 postRequestInterface.layout(list.get(position));
             }
         });
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
 
     }
@@ -135,7 +128,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
 
 
     // Dialog Comment
-    private void createDialog() {
+    private void createDialog(int position) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.botton_dialog,null,false);
         Button submit = view.findViewById(R.id.submit);
@@ -145,6 +138,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
+
             }
         });
         dialog.setContentView(view);
