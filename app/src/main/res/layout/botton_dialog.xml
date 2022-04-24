@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:paddingHorizontal="20dp"
     android:paddingBottom="100dp"
-    android:layout_marginStart="@dimen/size_14"
-    android:layout_marginEnd="@dimen/size_14"
-    android:background="@color/icons">
-    
+    android:layout_gravity="center"
+    android:background="@color/colorPrimaryDark">
+
     <EditText
-        android:id="@+id/write_comment"
+        android:id="@+id/edit_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Write Your Comment"
         android:typeface="serif"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="40dp"/>
 
     <Button
         android:id="@+id/submit"

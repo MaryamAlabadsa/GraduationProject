@@ -1,6 +1,7 @@
 package com.example.graduationproject.fragments.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,14 +30,20 @@ import com.example.graduationproject.retrofit.categories.AllCategories;
 import com.example.graduationproject.retrofit.categories.Category;
 import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.post.Post;
+import com.example.graduationproject.retrofit.register.RegisterResponse;
+import com.example.graduationproject.retrofit.register.User;
+import com.example.graduationproject.retrofit.request.Order;
+import com.example.graduationproject.utils.AppSharedPreferences;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.List;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -70,7 +77,9 @@ public class AllPostsFragment extends BaseFragment {
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+
         return fragment;
+
     }
 
     @Override
@@ -88,19 +97,16 @@ public class AllPostsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         binding = FragmentAllPostsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         dialogBinding=BottonDialogBinding.inflate(inflater, container, false);
-
         context = getActivity();
+        dialog = new BottomSheetDialog(context);
         showDialog();
         getAllCategories();
         getAllPosts();
-
         return view;
-
-
-
     }
 
     int isDonation = -1;
@@ -220,6 +226,35 @@ public class AllPostsFragment extends BaseFragment {
         });
     }
 
+
+    private void AddRequest( int id_post, String massage) {
+
+        RequestBody post_id = RequestBody.create(MediaType.parse("multipart/form-data"), id_post + "");
+        RequestBody mPost = RequestBody.create(MediaType.parse("multipart/form-data"),massage);
+
+        Call<Order> call =serviceApi.addRequest(
+                "Bearer " + token
+                , post_id
+                ,mPost);
+
+        call.enqueue(new Callback<Order>() {
+            @Override
+            public void onResponse(Call<Order> call, Response<Order> response) {
+                Log.d("response5 code", response.code() + "");
+            }
+
+            @Override
+            public void onFailure(Call<Order> call, Throwable t) {
+
+            }
+        });
+    }
+
+
+
+
+
+
     private void getPostDividedByIsDonation(int id) {
         RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), id + "");
 
@@ -266,25 +301,27 @@ public class AllPostsFragment extends BaseFragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 context, RecyclerView.VERTICAL, false);
         binding.rvPost.setLayoutManager(layoutManager);
-        dialog = new BottomSheetDialog(context);
-        // inflate view
-        createDialog();
+
 
         PostsAdapter adapter = new PostsAdapter(context, new PostRequestInterface() {
             @Override
             public void layout(Post post) {
+                createDialog();
                 dialog.show();
                 Toast.makeText(context, "dia", Toast.LENGTH_SHORT).show();
             }
         });
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         adapter.setList(postList);
         binding.rvPost.setAdapter(adapter);
         Log.e("rv2", postList.size() + "");
 
     }
-    
+
+
+
+
     private void createDialog() {
         View view = dialogBinding.getRoot();
 
@@ -292,7 +329,8 @@ public class AllPostsFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 showDialog();
-                String massege =dialogBinding.writeComment.getText().toString();
+                String massage =dialogBinding.editComment.getText().toString();
+//                AddRequest('0',massage);
                 dialog.dismiss();
             }
         });
@@ -308,6 +346,7 @@ public class AllPostsFragment extends BaseFragment {
         CategoryAdapter adapter = new CategoryAdapter(context, new CategoryInterface() {
             @Override
             public void layout(int id) {
+
                 Toast.makeText(context, id + "", Toast.LENGTH_SHORT).show();
                 if (id == 0)
                     getAllPosts();

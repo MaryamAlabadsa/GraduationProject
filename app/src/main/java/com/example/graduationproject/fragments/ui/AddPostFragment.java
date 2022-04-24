@@ -9,6 +9,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -164,12 +165,14 @@ public class AddPostFragment extends BaseFragment {
                 RadioButton r = (RadioButton) binding.radioGroup.getChildAt(idx);
 
 
+
+
                 if (ValidationAllFields().equals("")) {
                     String selectedtext = r.getText().toString();
                     if (selectedtext.equals("Donation"))
-                        isDonation = 1;
-                    else if (selectedtext.equals("Request"))
                         isDonation = 0;
+                    else if (selectedtext.equals("Request"))
+                        isDonation = 1;
                     addPostRequest(imagesList, pTitle, pDescription, category, isDonation);
                 } else {
                     progressDialog.dismiss();
@@ -221,20 +224,28 @@ public class AddPostFragment extends BaseFragment {
             binding.titlePost.requestFocus();
             binding.titlePost.setError("FIELD CANNOT BE EMPTY IN TITTLE");
             return "error1";
+
         } else if (pDescription.isEmpty()) {
             binding.descriptionPost.requestFocus();
             binding.descriptionPost.setError("FIELD CANNOT BE EMPTY IN DESCRIPTION");
             return "error2";
         }
-//        else if (isDonation == -1) {
-//            Toast.makeText(context, "PLEASE SELECTED REQUEST OR DONATION", Toast.LENGTH_SHORT).show();
-//            return "error3";
-//        }
+
         else if (imagesList.isEmpty()) {
+//            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+//            alert.setTitle("ALERT");
+//            alert.setMessage("PLEASE UPLOAD PHOTO");
+//            alert.setPositiveButton("ok",null);
+//            alert.show();
+
             Toast.makeText(context, "PLEASE UPLOAD PHOTO", Toast.LENGTH_SHORT).show();
             return "error4";
-
-        } else {
+        }
+        else if (isDonation == -1 ) {
+            Toast.makeText(context, "PLEASE SELECTED REQUEST OR DONATION", Toast.LENGTH_SHORT).show();
+            return "error 5 ";
+        }
+        else {
             Toast.makeText(context, "VALIDATION  SUCCESSFUL", Toast.LENGTH_SHORT).show();
             return "";
         }
@@ -274,7 +285,7 @@ public class AddPostFragment extends BaseFragment {
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null);
-                    Toast.makeText(context, "tamm", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                 } else {
                     String errorMessage = parseError(response);

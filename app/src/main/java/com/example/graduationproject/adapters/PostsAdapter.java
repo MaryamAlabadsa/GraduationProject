@@ -128,19 +128,19 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
 
 
     // Dialog Comment
-    private void createDialog(int position) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.botton_dialog,null,false);
-        Button submit = view.findViewById(R.id.submit);
-        EditText comment = view.findViewById(R.id.comment_btn);
-
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-
-            }
-        });
-        dialog.setContentView(view);
-    }
+//    private void createDialog(int position) {
+//        LayoutInflater inflater = LayoutInflater.from(context);
+//        View view = inflater.inflate(R.layout.botton_dialog,null,false);
+//        Button submit = view.findViewById(R.id.submit);
+//        EditText comment = view.findViewById(R.id.comment_btn);
+//
+//        submit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                dialog.dismiss();
+//
+//            }
+//        });
+//        dialog.setContentView(view);
+//    }
 }
