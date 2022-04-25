@@ -21,7 +21,8 @@ import com.example.graduationproject.R;
 import com.example.graduationproject.activities.MainActivity;
 import com.example.graduationproject.adapters.CategoryAdapter;
 import com.example.graduationproject.adapters.PostsAdapter;
-import com.example.graduationproject.databinding.BottonDialogBinding;
+import com.example.graduationproject.databinding.ButtonDialogBinding;
+import com.example.graduationproject.databinding.ButtonDialogBinding;
 import com.example.graduationproject.databinding.FragmentAllPostsBinding;
 import com.example.graduationproject.fragments.BaseFragment;
 import com.example.graduationproject.listener.CategoryInterface;
@@ -60,7 +61,7 @@ public class AllPostsFragment extends BaseFragment {
     FragmentAllPostsBinding binding;
     Context context;
     BottomSheetDialog dialog;
-    BottonDialogBinding dialogBinding;
+    ButtonDialogBinding dialogBinding;
 
 
     // TODO: Rename and change types of parameters
@@ -100,7 +101,7 @@ public class AllPostsFragment extends BaseFragment {
 
         binding = FragmentAllPostsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-        dialogBinding=BottonDialogBinding.inflate(inflater, container, false);
+        dialogBinding= ButtonDialogBinding.inflate(inflater, container, false);
         context = getActivity();
         dialog = new BottomSheetDialog(context);
         showDialog();
@@ -241,6 +242,7 @@ public class AllPostsFragment extends BaseFragment {
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
                 Log.d("response5 code", response.code() + "");
+                
             }
 
             @Override
