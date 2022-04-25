@@ -19,11 +19,13 @@ import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 
 public interface ServiceApi {
     String ENDPOINT = "http://3.84.126.63/api/";
 
-    // TODO: get
+    //  get
+
     @GET("Category")
     Call<AllCategories> getAllCategories(
             @Header("Authorization") String token);
@@ -36,7 +38,7 @@ public interface ServiceApi {
     Call<AllDonationsPosts> getDonationPosts(
             @Header("Authorization") String token);
 
-    // TODO: post
+    //  post
     @Multipart
     @POST("post")
     Call<AllPosts> addPost(
@@ -46,12 +48,14 @@ public interface ServiceApi {
             , @Part("is_donation") RequestBody is_donation
             , @Part("category_id") RequestBody category_id
             , @Part List<MultipartBody.Part> resources);
+
     @Multipart
     @POST("PostByCategory")
     Call<AllPosts> getPostByCategory(
             @Header("Authorization") String token
             , @Part("category_id") RequestBody category_id
     );
+
     @Multipart
     @POST("getPostDividedByIsDonation")
     Call<AllPosts> getPostDividedByIsDonation(

@@ -73,10 +73,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
 
 
-
-
-
-
         LayoutToolbarBinding toolbarBinding = binding.mainToolbar;
 //        NavLayoutBinding navLayoutBinding = binding.navLayout;
 //     //   NavHeaderBinding navHeaderBinding = NavHeaderBinding.inflate(getLayoutInflater());

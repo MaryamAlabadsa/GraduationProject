@@ -228,7 +228,7 @@ public class AllPostsFragment extends BaseFragment {
         call.enqueue(new Callback<AllPosts>() {
             @Override
             public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
-                Log.d("response3 code", response.code() + "");
+                Log.d("response code", response.code() + "");
 
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
@@ -251,6 +251,7 @@ public class AllPostsFragment extends BaseFragment {
     }
 
     public static String parseError(Response<?> response) {
+        //function that parse error from api in case response code!=200
         String errorMsg = null;
         try {
             JSONObject jObjError = new JSONObject(response.errorBody().string());
@@ -284,9 +285,9 @@ public class AllPostsFragment extends BaseFragment {
         Log.e("rv2", postList.size() + "");
 
     }
-    
+
     private void createDialog() {
-        View view = dialogBinding.getRoot();
+//        View view = dialogBinding.getRoot();
 
         dialogBinding.submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -296,7 +297,7 @@ public class AllPostsFragment extends BaseFragment {
                 dialog.dismiss();
             }
         });
-        dialog.setContentView(view);
+        dialog.setContentView(dialogBinding.getRoot());
     }
 
     private void setCategoryRv(List<Category> data) {
