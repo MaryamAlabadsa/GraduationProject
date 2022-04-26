@@ -165,8 +165,6 @@ public class AddPostFragment extends BaseFragment {
                 RadioButton r = (RadioButton) binding.radioGroup.getChildAt(idx);
 
 
-
-
                 if (ValidationAllFields().equals("")) {
                     String selectedtext = r.getText().toString();
                     if (selectedtext.equals("Donation"))
@@ -237,11 +235,10 @@ public class AddPostFragment extends BaseFragment {
 //            alert.setMessage("PLEASE UPLOAD PHOTO");
 //            alert.setPositiveButton("ok",null);
 //            alert.show();
-
             Toast.makeText(context, "PLEASE UPLOAD PHOTO", Toast.LENGTH_SHORT).show();
             return "error4";
         }
-        else if (isDonation == -1 ) {
+        else if (isDonation == 1 || isDonation == 0  ) {
             Toast.makeText(context, "PLEASE SELECTED REQUEST OR DONATION", Toast.LENGTH_SHORT).show();
             return "error 5 ";
         }

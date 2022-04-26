@@ -6,19 +6,13 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
-import com.example.graduationproject.activities.MainActivity;
 import com.example.graduationproject.databinding.PostItemBinding;
-import com.example.graduationproject.fragments.ui.AllPostsFragment;
 import com.example.graduationproject.listener.PostRequestInterface;
 import com.example.graduationproject.retrofit.post.Post;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -77,14 +71,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
 //        holder.binding.uNamePost.setText("number of request" + list.get(position).getPostFirstUser());
         holder.binding.descriptionPost.setText("" + list.get(position).getDescription());
         holder.binding.numberRequestsPost.setText("number of request =  " + list.get(position).getNumberOfRequests());
-        holder.binding.uNamePost.setText("" + list.get(position).getPostFirstUser());
+        holder.binding.uNamePost.setText("" + list.get(position).getFirstUserName());
         Glide.with(context).load(list.get(position).getFirstUserImageLink()).circleCrop()
                 .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.uImgPost);
 //        Glide.with(context).load(list.get(position).getPostMedia().get(0))
 //                .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.postImage);
 //        setImagesRv(holder, position);
         setPostImages(holder, position);
-        if (list.get(position).getPostSecondUser().equals("not found")) {
+        if (list.get(position).getSecondUserName().equals("not found")) {
             holder.binding.isAvailable.setBackgroundColor(Color.WHITE);
             holder.binding.isAvailable.setTextColor(Color.BLACK);
             holder.binding.isAvailable.setText("Available");
@@ -93,23 +87,19 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
             holder.binding.isAvailable.setBackgroundColor(Color.red(0));
             holder.binding.isAvailable.setTextColor(Color.RED);
             holder.binding.isAvailable.setText("not Available");
-
         }
-
-
 
 
         holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 postRequestInterface.layout(list.get(position));
+                
             }
         });
-
-
     }
 
-    private void setPostImages(PostsAdapter.MyViewHolder holder, int position) {
+    private void setPostImages(MyViewHolder holder, int position) {
         EasySlider easySlider = holder.binding.slider;
 
         List<SliderItem> sliderItems = new ArrayList<>();
@@ -127,20 +117,4 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     }
 
 
-    // Dialog Comment
-//    private void createDialog(int position) {
-//        LayoutInflater inflater = LayoutInflater.from(context);
-//        View view = inflater.inflate(R.layout.botton_dialog,null,false);
-//        Button submit = view.findViewById(R.id.submit);
-//        EditText comment = view.findViewById(R.id.comment_btn);
-//
-//        submit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                dialog.dismiss();
-//
-//            }
-//        });
-//        dialog.setContentView(view);
-//    }
 }
