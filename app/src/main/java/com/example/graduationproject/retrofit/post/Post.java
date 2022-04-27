@@ -1,17 +1,13 @@
+
 package com.example.graduationproject.retrofit.post;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Generated;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("jsonschema2pojo")
-public class Post implements Serializable {
-
+public class Post {
 
     @SerializedName("id")
     @Expose
@@ -25,18 +21,24 @@ public class Post implements Serializable {
     @SerializedName("is_donation")
     @Expose
     private Boolean isDonation;
+    @SerializedName("category_id")
+    @Expose
+    private Integer categoryId;
+    @SerializedName("category_name")
+    @Expose
+    private String categoryName;
     @SerializedName("number_of_requests")
     @Expose
     private Integer numberOfRequests;
-    @SerializedName("post_first_user")
+    @SerializedName("first_user_name")
     @Expose
-    private String postFirstUser;
-    @SerializedName("post_second_user")
+    private String firstUserName;
+    @SerializedName("second_user_name")
     @Expose
-    private String postSecondUser;
+    private String secondUserName;
     @SerializedName("post_first_user_email")
     @Expose
-    private String postFirstUserEmail;
+    private Object postFirstUserEmail;
     @SerializedName("post_second_user_email")
     @Expose
     private String postSecondUserEmail;
@@ -46,7 +48,9 @@ public class Post implements Serializable {
     @SerializedName("first_user_image_link")
     @Expose
     private String firstUserImageLink;
-    private final static long serialVersionUID = 2964213240315325669L;
+    @SerializedName("is_ordered")
+    @Expose
+    private Boolean isOrdered;
 
     public Integer getId() {
         return id;
@@ -80,6 +84,22 @@ public class Post implements Serializable {
         this.isDonation = isDonation;
     }
 
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
     public Integer getNumberOfRequests() {
         return numberOfRequests;
     }
@@ -88,27 +108,27 @@ public class Post implements Serializable {
         this.numberOfRequests = numberOfRequests;
     }
 
-    public String getPostFirstUser() {
-        return postFirstUser;
+    public String getFirstUserName() {
+        return firstUserName;
     }
 
-    public void setPostFirstUser(String postFirstUser) {
-        this.postFirstUser = postFirstUser;
+    public void setFirstUserName(String firstUserName) {
+        this.firstUserName = firstUserName;
     }
 
-    public String getPostSecondUser() {
-        return postSecondUser;
+    public String getSecondUserName() {
+        return secondUserName;
     }
 
-    public void setPostSecondUser(String postSecondUser) {
-        this.postSecondUser = postSecondUser;
+    public void setSecondUserName(String secondUserName) {
+        this.secondUserName = secondUserName;
     }
 
-    public String getPostFirstUserEmail() {
+    public Object getPostFirstUserEmail() {
         return postFirstUserEmail;
     }
 
-    public void setPostFirstUserEmail(String postFirstUserEmail) {
+    public void setPostFirstUserEmail(Object postFirstUserEmail) {
         this.postFirstUserEmail = postFirstUserEmail;
     }
 
@@ -134,6 +154,14 @@ public class Post implements Serializable {
 
     public void setFirstUserImageLink(String firstUserImageLink) {
         this.firstUserImageLink = firstUserImageLink;
+    }
+
+    public Boolean getIsOrdered() {
+        return isOrdered;
+    }
+
+    public void setIsOrdered(Boolean isOrdered) {
+        this.isOrdered = isOrdered;
     }
 
 }

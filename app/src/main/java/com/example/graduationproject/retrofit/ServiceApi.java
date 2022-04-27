@@ -7,6 +7,8 @@ import com.example.graduationproject.retrofit.logout.LogOut;
 import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.profile.donation.posts.AllDonationsPosts;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
+import com.example.graduationproject.retrofit.request.Data;
+import com.example.graduationproject.retrofit.request.Order;
 
 import java.util.List;
 
@@ -78,6 +80,13 @@ public interface ServiceApi {
     Call<LogOut> logout(
             @Header("Authorization") String token);
 
+    @Multipart
+    @POST("order")
+    Call<Order> addRequest(
+            @Header("Authorization") String token
+            , @Part("post_id") RequestBody post_id
+            , @Part("massage") RequestBody massage);
+
 
     @Multipart
     @POST("register")
@@ -89,5 +98,7 @@ public interface ServiceApi {
             , @Part("password") RequestBody password
             , @Part("password_confirmation") RequestBody passwordConfirmation
             , @Part MultipartBody.Part image);
+
+
 
 }

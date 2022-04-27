@@ -9,9 +9,9 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.Generated;
+
 @Generated("jsonschema2pojo")
-public class AllPosts implements Serializable
-{
+public class AllPosts implements Serializable {
 
     @SerializedName("message")
     @Expose

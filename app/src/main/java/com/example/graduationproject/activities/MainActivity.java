@@ -24,7 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.ActivityMainBinding;
-import com.example.graduationproject.databinding.BottonDialogBinding;
+import com.example.graduationproject.databinding.ButtonDialogBinding;
 import com.example.graduationproject.databinding.LayoutToolbarBinding;
 import com.example.graduationproject.fragments.ui.AddPostFragment;
 import com.example.graduationproject.fragments.ui.AllPostsFragment;
@@ -54,7 +54,7 @@ import retrofit2.Response;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentSwitcher {
     ActivityMainBinding binding;
-    BottonDialogBinding dialogBinding;
+    ButtonDialogBinding dialogBinding;
     Context context = MainActivity.this;
     int category_id;
     DrawerLayout drawer;
