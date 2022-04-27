@@ -243,10 +243,6 @@ public class AllPostsFragment extends BaseFragment {
     }
 
 
-
-
-
-
     private void getPostDividedByIsDonation(int id) {
         RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), id + "");
 

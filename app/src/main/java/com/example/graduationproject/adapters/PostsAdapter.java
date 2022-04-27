@@ -28,7 +28,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     Context context;
     List<Post> list;
     PostRequestInterface postRequestInterface;
-    BottomSheetDialog dialog;
+
 
 
     public PostsAdapter(Context context, PostRequestInterface postRequestInterface) {
@@ -94,7 +94,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
             @Override
             public void onClick(View view) {
                 postRequestInterface.layout(list.get(position));
-                
             }
         });
     }
