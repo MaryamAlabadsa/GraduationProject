@@ -2,8 +2,12 @@
 package com.example.graduationproject.retrofit.request;
 
 import javax.annotation.Generated;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Generated("jsonschema2pojo")
 public class Order {
@@ -13,7 +17,8 @@ public class Order {
     private String message;
     @SerializedName("data")
     @Expose
-    private Data orders;
+    private List<Data> data = new ArrayList<Data>();
+    private final static long serialVersionUID = 2567860251370830448L;
 
     public String getMessage() {
         return message;
@@ -23,12 +28,12 @@ public class Order {
         this.message = message;
     }
 
-    public Data getData() {
-        return orders;
+    public List<Data> getData() {
+        return data;
     }
 
-    public void setData(Data orders) {
-        this.orders = orders;
+    public void setData(List<Data> data) {
+        this.data = data;
     }
 
 }

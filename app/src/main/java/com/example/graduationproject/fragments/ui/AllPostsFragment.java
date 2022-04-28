@@ -1,8 +1,10 @@
 package com.example.graduationproject.fragments.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,8 +21,11 @@ import com.example.graduationproject.adapters.PostsAdapter;
 import com.example.graduationproject.databinding.ButtonDialogBinding;
 import com.example.graduationproject.databinding.FragmentAllPostsBinding;
 import com.example.graduationproject.fragments.BaseFragment;
+import com.example.graduationproject.fragments.FragmentSwitcher;
+import com.example.graduationproject.fragments.PagesFragment;
 import com.example.graduationproject.listener.CategoryInterface;
 import com.example.graduationproject.listener.PostRequestInterface;
+import com.example.graduationproject.model.PostOrdersInfo;
 import com.example.graduationproject.retrofit.categories.AllCategories;
 import com.example.graduationproject.retrofit.categories.Category;
 import com.example.graduationproject.retrofit.post.AllPosts;
@@ -51,8 +56,10 @@ public class AllPostsFragment extends BaseFragment {
     Context context;
     BottomSheetDialog dialog;
     ButtonDialogBinding dialogBinding;
+    private FragmentSwitcher fragmentSwitcher;
+    List<Category> data;
 
-
+    Intent intent;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -90,7 +97,7 @@ public class AllPostsFragment extends BaseFragment {
 
         binding = FragmentAllPostsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-        dialogBinding= ButtonDialogBinding.inflate(inflater, container, false);
+        dialogBinding = ButtonDialogBinding.inflate(inflater, container, false);
         context = getActivity();
         dialog = new BottomSheetDialog(context);
         showDialog();
@@ -117,7 +124,7 @@ public class AllPostsFragment extends BaseFragment {
 //            showDialog();
 //            getPostDividedByIsDonation(0);
 //        }
-        Toast.makeText(context, radioButtonID+"1", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, radioButtonID + "1", Toast.LENGTH_SHORT).show();
 
 
     }
@@ -127,8 +134,6 @@ public class AllPostsFragment extends BaseFragment {
     public int getFragmentTitle() {
         return R.string.allPosts;
     }
-
-    List<Category> data;
 
     private void getAllCategories() {
 //        data = new ArrayList<>();
@@ -216,16 +221,15 @@ public class AllPostsFragment extends BaseFragment {
         });
     }
 
-
-    private void AddRequest( int id_post, String massage) {
+    private void AddRequest(int id_post, String massage) {
 
         RequestBody post_id = RequestBody.create(MediaType.parse("multipart/form-data"), id_post + "");
-        RequestBody mPost = RequestBody.create(MediaType.parse("multipart/form-data"),massage);
+        RequestBody mPost = RequestBody.create(MediaType.parse("multipart/form-data"), massage);
 
-        Call<Order> call =serviceApi.addRequest(
+        Call<Order> call = serviceApi.addRequest(
                 "Bearer " + token
                 , post_id
-                ,mPost);
+                , mPost);
 
         call.enqueue(new Callback<Order>() {
             @Override
@@ -241,11 +245,6 @@ public class AllPostsFragment extends BaseFragment {
             }
         });
     }
-
-
-
-
-
 
     private void getPostDividedByIsDonation(int id) {
         RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), id + "");
@@ -299,9 +298,13 @@ public class AllPostsFragment extends BaseFragment {
         PostsAdapter adapter = new PostsAdapter(context, new PostRequestInterface() {
             @Override
             public void layout(Post post) {
-                createDialog(post.getId());
+                if (post.getIsHeTheOwnerOfThePost()) {
+                    Toast.makeText(context, post.getId()+"", Toast.LENGTH_SHORT).show();
+                    PostOrdersInfo info=new PostOrdersInfo(post.getId(),post.getIsCompleted(),post.getIsDonation(),post.getSecondUser());
+                    fragmentSwitcher.switchFragment(PagesFragment.POST_ORDERS,info);
+                } else
+                    createDialog(post.getId());
                 dialog.show();
-                Toast.makeText(context, "dia", Toast.LENGTH_SHORT).show();
             }
         });
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
@@ -309,14 +312,14 @@ public class AllPostsFragment extends BaseFragment {
         binding.rvPost.setAdapter(adapter);
         Log.e("rv2", postList.size() + "");
     }
-    
+
     private void createDialog(int id) {
         View view = dialogBinding.getRoot();
         dialogBinding.submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String massage =dialogBinding.editComment.getText().toString();
-                AddRequest(id,massage);
+                String massage = dialogBinding.editComment.getText().toString();
+                AddRequest(id, massage);
                 dialog.dismiss();
             }
         });
@@ -344,7 +347,10 @@ public class AllPostsFragment extends BaseFragment {
         binding.rvCategory.setAdapter(adapter);
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        fragmentSwitcher = (FragmentSwitcher) context;
 
-
-
+    }
 }

@@ -1,6 +1,7 @@
 
 package com.example.graduationproject.retrofit.post;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
@@ -44,13 +45,23 @@ public class Post {
     private String postSecondUserEmail;
     @SerializedName("post_media")
     @Expose
-    private List<String> postMedia = null;
+    private List<String> postMedia = new ArrayList<String>();
     @SerializedName("first_user_image_link")
     @Expose
     private String firstUserImageLink;
     @SerializedName("is_ordered")
     @Expose
     private Boolean isOrdered;
+    @SerializedName("is_he_the_owner_of_the_post")
+    @Expose
+    private Boolean isHeTheOwnerOfThePost;
+    @SerializedName("is_completed")
+    @Expose
+    private Boolean isCompleted;
+    @SerializedName("second_user")
+    @Expose
+    private int secondUser;
+    private final static long serialVersionUID = 5845778918655472493L;
 
     public Integer getId() {
         return id;
@@ -164,4 +175,59 @@ public class Post {
         this.isOrdered = isOrdered;
     }
 
+    public Boolean getIsHeTheOwnerOfThePost() {
+        return isHeTheOwnerOfThePost;
+    }
+
+    public void setIsHeTheOwnerOfThePost(Boolean isHeTheOwnerOfThePost) {
+        this.isHeTheOwnerOfThePost = isHeTheOwnerOfThePost;
+    }
+
+    public Boolean getIsCompleted() {
+        return isCompleted;
+    }
+
+    public void setIsCompleted(Boolean isCompleted) {
+        this.isCompleted = isCompleted;
+    }
+
+    public Boolean getDonation() {
+        return isDonation;
+    }
+
+    public void setDonation(Boolean donation) {
+        isDonation = donation;
+    }
+
+    public Boolean getOrdered() {
+        return isOrdered;
+    }
+
+    public void setOrdered(Boolean ordered) {
+        isOrdered = ordered;
+    }
+
+    public Boolean getHeTheOwnerOfThePost() {
+        return isHeTheOwnerOfThePost;
+    }
+
+    public void setHeTheOwnerOfThePost(Boolean heTheOwnerOfThePost) {
+        isHeTheOwnerOfThePost = heTheOwnerOfThePost;
+    }
+
+    public Boolean getCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(Boolean completed) {
+        isCompleted = completed;
+    }
+
+    public int getSecondUser() {
+        return secondUser;
+    }
+
+    public void setSecondUser(int secondUser) {
+        this.secondUser = secondUser;
+    }
 }

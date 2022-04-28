@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
-import com.example.graduationproject.databinding.PostItemBinding;
+import com.example.graduationproject.databinding.LayoutPostItemBinding;
 import com.example.graduationproject.listener.PostRequestInterface;
 import com.example.graduationproject.retrofit.post.Post;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -39,15 +39,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
 
     @SuppressLint("NotifyDataSetChanged")
     public void setList(List<Post> list) {
-        this.list=list;
+        this.list = list;
         notifyDataSetChanged();
 
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
-        PostItemBinding binding;
+        LayoutPostItemBinding binding;
 
-        public MyViewHolder(PostItemBinding binding) {
+        public MyViewHolder(LayoutPostItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -57,7 +57,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     @NonNull
     @Override
     public PostsAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        PostItemBinding binding = PostItemBinding.inflate(LayoutInflater
+        LayoutPostItemBinding binding = LayoutPostItemBinding.inflate(LayoutInflater
                         .from(parent.getContext())
                 , parent, false);
         return new MyViewHolder(binding);
@@ -68,33 +68,38 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     @Override
     public void onBindViewHolder(@NonNull PostsAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         holder.binding.titlePost.setText("" + list.get(position).getTitle());
-//        holder.binding.uNamePost.setText("number of request" + list.get(position).getPostFirstUser());
         holder.binding.descriptionPost.setText("" + list.get(position).getDescription());
         holder.binding.numberRequestsPost.setText("number of request =  " + list.get(position).getNumberOfRequests());
         holder.binding.uNamePost.setText("" + list.get(position).getFirstUserName());
         Glide.with(context).load(list.get(position).getFirstUserImageLink()).circleCrop()
                 .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.uImgPost);
-//        Glide.with(context).load(list.get(position).getPostMedia().get(0))
-//                .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.postImage);
-//        setImagesRv(holder, position);
+
         setPostImages(holder, position);
         if (list.get(position).getSecondUserName().equals("not found")) {
             holder.binding.isAvailable.setBackgroundColor(Color.WHITE);
             holder.binding.isAvailable.setTextColor(Color.BLACK);
             holder.binding.isAvailable.setText("Available");
-
         } else {
             holder.binding.isAvailable.setBackgroundColor(Color.red(0));
             holder.binding.isAvailable.setTextColor(Color.RED);
             holder.binding.isAvailable.setText("not Available");
         }
 
+        if (list.get(position).getIsHeTheOwnerOfThePost()) {
+            holder.binding.commentBtn.setText("Show orders");
+        } else {
+            if (list.get(position).getIsCompleted())
+                holder.binding.commentBtn.setVisibility(View.INVISIBLE);
+            else if (list.get(position).getOrdered())
+                holder.binding.commentBtn.setVisibility(View.INVISIBLE );
+            else
+                holder.binding.commentBtn.setText("Add orders");
 
+        }
         holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 postRequestInterface.layout(list.get(position));
-                
             }
         });
     }

@@ -34,27 +34,45 @@ public class SplashActivity extends BaseActivity {
         rotateAnimation.setRepeatCount(Animation.RESTART);
 
         findViewById(R.id.image).startAnimation(rotateAnimation);
-        Thread t = new Thread(new Runnable() {
+//        Thread t = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Thread.sleep(2000);
+//                   if (isLogin()) {
+//                      // new WebService().startRequest(WebService.RequestAPI.PROFILE, SplashScreen.this);
+//                       startActivity(new Intent(SplashActivity.this,MainActivity.class));
+//                    } else {
+//                        Intent i = new Intent(SplashActivity.this, SignInActivity.class);
+//                        startActivity(i);
+//                        finish();
+//                    }
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//        t.run();
+        Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(2000);
-                   if (isLogin()) {
-                      // new WebService().startRequest(WebService.RequestAPI.PROFILE, SplashScreen.this);
-                       startActivity(new Intent(SplashActivity.this,MainActivity.class));
-                    } else {
-                        Intent i = new Intent(SplashActivity.this, SignInActivity.class);
-                        startActivity(i);
-                        finish();
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                run_activity();
+                if (isLogin()) {
+                    // new WebService().startRequest(WebService.RequestAPI.PROFILE, SplashScreen.this);
+                    startActivity(new Intent(SplashActivity.this,MainActivity.class));
+                } else {
+                    Intent i = new Intent(SplashActivity.this, SignInActivity.class);
+                    startActivity(i);
+                    finish();
                 }
             }
-        });
-        t.run();
-
+        };
+        handler.postDelayed(runnable, (long) (1.5 * 1000));
     }
-
+    public void run_activity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
 }

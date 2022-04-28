@@ -2,12 +2,14 @@
 package com.example.graduationproject.retrofit.request;
 
 import javax.annotation.Generated;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-@Generated("jsonschema2pojo")
-public class Data {
+import java.io.Serializable;
 
+@Generated("jsonschema2pojo")
+public class Data implements Serializable {
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -20,9 +22,19 @@ public class Data {
     @SerializedName("user_id")
     @Expose
     private Integer userId;
-    @SerializedName("is_donation_post")
+    @SerializedName("user_name")
     @Expose
-    private Boolean isDonationPost;
+    private String userName;
+    @SerializedName("user_image")
+    @Expose
+    private String userImage;
+    @SerializedName("created_at")
+    @Expose
+    private String createdAt;
+    @SerializedName("user_phone_number")
+    @Expose
+    private String userPhoneNumber;
+    private final static long serialVersionUID = 6290194676996306573L;
 
     public Integer getId() {
         return id;
@@ -56,12 +68,36 @@ public class Data {
         this.userId = userId;
     }
 
-    public Boolean getIsDonationPost() {
-        return isDonationPost;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setIsDonationPost(Boolean isDonationPost) {
-        this.isDonationPost = isDonationPost;
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUserPhoneNumber() {
+        return userPhoneNumber;
+    }
+
+    public void setUserPhoneNumber(String userPhoneNumber) {
+        this.userPhoneNumber = userPhoneNumber;
     }
 
 }

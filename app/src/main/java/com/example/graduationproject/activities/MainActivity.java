@@ -32,7 +32,9 @@ import com.example.graduationproject.fragments.BaseFragment;
 import com.example.graduationproject.fragments.FragmentSwitcher;
 import com.example.graduationproject.fragments.ui.NotificationFragment;
 import com.example.graduationproject.fragments.PagesFragment;
+import com.example.graduationproject.fragments.ui.PostOrdersFragment;
 import com.example.graduationproject.fragments.ui.ProfileFragment;
+import com.example.graduationproject.model.PostOrdersInfo;
 import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.login.SendLogin;
@@ -74,8 +76,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
 
         LayoutToolbarBinding toolbarBinding = binding.mainToolbar;
-//        NavLayoutBinding navLayoutBinding = binding.navLayout;
-//     //   NavHeaderBinding navHeaderBinding = NavHeaderBinding.inflate(getLayoutInflater());
         drawer = binding.mainDrawer;
 
         toolbarBinding.toolbar.setTitle("");
@@ -121,11 +121,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         Toast.makeText(context, token + "token ", Toast.LENGTH_SHORT).show();
 
 
-
-
-
     }
-
 
 
     @Override
@@ -175,7 +171,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     String tag;
 
     @Override
-    public void switchFragment(PagesFragment pagesFragment, Object object) {
+    public void switchFragment(PagesFragment pagesFragment, PostOrdersInfo object) {
         BaseFragment fragment = null;
 //         tag = AllPostsFragment.TAG;
         switch (pagesFragment) {
@@ -192,27 +188,18 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case PROFILE:
                 fragment = new ProfileFragment();
                 break;
+            case POST_ORDERS:
+                fragment = PostOrdersFragment.newInstance(object);
+                break;
         }
         setTitle(fragment.getFragmentTitle());
 
         if (ALL_POSTS == pagesFragment) {
-//            FragmentManager fm = getSupportFragmentManager();
-//            for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
-//                fm.popBackStack();
-//            }
-//            Toast.makeText(context, "ALL_POSTS", Toast.LENGTH_SHORT).show();
-//            if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, tag).commit();
-//            } else {
-//                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, tag).commit();
-//            }
         } else {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, tag).commit();
-
         }
-
     }
-
 
     private void requestLogout() {
 
@@ -244,7 +231,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
         });
     }
-
 
     @Override
     public void onBackPressed() {

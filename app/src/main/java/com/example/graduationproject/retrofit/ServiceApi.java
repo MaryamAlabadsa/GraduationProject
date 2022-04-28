@@ -5,6 +5,7 @@ import com.example.graduationproject.retrofit.change.password.ChangePassword;
 import com.example.graduationproject.retrofit.login.SendLogin;
 import com.example.graduationproject.retrofit.logout.LogOut;
 import com.example.graduationproject.retrofit.post.AllPosts;
+import com.example.graduationproject.retrofit.post.Post;
 import com.example.graduationproject.retrofit.profile.donation.posts.AllDonationsPosts;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
 import com.example.graduationproject.retrofit.request.Data;
@@ -20,8 +21,10 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ServiceApi {
     String ENDPOINT = "http://3.84.126.63/api/";
@@ -99,6 +102,17 @@ public interface ServiceApi {
             , @Part("password_confirmation") RequestBody passwordConfirmation
             , @Part MultipartBody.Part image);
 
+
+    @Multipart
+    @POST("PostOrders")
+    Call<Order> getPostOrder(
+            @Header("Authorization") String token
+            , @Part("id") RequestBody id);
+
+    @PUT("post/{id}")
+    Call<Post> changePostStatus(@Path("id") int id,
+                                @Header("Authorization") String token
+            , @Query("second_user") int second_user);
 
 
 }

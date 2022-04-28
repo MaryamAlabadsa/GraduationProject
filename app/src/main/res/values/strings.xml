@@ -16,13 +16,13 @@
     <string name="allPosts">all posts</string>
 
 
-<!--    <string-array name="Donations">-->
-<!--        <item>cash</item>-->
-<!--        <item>clothes</item>-->
-<!--        <item>books</item>-->
-<!--        <item>Kitchen tools</item>-->
+    <!--    <string-array name="Donations">-->
+    <!--        <item>cash</item>-->
+    <!--        <item>clothes</item>-->
+    <!--        <item>books</item>-->
+    <!--        <item>Kitchen tools</item>-->
 
-<!--    </string-array>-->
+    <!--    </string-array>-->
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -30,5 +30,11 @@
     <string name="Register">Register</string>
     <string name="session_was_expired_logout_processing">session was expired logout processing</string>
     <string name="changePassword">Change Password</string>
+    <string name="orders">My Orders</string>
+    <string name="finish">finish</string>
+    <string name="confirm">confirm</string>
+    <string name="confirmation_message">confirmation message</string>
+    <string name="beneficiary">beneficiary</string>
+    <string name="donor">Donor</string>
 
 </resources>
