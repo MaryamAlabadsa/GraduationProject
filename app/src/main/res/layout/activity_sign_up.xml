@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E0E4EC"
+    android:background="#E9EEF5"
     tools:context=".activities.SignUpActivity">
 
     <ScrollView
@@ -23,32 +23,34 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="30dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="40dp"
                 android:layout_marginRight="30dp"
                 android:src="@drawable/add_phpto" />
 
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInput_email"
-                    style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInput_email"
+                style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pick_image"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:hint="Write Your Email"
+                android:paddingStart="20dp"
+                android:typeface="serif"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="180dp"
-                    android:layout_marginEnd="20dp"
-                    android:hint="Write Your Email"
-                    android:typeface="serif"
-                    app:endIconMode="clear_text"
-                    app:startIconDrawable="@drawable/ic_baseline_email_24">
+                    android:background="@drawable/text_input" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/email"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-
-                        />
-                </com.google.android.material.textfield.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInput_username"
@@ -57,18 +59,19 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textInput_email"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:hint="Write Your Username"
+                android:paddingStart="20dp"
                 android:typeface="serif"
-                app:endIconMode="clear_text"
-                app:startIconDrawable="@drawable/person">
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white" />
+                    android:background="@drawable/text_input" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -78,45 +81,47 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textInput_username"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:hint="Write Your Address"
                 android:typeface="serif"
                 app:endIconMode="clear_text"
-                app:startIconDrawable="@drawable/location">
+                android:paddingStart="20dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    android:background="@drawable/text_input"
 
                     />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInput_phone"
                 style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/textInput_location"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:hint="Write Your Phone"
+                android:paddingStart="20dp"
                 android:typeface="serif"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 app:endIconMode="clear_text"
-                app:prefixText="+970"
-                app:prefixTextColor="#7C98C2"
                 app:helperTextTextColor="#FF0000"
-                android:layout_below="@+id/textInput_location"
-                app:startIconDrawable="@drawable/phone">
+                app:prefixText="+970"
+                app:prefixTextColor="#7C98C2">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/phone"
-                    android:inputType="number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    />
+                    android:background="@drawable/text_input"
+                    android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -126,18 +131,18 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textInput_phone"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:hint="Write Your Password"
                 android:typeface="serif"
-                app:endIconMode="password_toggle"
-                app:startIconDrawable="@drawable/password">
+                android:paddingStart="20dp"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    android:background="@drawable/text_input"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -145,8 +150,9 @@
                 android:id="@+id/register"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:layout_below="@+id/textInput_password"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="700dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginRight="40dp"
                 android:layout_marginBottom="60dp"
                 android:background="@drawable/button2">
