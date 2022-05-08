@@ -69,7 +69,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     public void onBindViewHolder(@NonNull PostsAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         holder.binding.titlePost.setText("" + list.get(position).getTitle());
         holder.binding.descriptionPost.setText("" + list.get(position).getDescription());
-        holder.binding.numberRequestsPost.setText("number of request =  " + list.get(position).getNumberOfRequests());
+        holder.binding.numberRequestsPost.setText( list.get(position).getNumberOfRequests() +" request   " );
         holder.binding.uNamePost.setText("" + list.get(position).getFirstUserName());
         Glide.with(context).load(list.get(position).getFirstUserImageLink()).circleCrop()
                 .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.uImgPost);
@@ -93,7 +93,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
             else if (list.get(position).getOrdered())
                 holder.binding.commentBtn.setVisibility(View.INVISIBLE );
             else
-                holder.binding.commentBtn.setText("Add orders");
+                holder.binding.commentBtn.setText("Add");
 
         }
         holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +110,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         List<SliderItem> sliderItems = new ArrayList<>();
         for (String images : list.get(position).getPostMedia()) {
             sliderItems.add(new SliderItem("", images));
-
         }
         easySlider.setPages(sliderItems);
 

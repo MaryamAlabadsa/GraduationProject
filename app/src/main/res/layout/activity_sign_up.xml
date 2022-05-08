@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E9EEF5"
+    android:background="@color/back"
     tools:context=".activities.SignUpActivity">
 
     <ScrollView
@@ -46,6 +46,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/email"
+                    android:textColor="@color/hint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/text_input" />
@@ -69,6 +70,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/username"
+                    android:textColor="@color/hint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/text_input" />
@@ -94,6 +96,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/text_input"
+                    android:textColor="@color/hint"
 
                     />
             </com.google.android.material.textfield.TextInputLayout>
@@ -121,7 +124,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/text_input"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:textColor="@color/hint"
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -143,7 +148,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/text_input"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:textColor="@color/hint"
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
             <RelativeLayout
