@@ -67,8 +67,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull PostsAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-        holder.binding.titlePost.setText("" + list.get(position).getTitle());
-        holder.binding.descriptionPost.setText("" + list.get(position).getDescription());
+//        holder.binding.titlePost.setText("" + list.get(position).getTitle());
+//        holder.binding.descriptionPost.setText("" + list.get(position).getDescription());
         holder.binding.numberRequestsPost.setText( list.get(position).getNumberOfRequests() +" request   " );
         holder.binding.uNamePost.setText("" + list.get(position).getFirstUserName());
         Glide.with(context).load(list.get(position).getFirstUserImageLink()).circleCrop()
