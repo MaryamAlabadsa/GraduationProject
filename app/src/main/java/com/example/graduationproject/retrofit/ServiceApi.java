@@ -109,6 +109,10 @@ public interface ServiceApi {
             @Header("Authorization") String token
             , @Part("id") RequestBody id);
 
+    @POST("RequestsPosts")
+    Call<AllPosts> getMyProfileRequestsPosts(
+            @Header("Authorization") String token);
+
     @PUT("post/{id}")
     Call<Post> changePostStatus(@Path("id") int id,
                                 @Header("Authorization") String token

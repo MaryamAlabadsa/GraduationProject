@@ -2,13 +2,17 @@ package com.example.graduationproject.model;
 
 public class PostOrdersInfo {
     boolean isCompleted,isDonation;
-    int secondUser,postId;
+    int secondUser,postId,userId;
 
     public PostOrdersInfo( int postId,boolean isCompleted, boolean isDonation, int secondUser) {
         this.isCompleted = isCompleted;
         this.isDonation = isDonation;
         this.secondUser = secondUser;
         this.postId = postId;
+    }
+
+    public PostOrdersInfo(int userId) {
+        this.userId = userId;
     }
 
     public boolean isDonation() {
@@ -41,5 +45,13 @@ public class PostOrdersInfo {
 
     public void setSecondUser(int secondUser) {
         this.secondUser = secondUser;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

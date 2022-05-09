@@ -60,7 +60,10 @@ public class Post {
     private Boolean isCompleted;
     @SerializedName("second_user")
     @Expose
-    private int secondUser;
+    private int secondUserId;
+    @SerializedName("first_user_id")
+    @Expose
+    private int firstUserId;
     private final static long serialVersionUID = 5845778918655472493L;
 
     public Integer getId() {
@@ -223,11 +226,19 @@ public class Post {
         isCompleted = completed;
     }
 
-    public int getSecondUser() {
-        return secondUser;
+    public int getSecondUserId() {
+        return secondUserId;
     }
 
-    public void setSecondUser(int secondUser) {
-        this.secondUser = secondUser;
+    public void setSecondUserId(int secondUserId) {
+        this.secondUserId = secondUserId;
+    }
+
+    public int getFirstUserId() {
+        return firstUserId;
+    }
+
+    public void setFirstUserId(int firstUserId) {
+        this.firstUserId = firstUserId;
     }
 }

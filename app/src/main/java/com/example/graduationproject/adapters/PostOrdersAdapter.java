@@ -2,11 +2,9 @@ package com.example.graduationproject.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,15 +16,7 @@ import com.example.graduationproject.listener.PostOrderRequestInterface;
 import com.example.graduationproject.listener.PostRequestInterface;
 import com.example.graduationproject.retrofit.request.Data;
 import com.example.graduationproject.retrofit.request.Order;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import ahmed.easyslider.EasySlider;
-import ahmed.easyslider.SliderItem;
 
 public class PostOrdersAdapter extends RecyclerView.Adapter<PostOrdersAdapter.MyViewHolder> {
 

@@ -130,7 +130,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         isAllPost = false;
         switch (id) {
             case R.id.profile:
-                switchFragment(PagesFragment.PROFILE, null);
+                switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(0));
                 break;
 
             case R.id.notifcation:
@@ -186,7 +186,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 fragment = new NotificationFragment();
                 break;
             case PROFILE:
-                fragment = new ProfileFragment();
+                fragment = ProfileFragment.newInstance(object.getUserId());
                 break;
             case POST_ORDERS:
                 fragment = PostOrdersFragment.newInstance(object);
