@@ -1,105 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="@dimen/size_14"
-    >
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="wrap_content"
-    android:padding="@dimen/size_14"
-    android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/u_img_post"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:scaleType="fitXY"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+    android:layout_margin="@dimen/_5sdp"
+    app:cardCornerRadius="@dimen/_20sdp">
 
-    <TextView
-        android:id="@+id/u_name_post"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/u_img_post"
-        app:layout_constraintStart_toEndOf="@+id/u_img_post"
-        app:layout_constraintTop_toTopOf="@+id/u_img_post" />
+        android:layout_height="@dimen/_180sdp">
 
-    <TextView
-        android:id="@+id/is_available"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:text="Button"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/u_name_post"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/u_name_post" />
+        <com.smarteist.autoimageslider.SliderView
+            android:id="@+id/imageSlider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_120sdp"
+            app:sliderAnimationDuration="600"
+            app:sliderAutoCycleEnabled="true"
+            app:sliderIndicatorAnimationDuration="600"
+            app:sliderIndicatorGravity="center_horizontal|bottom"
+            app:sliderIndicatorMargin="15dp"
+            app:sliderIndicatorOrientation="horizontal"
+            app:sliderIndicatorPadding="3dp"
+            app:sliderIndicatorRadius="2dp"
+            app:sliderIndicatorSelectedColor="@color/blue"
+            app:sliderIndicatorUnselectedColor="#FFF"
+            app:sliderScrollTimeInSec="1"
+            app:sliderStartAutoCycle="true"
+            tools:ignore="MissingConstraints" />
 
-    <TextView
-        android:id="@+id/title_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/u_img_post" />
+        <TextView
+            app:layout_constraintRight_toRightOf="@+id/imageSlider"
+            app:layout_constraintTop_toTopOf="@id/imageSlider"
+            android:id="@+id/number_requests_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:text="TextView"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            tools:ignore="MissingConstraints" />
 
-    <TextView
-        android:id="@+id/description_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_post" />
 
-    <ahmed.easyslider.EasySlider
-        android:id="@+id/slider"
-        android:layout_width="350dp"
-        android:layout_height="150dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/description_post" />
 
-    <TextView
-        android:id="@+id/number_requests_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="TextView"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/slider" />
+        <ImageView
+            android:id="@+id/u_img_post"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars"
+            android:layout_marginTop="@dimen/_130sdp"
+            android:layout_marginStart="@dimen/_10sdp" />
 
-    <Button
-        android:id="@+id/comment_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        android:text="Add Request"
-        android:paddingLeft="5dp"
-        android:paddingEnd="5dp"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="@+id/number_requests_post"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/number_requests_post" />
+        <TextView
+            android:id="@+id/u_name_post"
+            android:layout_width="@dimen/_90sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:text="TextView"
+            android:textSize="@dimen/_8sdp"
+            android:fontFamily="@font/din_next_arabic_medium"
+            android:textColor="@color/black"
+            android:layout_marginTop="@dimen/_5ssp"
+            app:layout_constraintStart_toEndOf="@+id/u_img_post"
+            app:layout_constraintTop_toTopOf="@+id/u_img_post" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/primaryLight"
-        app:layout_constraintTop_toBottomOf="@id/comment_btn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/is_available"
+            android:layout_width="@dimen/_65sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:background="@drawable/button_publish"
+            android:gravity="center"
+            android:text="TextView"
+            android:textSize="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.847"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginRight="@dimen/_5sdp"
+            app:layout_constraintVertical_bias="0.871" />
+
+
+        <TextView
+            android:id="@+id/comment_btn"
+            android:layout_width="@dimen/_65sdp"
+            android:layout_height="@dimen/_25sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/is_available"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginRight="@dimen/_2sdp"
+            android:background="@drawable/add_butt"
+            android:text="TextView"
+            android:textSize="@dimen/_8sdp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:fontFamily="@font/din_next_arabic_bold"
+            app:layout_constraintVertical_bias="0.871"/>
+
+       </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

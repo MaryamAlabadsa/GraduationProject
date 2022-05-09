@@ -7,8 +7,10 @@
         <entry key="..\:/Users/WAFAco/AppData/Local/Android/Sdk/platforms/android-31/data/res/layout/simple_spinner_dropdown_item.xml" value="0.20244565217391305" />
         <entry key="..\:/Users/WAFAco/AppData/Local/Android/Sdk/platforms/android-31/data/res/layout/simple_spinner_item.xml" value="0.20244565217391305" />
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1855" />
+        <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/drawable/add_butt.xml" value="0.1705" />
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/drawable/button2.xml" value="0.17" />
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/drawable/button_publish.xml" value="0.17" />
+        <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/drawable/cardradius.xml" value="0.1705" />
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/drawable/ic_camera.xml" value="0.1945" />
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/drawable/image_add_post.xml" value="0.1945" />
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/drawable/person.xml" value="0.17" />
@@ -18,7 +20,7 @@
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/layout/activity_main.xml" value="0.15534420289855072" />
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/layout/activity_profile_screen.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/layout/activity_sign_in.xml" value="0.17074275362318841" />
-        <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/layout/activity_sign_up.xml" value="0.21" />
+        <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/layout/activity_sign_up.xml" value="0.25" />
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/layout/activity_splash.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/layout/botton_dialog.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/layout/button_dialog.xml" value="0.20416666666666666" />
@@ -30,6 +32,7 @@
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/layout/fragment_notification.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/layout/fragment_profile.xml" value="0.20244565217391305" />
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/layout/images_post_item.xml" value="0.20244565217391305" />
+        <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/layout/layout_post_item.xml" value="0.25" />
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/layout/layout_toolbar.xml" value="0.20244565217391305" />
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/layout/nav_haede.xml" value="0.20244565217391305" />
         <entry key="..\:/Users/WAFAco/Documents/GitHub/GraduationProject/app/src/main/res/layout/nav_header.xml" value="0.20244565217391305" />

@@ -27,7 +27,7 @@
 
     <!-- change color of switch-->
     <style name="mySwitch">
-        <item name="colorControlActivated">#7C98C2</item>
+        <item name="colorControlActivated">#005187</item>
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
