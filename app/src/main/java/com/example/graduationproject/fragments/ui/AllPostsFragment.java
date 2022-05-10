@@ -109,22 +109,22 @@ public class AllPostsFragment extends BaseFragment {
 
     int isDonation = -1;
 
-    public void rbClick() {
-        int radioButtonID = binding.radioGroup.getCheckedRadioButtonId();
-//        RadioButton radioButton =(RadioButton) findViewById(radioButtonID);
-//        int idx = binding.radioGroup.indexOfChild(radioButton);
-//        RadioButton r = (RadioButton) binding.radioGroup.getChildAt(idx);
-//        String selectedtext = radioButton.getText().toString();
-//        if (selectedtext.equals("Donation")) {
-//            showDialog();
-//            getPostDividedByIsDonation(1);
-//        } else if (selectedtext.equals("Request")) {
-//            showDialog();
-//            getPostDividedByIsDonation(0);
-//        }
-
-
-    }
+//    public void rbClick() {
+//        int radioButtonID = binding.radioGroup.getCheckedRadioButtonId();
+////        RadioButton radioButton =(RadioButton) findViewById(radioButtonID);
+////        int idx = binding.radioGroup.indexOfChild(radioButton);
+////        RadioButton r = (RadioButton) binding.radioGroup.getChildAt(idx);
+////        String selectedtext = radioButton.getText().toString();
+////        if (selectedtext.equals("Donation")) {
+////            showDialog();
+////            getPostDividedByIsDonation(1);
+////        } else if (selectedtext.equals("Request")) {
+////            showDialog();
+////            getPostDividedByIsDonation(0);
+////        }
+//
+//
+//    }
 
 
     @Override

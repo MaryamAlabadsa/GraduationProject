@@ -6,10 +6,11 @@ import com.example.graduationproject.retrofit.login.SendLogin;
 import com.example.graduationproject.retrofit.logout.LogOut;
 import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.post.Post;
-import com.example.graduationproject.retrofit.profile.donation.posts.AllDonationsPosts;
+import com.example.graduationproject.retrofit.profile.donation.posts.ProfilePosts;
+import com.example.graduationproject.retrofit.profile.user.info.UserProfileInfo;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
-import com.example.graduationproject.retrofit.request.Data;
 import com.example.graduationproject.retrofit.request.Order;
+import com.example.graduationproject.retrofit.token.SendDeviceTokenResponse;
 
 import java.util.List;
 
@@ -39,9 +40,9 @@ public interface ServiceApi {
     Call<AllPosts> getAllPosts(
             @Header("Authorization") String token);
 
-    @GET("donationPosts")
-    Call<AllDonationsPosts> getDonationPosts(
-            @Header("Authorization") String token);
+//    @GET("donationPosts")
+//    Call<AllDonationsPosts> getDonationPosts(
+//            @Header("Authorization") String token);
 
     //  post
     @Multipart
@@ -109,14 +110,42 @@ public interface ServiceApi {
             @Header("Authorization") String token
             , @Part("id") RequestBody id);
 
-    @POST("RequestsPosts")
-    Call<AllPosts> getMyProfileRequestsPosts(
-            @Header("Authorization") String token);
-
     @PUT("post/{id}")
     Call<Post> changePostStatus(@Path("id") int id,
                                 @Header("Authorization") String token
             , @Query("second_user") int second_user);
+
+    @GET("sendDeviceToken/{id}")
+    Call<SendDeviceTokenResponse> sendDeviceToken(@Path("id") String id, @Header("Authorization") String token);
+
+    // profile
+
+    @POST("myDonationPosts")
+    Call<ProfilePosts> getMyDonationPosts(
+            @Header("Authorization") String token);
+
+    @POST("myRequestsPosts")
+    Call<ProfilePosts> getMyRequestsPosts(
+            @Header("Authorization") String token);
+
+    @POST("UserDonationPosts/{id}")
+    Call<ProfilePosts> getUserDonationPosts(
+            @Path("id") int userId,
+            @Header("Authorization") String token);
+
+    @POST("UserRequestPosts/{id}")
+    Call<ProfilePosts> getUserRequestPosts(
+            @Path("id") int userId,
+            @Header("Authorization") String token);
+
+    @POST("MyProfileInfo/{id}")
+    Call<UserProfileInfo> getMyProfileInfo(
+            @Header("Authorization") String token);
+
+    @POST("userProfileInfo/{id}")
+    Call<UserProfileInfo> getUserProfileInfo(
+            @Path("id") int userId,
+            @Header("Authorization") String token);
 
 
 }

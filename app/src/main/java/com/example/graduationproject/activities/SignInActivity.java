@@ -28,8 +28,10 @@ import com.example.graduationproject.databinding.ActivitySignInBinding;
 import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.login.SendLogin;
+import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
 import com.example.graduationproject.retrofit.register.User;
+import com.example.graduationproject.retrofit.token.SendDeviceTokenResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
@@ -98,18 +100,14 @@ public class SignInActivity extends BaseActivity {
                     User user = response.body().getData().getUser();
                     Gson gson = new Gson();
                     String userString = gson.toJson(user);
-
                     sharedPreferences.writeString(AppSharedPreferences.USER, userString);
-                    startActivity(new Intent(context, MainActivity.class));
-                    Toast.makeText(SignInActivity.this, response.body().getData().getToken() + "", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(SignInActivity.this, userString + "", Toast.LENGTH_SHORT).show();
                     sharedPreferences.writeString(AppSharedPreferences.AUTHENTICATION, response.body().getData().getToken());
+                    sendDeviceToken();
 
                 } else {
                     String errorMessage = parseError2(response);
                     Toast.makeText(SignInActivity.this, errorMessage + "", Toast.LENGTH_SHORT).show();
                     binding.email.setError(errorMessage);
-
                     Log.e("errorMessage", errorMessage + "");
                 }
             }
@@ -136,5 +134,27 @@ public class SignInActivity extends BaseActivity {
         }
     }
 
-
+    private void sendDeviceToken(){
+        String token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
+        String deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
+        Call<SendDeviceTokenResponse> call = serviceApi.sendDeviceToken(deviceToken,"Bearer " + token);
+        call.enqueue(new Callback<SendDeviceTokenResponse>() {
+            @Override
+            public void onResponse(Call<SendDeviceTokenResponse> call, Response<SendDeviceTokenResponse> response) {
+                Log.d("response1 code", response.code() + "");
+                if (response.isSuccessful()) {
+                    Log.d("Success", new Gson().toJson(response.body()));
+                    startActivity(new Intent(context, MainActivity.class));
+                } else {
+                    String errorMessage = parseError(response);
+                    Log.e("errorMessage", errorMessage + "");
+                }
+            }
+            @Override
+            public void onFailure(Call<SendDeviceTokenResponse> call, Throwable t) {
+                Log.d("onFailure2", t.getMessage() + "");
+                call.cancel();
+            }
+        });
+    }
 }

@@ -74,8 +74,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull PostsAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-//        holder.binding.titlePost.setText("" + list.get(position).getTitle());
-//        holder.binding.descriptionPost.setText("" + list.get(position).getDescription());
         holder.binding.numberRequestsPost.setText(list.get(position).getNumberOfRequests() + " request   ");
         holder.binding.uNamePost.setText("" + list.get(position).getFirstUserName());
         Glide.with(context).load(list.get(position).getFirstUserImageLink()).circleCrop()
@@ -134,13 +132,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
 
     private void setPostStatus(MyViewHolder holder, int position) {
         if (list.get(position).getSecondUserName().equals("not found")) {
-            holder.binding.isAvailable.setBackgroundColor(Color.WHITE);
-            holder.binding.isAvailable.setTextColor(Color.RED);
-            holder.binding.isAvailable.setText("Pending");
+            holder.binding.postStatus.setBackgroundColor(Color.WHITE);
+            holder.binding.postStatus.setTextColor(Color.RED);
+            holder.binding.postStatus.setText("Pending");
         } else {
-            holder.binding.isAvailable.setBackgroundColor(Color.red(0));
-            holder.binding.isAvailable.setTextColor(Color.GREEN);
-            holder.binding.isAvailable.setText("completed");
+            holder.binding.postStatus.setBackgroundColor(Color.red(0));
+            holder.binding.postStatus.setTextColor(Color.GREEN);
+            holder.binding.postStatus.setText("completed");
         }
     }
 

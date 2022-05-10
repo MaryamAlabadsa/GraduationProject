@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.categories.AllCategories;
+import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.utils.AppSharedPreferences;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -27,6 +28,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
         Log.e("onNewToken", token);
+        AppSharedPreferences sharedPreferences = new AppSharedPreferences(getApplicationContext());
+        sharedPreferences.writeString(AppSharedPreferences.DEVICE_TOKEN, token);
     }
 
     @Override
@@ -37,9 +40,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d("TAG", "Message Notification Body: " + message.getNotification().getTitle());
             Log.d("TAG", "Message Notification Body: " + message.getNotification().getBody());
         }
-//        {
-//            "type" : "iiiii", "type2" : "iiiii"
-//        }
         if (message.getData().size() > 0) {
             Log.d("TAG", "Message data payload: " + message.getData());
             Map<String, String> params = message.getData();
@@ -55,5 +55,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }
         }
     }
+
+
+
+
 
 }

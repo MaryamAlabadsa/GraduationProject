@@ -2,8 +2,10 @@
 package com.example.graduationproject.retrofit.profile.donation.posts;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Generated;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,17 +13,33 @@ import com.google.gson.annotations.SerializedName;
 public class Data implements Serializable
 {
 
-    @SerializedName("donations posts")
+    @SerializedName("postsList")
     @Expose
-    private List<DonationsPost> donationsPosts = null;
-    private final static long serialVersionUID = -8050799946207601285L;
+    private List<PostsList> postsList = new ArrayList<PostsList>();
+    private final static long serialVersionUID = -7355531265131955522L;
 
-    public List<DonationsPost> getDonationsPosts() {
-        return donationsPosts;
+    /**
+     * No args constructor for use in serialization
+     * 
+     */
+    public Data() {
     }
 
-    public void setDonationsPosts(List<DonationsPost> donationsPosts) {
-        this.donationsPosts = donationsPosts;
+    /**
+     * 
+     * @param postsList
+     */
+    public Data(List<PostsList> postsList) {
+        super();
+        this.postsList = postsList;
+    }
+
+    public List<PostsList> getPostsList() {
+        return postsList;
+    }
+
+    public void setPostsList(List<PostsList> postsList) {
+        this.postsList = postsList;
     }
 
 }

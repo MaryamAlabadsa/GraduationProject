@@ -33,6 +33,7 @@ import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
 import com.example.graduationproject.retrofit.register.User;
+import com.example.graduationproject.retrofit.token.SendDeviceTokenResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
 import com.example.graduationproject.utils.FileUtil;
 import com.google.android.material.textfield.TextInputLayout;
@@ -140,19 +141,16 @@ public class SignUpActivity extends AppCompatActivity {
                     String userString=gson.toJson(user);
 
                     sharedPreferences.writeString(AppSharedPreferences.USER, userString);
-                    startActivity(new Intent(context,MainActivity.class));
                     sharedPreferences.writeString(AppSharedPreferences.AUTHENTICATION, response.body().getData().getToken());
-                    progressDialog.dismiss();
+                    sendDeviceToken();
                 } else {
                     String errorMessage = parseError2(response);
                     Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
                     binding.email.setError(errorMessage);
                     progressDialog.dismiss();
-
                     Log.e("errorMessage", errorMessage + "");
                 }
             }
-
             @Override
             public void onFailure(Call<RegisterResponse> call, Throwable t) {
                 Log.d("onFailure", t.getMessage() + "");
@@ -202,8 +200,6 @@ public class SignUpActivity extends AppCompatActivity {
         boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED;
         return res1 && res2;
-
-
     }
     Uri userImg;
     File file = null;
@@ -215,23 +211,42 @@ public class SignUpActivity extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 Uri userImg = result.getUri();
-//                Picasso.with(this).load(userImg).into(binding.pickImage);
                 try {
                     InputStream stream = getContentResolver().openInputStream(userImg);
                     Bitmap bitmap = BitmapFactory.decodeStream(stream);
                     binding.pickImage.setImageBitmap(bitmap);
-//                    file = FileUtil.from(context, result.getUri());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-//                    Intent data = result.getData();
-//                    Log.e("data", data.getDataString() + "");
-
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
 
         }
+    }
+    private void sendDeviceToken(){
+        String token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
+        String deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
+        Call<SendDeviceTokenResponse> call = serviceApi.sendDeviceToken(deviceToken,"Bearer " + token);
+        call.enqueue(new Callback<SendDeviceTokenResponse>() {
+            @Override
+            public void onResponse(Call<SendDeviceTokenResponse> call, Response<SendDeviceTokenResponse> response) {
+                Log.d("response1 code", response.code() + "");
+                if (response.isSuccessful()) {
+                    Log.d("Success", new Gson().toJson(response.body()));
+                    startActivity(new Intent(context, MainActivity.class));
+                    progressDialog.dismiss();
+                } else {
+//                    String errorMessage = parseError(response);
+//                    Log.e("errorMessage", errorMessage + "");
+                }
+            }
+            @Override
+            public void onFailure(Call<SendDeviceTokenResponse> call, Throwable t) {
+                Log.d("onFailure2", t.getMessage() + "");
+                call.cancel();
+            }
+        });
     }
 }

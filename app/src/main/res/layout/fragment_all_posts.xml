@@ -29,50 +29,34 @@
         />
     <LinearLayout
         android:id="@+id/is_donation_linear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp"
         android:layout_margin="@dimen/size_14"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintTop_toBottomOf="@id/rv_category"
         app:layout_constraintStart_toStartOf="parent"
         android:orientation="horizontal">
 
-        <RadioGroup
-            android:id="@+id/radio_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <TextView
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="match_parent"
+            android:gravity="left|center"
+            android:text="Donation"
+            android:fontFamily="@font/din_next_arabic_bold"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12sdp"
+            android:layout_weight="1"
+            />
 
-            <RadioButton
-                android:id="@+id/radio_don"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:text="Donation"
-                android:textColor="#7C98C2"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:theme="@style/mySwitch"
-                android:typeface="serif" />
-
-            <RadioButton
-                android:id="@+id/radio_req"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="80dp"
-                android:text="Request"
-                android:textColor="#7C98C2"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:theme="@style/mySwitch"
-                android:typeface="serif" />
-        </RadioGroup>
-
+        <Button
+            android:id="@+id/filter_change"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_gravity="center|right"
+            android:background="@null"
+            android:drawableEnd="@drawable/ic_filter"
+            />
     </LinearLayout>
-
-
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_post"
         android:layout_width="match_parent"
