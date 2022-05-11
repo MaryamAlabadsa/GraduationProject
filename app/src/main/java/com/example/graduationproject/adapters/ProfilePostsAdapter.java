@@ -15,7 +15,8 @@ import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.LayoutPostItemBinding;
 import com.example.graduationproject.databinding.LayoutProfilePostItemBinding;
-import com.example.graduationproject.listener.PostRequestInterface;
+import com.example.graduationproject.listener.PostAddOrderInterface;
+import com.example.graduationproject.listener.PostRemoveOrderInterface;
 import com.example.graduationproject.listener.UserIdtRequestInterface;
 import com.example.graduationproject.model.SliderItem;
 import com.example.graduationproject.retrofit.post.Post;
@@ -32,16 +33,18 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     Context context;
     List<PostsList> list;
-    PostRequestInterface postRequestInterface;
+    PostAddOrderInterface addOrderInterface;
+    PostRemoveOrderInterface removeOrderInterface;
     UserIdtRequestInterface userIdtRequestInterface;
     public static final int ITEM1 = 0;
     public static final int ITEM2 = 1;
 
 
-    public ProfilePostsAdapter(Context context, PostRequestInterface postRequestInterface, UserIdtRequestInterface userIdtRequestInterface) {
+    public ProfilePostsAdapter(Context context, PostAddOrderInterface addOrderInterface,PostRemoveOrderInterface removeOrderInterface, UserIdtRequestInterface userIdtRequestInterface) {
         list = new ArrayList<>();
         this.context = context;
-        this.postRequestInterface = postRequestInterface;
+        this.addOrderInterface = addOrderInterface;
+        this.removeOrderInterface=removeOrderInterface;
         this.userIdtRequestInterface = userIdtRequestInterface;
     }
 
@@ -159,7 +162,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 binding.commentBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        postRequestInterface.layout(list);
+                        addOrderInterface.layout(list);
                     }
                 });
                binding.commentBtn.setText("Add");
@@ -215,23 +218,29 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private void setOrderButton(ProfilePostsAdapter.MyPostViewHolder holder, int position) {
-//        Log.e("isOrdered",list.get(position).getPost().getOrdered()+"");
 
         if (list.get(position).getIsHeTheOwnerOfThePost()) {
             holder.binding.commentBtn.setText("Show orders");
         } else {
             if (list.get(position).getIsCompleted())
                 holder.binding.commentBtn.setVisibility(View.INVISIBLE);
-//            else if (list.get(position).getPost().getIsOrdered())
-//                holder.binding.commentBtn.setVisibility(View.INVISIBLE);
-            else {
+            else if (list.get(position).getIsOrdered()){
+                holder.binding.commentBtn.setText("Remove order");
                 holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        postRequestInterface.layout(list.get(position).getPost());
+                        removeOrderInterface.layout(list.get(position).getPost());
                     }
                 });
+            }
+            else {
                 holder.binding.commentBtn.setText("Add");
+                holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        addOrderInterface.layout(list.get(position).getPost());
+                    }
+                });
             }
         }
     }

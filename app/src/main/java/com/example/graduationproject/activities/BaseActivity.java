@@ -1,5 +1,6 @@
 package com.example.graduationproject.activities;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 
@@ -18,6 +19,8 @@ public class BaseActivity extends AppCompatActivity {
     AppSharedPreferences sharedPreferences;
     String token;
     ServiceApi serviceApi;
+    public ProgressDialog progressDialog;
+
 
 //    @Override
 //    protected void onStart() {
@@ -27,6 +30,12 @@ public class BaseActivity extends AppCompatActivity {
 //        token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
 //
 //    }
+public void showDialog() {
+    progressDialog = new ProgressDialog(this);
+    progressDialog.setMessage("Please Wait");
+    progressDialog.setCancelable(false);
+    progressDialog.show();
+}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {

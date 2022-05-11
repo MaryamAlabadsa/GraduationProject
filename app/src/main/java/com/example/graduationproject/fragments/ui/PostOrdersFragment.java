@@ -33,7 +33,6 @@ import com.example.graduationproject.fragments.BaseFragment;
 import com.example.graduationproject.fragments.FragmentSwitcher;
 import com.example.graduationproject.fragments.PagesFragment;
 import com.example.graduationproject.listener.PostOrderRequestInterface;
-import com.example.graduationproject.listener.PostRequestInterface;
 import com.example.graduationproject.model.PostOrdersInfo;
 import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.post.Post;
@@ -165,7 +164,8 @@ public class PostOrdersFragment extends BaseFragment {
         });
     }
     AlertDialog.Builder builder;
-    private void createDialog(int userId) {
+
+    private void createAcceptOrderDialog(int userId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         builder.setMessage(R.string.confirmation_message)
@@ -192,7 +192,7 @@ public class PostOrdersFragment extends BaseFragment {
         adapter = new PostOrdersAdapter(context, new PostOrderRequestInterface() {
             @Override
             public void layout(int userId) {
-                createDialog(userId);
+                createAcceptOrderDialog(userId);
             }
         },isCompleted,isDonation,secondUser);
         adapter.setList(order);

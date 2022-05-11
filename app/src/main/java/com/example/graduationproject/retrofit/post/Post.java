@@ -10,6 +10,7 @@ import com.google.gson.annotations.SerializedName;
 @Generated("jsonschema2pojo")
 public class Post {
 
+
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -25,6 +26,12 @@ public class Post {
     @SerializedName("category_id")
     @Expose
     private Integer categoryId;
+    @SerializedName("first_user_id")
+    @Expose
+    private Integer firstUserId;
+    @SerializedName("second_user_id")
+    @Expose
+    private Integer secondUserId;
     @SerializedName("category_name")
     @Expose
     private String categoryName;
@@ -52,19 +59,68 @@ public class Post {
     @SerializedName("is_ordered")
     @Expose
     private Boolean isOrdered;
+    @SerializedName("Order_id")
+    @Expose
+    private Integer orderId;
     @SerializedName("is_he_the_owner_of_the_post")
     @Expose
     private Boolean isHeTheOwnerOfThePost;
     @SerializedName("is_completed")
     @Expose
     private Boolean isCompleted;
-    @SerializedName("second_user")
-    @Expose
-    private int secondUserId;
-    @SerializedName("first_user_id")
-    @Expose
-    private int firstUserId;
-    private final static long serialVersionUID = 5845778918655472493L;
+    private final static long serialVersionUID = -9076844435418703799L;
+
+    /**
+     * No args constructor for use in serialization
+     *
+     */
+    public Post() {
+    }
+
+    /**
+     *
+     * @param secondUserId
+     * @param secondUserName
+     * @param orderId
+     * @param postSecondUserEmail
+     * @param description
+     * @param title
+     * @param categoryName
+     * @param postFirstUserEmail
+     * @param firstUserId
+     * @param isHeTheOwnerOfThePost
+     * @param numberOfRequests
+     * @param firstUserName
+     * @param postMedia
+     * @param id
+     * @param isOrdered
+     * @param categoryId
+     * @param isDonation
+     * @param firstUserImageLink
+     * @param isCompleted
+     */
+    public Post(Integer id, String title, String description, Boolean isDonation, Integer categoryId, Integer firstUserId, Integer secondUserId, String categoryName, Integer numberOfRequests, String firstUserName, String secondUserName, Object postFirstUserEmail, String postSecondUserEmail, List<String> postMedia, String firstUserImageLink, Boolean isOrdered, Integer orderId, Boolean isHeTheOwnerOfThePost, Boolean isCompleted) {
+        super();
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.isDonation = isDonation;
+        this.categoryId = categoryId;
+        this.firstUserId = firstUserId;
+        this.secondUserId = secondUserId;
+        this.categoryName = categoryName;
+        this.numberOfRequests = numberOfRequests;
+        this.firstUserName = firstUserName;
+        this.secondUserName = secondUserName;
+        this.postFirstUserEmail = postFirstUserEmail;
+        this.postSecondUserEmail = postSecondUserEmail;
+        this.postMedia = postMedia;
+        this.firstUserImageLink = firstUserImageLink;
+        this.isOrdered = isOrdered;
+        this.orderId = orderId;
+        this.isHeTheOwnerOfThePost = isHeTheOwnerOfThePost;
+        this.isCompleted = isCompleted;
+    }
 
     public Integer getId() {
         return id;
@@ -104,6 +160,22 @@ public class Post {
 
     public void setCategoryId(Integer categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public Integer getFirstUserId() {
+        return firstUserId;
+    }
+
+    public void setFirstUserId(Integer firstUserId) {
+        this.firstUserId = firstUserId;
+    }
+
+    public Integer getSecondUserId() {
+        return secondUserId;
+    }
+
+    public void setSecondUserId(Integer secondUserId) {
+        this.secondUserId = secondUserId;
     }
 
     public String getCategoryName() {
@@ -178,6 +250,14 @@ public class Post {
         this.isOrdered = isOrdered;
     }
 
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
+
     public Boolean getIsHeTheOwnerOfThePost() {
         return isHeTheOwnerOfThePost;
     }
@@ -194,51 +274,4 @@ public class Post {
         this.isCompleted = isCompleted;
     }
 
-    public Boolean getDonation() {
-        return isDonation;
-    }
-
-    public void setDonation(Boolean donation) {
-        isDonation = donation;
-    }
-
-    public Boolean getOrdered() {
-        return isOrdered;
-    }
-
-    public void setOrdered(Boolean ordered) {
-        isOrdered = ordered;
-    }
-
-    public Boolean getHeTheOwnerOfThePost() {
-        return isHeTheOwnerOfThePost;
-    }
-
-    public void setHeTheOwnerOfThePost(Boolean heTheOwnerOfThePost) {
-        isHeTheOwnerOfThePost = heTheOwnerOfThePost;
-    }
-
-    public Boolean getCompleted() {
-        return isCompleted;
-    }
-
-    public void setCompleted(Boolean completed) {
-        isCompleted = completed;
-    }
-
-    public int getSecondUserId() {
-        return secondUserId;
-    }
-
-    public void setSecondUserId(int secondUserId) {
-        this.secondUserId = secondUserId;
-    }
-
-    public int getFirstUserId() {
-        return firstUserId;
-    }
-
-    public void setFirstUserId(int firstUserId) {
-        this.firstUserId = firstUserId;
-    }
 }

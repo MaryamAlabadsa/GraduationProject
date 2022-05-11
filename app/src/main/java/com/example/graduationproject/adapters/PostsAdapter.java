@@ -15,7 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.LayoutPostItemBinding;
-import com.example.graduationproject.listener.PostRequestInterface;
+import com.example.graduationproject.listener.PostAddOrderInterface;
+import com.example.graduationproject.listener.PostRemoveOrderInterface;
 import com.example.graduationproject.listener.UserIdtRequestInterface;
 import com.example.graduationproject.model.SliderItem;
 import com.example.graduationproject.retrofit.post.Post;
@@ -32,15 +33,16 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
 
     Context context;
     List<Post> list;
-    PostRequestInterface postRequestInterface;
-    UserIdtRequestInterface userIdtRequestInterface;
+    PostAddOrderInterface addOrderInterface;
+    PostRemoveOrderInterface removeOrderInterface;    UserIdtRequestInterface userIdtRequestInterface;
     BottomSheetDialog dialog;
 
 
-    public PostsAdapter(Context context, PostRequestInterface postRequestInterface, UserIdtRequestInterface userIdtRequestInterface) {
+    public PostsAdapter(Context context, PostAddOrderInterface addOrderInterface,PostRemoveOrderInterface removeOrderInterface, UserIdtRequestInterface userIdtRequestInterface) {
         list = new ArrayList<>();
         this.context = context;
-        this.postRequestInterface = postRequestInterface;
+        this.addOrderInterface = addOrderInterface;
+        this.removeOrderInterface=removeOrderInterface;
         this.userIdtRequestInterface = userIdtRequestInterface;
     }
 
@@ -116,16 +118,26 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         } else {
             if (list.get(position).getIsCompleted())
                 holder.binding.commentBtn.setVisibility(View.INVISIBLE);
-            else if (list.get(position).getOrdered())
-                holder.binding.commentBtn.setVisibility(View.INVISIBLE);
+            else if (list.get(position).getIsOrdered()){
+                holder.binding.commentBtn.setText("Remove order");
+                holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        removeOrderInterface.layout(list.get(position));
+                        notifyDataSetChanged();
+                    }
+                });
+            }
             else {
                 holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        postRequestInterface.layout(list.get(position));
+                        addOrderInterface.layout(list.get(position));
+                        notifyDataSetChanged();
+
                     }
                 });
-                holder.binding.commentBtn.setText("Add");
+                holder.binding.commentBtn.setText("Add order");
             }
         }
     }

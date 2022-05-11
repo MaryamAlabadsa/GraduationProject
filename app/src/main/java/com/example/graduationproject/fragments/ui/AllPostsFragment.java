@@ -1,5 +1,6 @@
 package com.example.graduationproject.fragments.ui;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.example.graduationproject.R;
 import com.example.graduationproject.activities.MainActivity;
@@ -24,7 +26,8 @@ import com.example.graduationproject.fragments.BaseFragment;
 import com.example.graduationproject.fragments.FragmentSwitcher;
 import com.example.graduationproject.fragments.PagesFragment;
 import com.example.graduationproject.listener.CategoryInterface;
-import com.example.graduationproject.listener.PostRequestInterface;
+import com.example.graduationproject.listener.PostAddOrderInterface;
+import com.example.graduationproject.listener.PostRemoveOrderInterface;
 import com.example.graduationproject.listener.UserIdtRequestInterface;
 import com.example.graduationproject.model.PostOrdersInfo;
 import com.example.graduationproject.retrofit.categories.AllCategories;
@@ -32,6 +35,7 @@ import com.example.graduationproject.retrofit.categories.Category;
 import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.post.Post;
 import com.example.graduationproject.retrofit.request.Order;
+import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 
@@ -104,28 +108,11 @@ public class AllPostsFragment extends BaseFragment {
         showDialog();
         getAllCategories();
         getAllPosts();
+        Toast.makeText(context, token+"", Toast.LENGTH_SHORT).show();
         return view;
     }
 
     int isDonation = -1;
-
-//    public void rbClick() {
-//        int radioButtonID = binding.radioGroup.getCheckedRadioButtonId();
-////        RadioButton radioButton =(RadioButton) findViewById(radioButtonID);
-////        int idx = binding.radioGroup.indexOfChild(radioButton);
-////        RadioButton r = (RadioButton) binding.radioGroup.getChildAt(idx);
-////        String selectedtext = radioButton.getText().toString();
-////        if (selectedtext.equals("Donation")) {
-////            showDialog();
-////            getPostDividedByIsDonation(1);
-////        } else if (selectedtext.equals("Request")) {
-////            showDialog();
-////            getPostDividedByIsDonation(0);
-////        }
-//
-//
-//    }
-
 
     @Override
     public int getFragmentTitle() {
@@ -133,7 +120,6 @@ public class AllPostsFragment extends BaseFragment {
     }
 
     private void getAllCategories() {
-//        data = new ArrayList<>();
         Call<AllCategories> call = serviceApi.getAllCategories(
                 "Bearer " + token);
         call.enqueue(new Callback<AllCategories>() {
@@ -170,12 +156,14 @@ public class AllPostsFragment extends BaseFragment {
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     AllPosts getAllPosts = response.body();
+                    assert response.body() != null;
                     setPostsRv(response.body().getData());
                     Log.e("maryam", getAllPosts.getData().size() + "");
                     progressDialog.dismiss();
                 } else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
+                    progressDialog.dismiss();
                 }
             }
 
@@ -217,30 +205,6 @@ public class AllPostsFragment extends BaseFragment {
         });
     }
 
-    private void AddRequest(int id_post, String massage) {
-
-        RequestBody post_id = RequestBody.create(MediaType.parse("multipart/form-data"), id_post + "");
-        RequestBody mPost = RequestBody.create(MediaType.parse("multipart/form-data"), massage);
-
-        Call<Order> call = serviceApi.addRequest(
-                "Bearer " + token
-                , post_id
-                , mPost);
-
-        call.enqueue(new Callback<Order>() {
-            @Override
-            public void onResponse(Call<Order> call, Response<Order> response) {
-                Log.d("response5 code", response.code() + "");
-                dialog.dismiss();
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(Call<Order> call, Throwable t) {
-
-            }
-        });
-    }
 
     private void getPostDividedByIsDonation(int id) {
         RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), id + "");
@@ -289,17 +253,23 @@ public class AllPostsFragment extends BaseFragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 context, RecyclerView.VERTICAL, false);
         binding.rvPost.setLayoutManager(layoutManager);
-
-
-        PostsAdapter adapter = new PostsAdapter(context, new PostRequestInterface() {
+        PostsAdapter adapter = new PostsAdapter(context, new PostAddOrderInterface() {
             @Override
             public void layout(Post post) {
                 if (post.getIsHeTheOwnerOfThePost()) {
                     PostOrdersInfo info = new PostOrdersInfo(post.getId(), post.getIsCompleted(), post.getIsDonation(), post.getSecondUserId());
                     fragmentSwitcher.switchFragment(PagesFragment.POST_ORDERS, info);
-                } else
+                } else{
                     createDialog(post.getId());
-                dialog.show();
+                    dialog.show();
+                }
+
+            }
+        }, new PostRemoveOrderInterface() {
+            @Override
+            public void layout(Post post) {
+                showDialog();
+                RemoveRequest(post.getOrderId());
             }
         }, new UserIdtRequestInterface() {
             @Override
@@ -313,18 +283,17 @@ public class AllPostsFragment extends BaseFragment {
         Log.e("rv2", postList.size() + "");
     }
 
-    private void createDialog(int id) {
-        View view = dialogBinding.getRoot();
-        dialogBinding.submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String massage = dialogBinding.editComment.getText().toString();
-                AddRequest(id, massage);
-                dialog.dismiss();
-            }
-        });
-        dialog.setContentView(dialogBinding.getRoot());
-    }
+//    private void createDialog(int id) {
+//        View view = dialogBinding.getRoot();
+//        dialogBinding.submit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                String massage = dialogBinding.editComment.getText().toString();
+//                AddRequest(id, massage,dialog);
+//            }
+//        });
+//        dialog.setContentView(dialogBinding.getRoot());
+//    }
 
     private void setCategoryRv(List<Category> data) {
 
@@ -335,10 +304,16 @@ public class AllPostsFragment extends BaseFragment {
         CategoryAdapter adapter = new CategoryAdapter(context, new CategoryInterface() {
             @Override
             public void layout(int id) {
-                if (id == 0)
+                if (id == 0){
+                    showDialog();
                     getAllPosts();
-                else
+
+                }
+                else{
+                    showDialog();
                     getPostsByCategory(id);
+
+                }
             }
         });
         adapter.setList(data);
@@ -350,5 +325,61 @@ public class AllPostsFragment extends BaseFragment {
         super.onAttach(context);
         fragmentSwitcher = (FragmentSwitcher) context;
 
+    }
+    public void AddRequest(int id_post, String massage) {
+
+        RequestBody post_id = RequestBody.create(MediaType.parse("multipart/form-data"), id_post + "");
+        RequestBody mPost = RequestBody.create(MediaType.parse("multipart/form-data"), massage);
+
+        Call<Order> call = serviceApi.addRequest(
+                "Bearer " + token
+                , post_id
+                , mPost);
+
+        call.enqueue(new Callback<Order>() {
+            @Override
+            public void onResponse(Call<Order> call, Response<Order> response) {
+                Log.d("response5 code", response.code() + "");
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<Order> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void RemoveRequest(int order_id) {
+
+        Call<MessageResponse> call = serviceApi.deleteOrder(order_id,
+                "Bearer " + token
+        );
+
+        call.enqueue(new Callback<MessageResponse>() {
+            @Override
+            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                Log.d("response5 code", response.code() + "");
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<MessageResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void createDialog(int id) {
+        View view = dialogBinding.getRoot();
+        dialogBinding.submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String massage = dialogBinding.editComment.getText().toString();
+                AddRequest(id, massage);
+                dialog.dismiss();
+            }
+        });
+        dialog.setContentView(dialogBinding.getRoot());
     }
 }

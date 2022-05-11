@@ -1,8 +1,10 @@
 package com.example.graduationproject.fragments.ui;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,11 +18,16 @@ import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.adapters.CategoryAdapter;
 import com.example.graduationproject.adapters.ProfilePostsAdapter;
+import com.example.graduationproject.databinding.ButtonDialogBinding;
 import com.example.graduationproject.databinding.FragmentProfileBinding;
 import com.example.graduationproject.fragments.BaseFragment;
+import com.example.graduationproject.fragments.FragmentSwitcher;
+import com.example.graduationproject.fragments.PagesFragment;
 import com.example.graduationproject.listener.CategoryInterface;
-import com.example.graduationproject.listener.PostRequestInterface;
+import com.example.graduationproject.listener.PostAddOrderInterface;
+import com.example.graduationproject.listener.PostRemoveOrderInterface;
 import com.example.graduationproject.listener.UserIdtRequestInterface;
+import com.example.graduationproject.model.PostOrdersInfo;
 import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.post.Post;
@@ -28,11 +35,16 @@ import com.example.graduationproject.retrofit.profile.donation.posts.PostsList;
 import com.example.graduationproject.retrofit.profile.donation.posts.ProfilePosts;
 import com.example.graduationproject.retrofit.profile.user.info.UserProfileInfo;
 import com.example.graduationproject.retrofit.register.User;
+import com.example.graduationproject.retrofit.request.Order;
+import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,6 +58,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     Context context;
     FragmentProfileBinding binding;
     private static final String ARG_PARAM1 = "param1";
+    private FragmentSwitcher fragmentSwitcher;
+    BottomSheetDialog dialog;
 
     // TODO: Rename and change types of parameters
     private int userId;
@@ -82,6 +96,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         serviceApi = Creator.getClient().create(ServiceApi.class);
         sharedPreferences = new AppSharedPreferences(getActivity().getApplicationContext());
         token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
+        dialogBinding = ButtonDialogBinding.inflate(inflater, container, false);
+        context = getActivity();
+        dialog = new BottomSheetDialog(context);
+        showDialog();
         getProfileData();
         binding.btnDonationPost.setOnClickListener(this::onClick);
         binding.btnRequestPost.setOnClickListener(this::onClick);
@@ -116,8 +134,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     binding.fullName.setText(response.body().getData().getUser().getName());
                     binding.tvDonationPostsNum.setText(response.body().getData().getNumDonationPost() + "");
                     binding.tvRequestPostsNum.setText(response.body().getData().getNumRequestPost() + "");
-
-
                 } else {
 //                    String errorMessage
 //                    = parseError(response);
@@ -148,6 +164,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     binding.fullName.setText(response.body().getData().getUser().getName());
                     binding.tvDonationPostsNum.setText(response.body().getData().getNumDonationPost() + "");
                     binding.tvRequestPostsNum.setText(response.body().getData().getNumRequestPost() + "");
+                    progressDialog.dismiss();
 
 
                 } else {
@@ -281,15 +298,27 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 context, RecyclerView.VERTICAL, false);
         binding.rvPosts.setLayoutManager(layoutManager);
-        ProfilePostsAdapter adapter = new ProfilePostsAdapter(context, new PostRequestInterface() {
+        ProfilePostsAdapter adapter = new ProfilePostsAdapter(context, new PostAddOrderInterface() {
             @Override
             public void layout(Post post) {
+                if (post.getIsHeTheOwnerOfThePost()) {
+                    PostOrdersInfo info = new PostOrdersInfo(post.getId(), post.getIsCompleted(), post.getIsDonation(), post.getSecondUserId());
+                    fragmentSwitcher.switchFragment(PagesFragment.POST_ORDERS, info);
+                } else{
+                    createDialog(post.getId());
+                    dialog.show();
+                }
 
+            }
+        }, new PostRemoveOrderInterface() {
+            @Override
+            public void layout(Post post) {
+                RemoveRequest(post.getOrderId());
             }
         }, new UserIdtRequestInterface() {
             @Override
             public void layout(int userId) {
-
+                fragmentSwitcher.switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(userId));
             }
         });
         adapter.setList(data);
@@ -319,5 +348,68 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     getUserRequestPosts(userId);
                 break;
         }
+    }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        fragmentSwitcher = (FragmentSwitcher) context;
+
+    }
+
+    private void AddRequest(int id_post, String massage, Dialog dialog) {
+
+        RequestBody post_id = RequestBody.create(MediaType.parse("multipart/form-data"), id_post + "");
+        RequestBody mPost = RequestBody.create(MediaType.parse("multipart/form-data"), massage);
+
+        Call<Order> call = serviceApi.addRequest(
+                "Bearer " + token
+                , post_id
+                , mPost);
+
+        call.enqueue(new Callback<Order>() {
+            @Override
+            public void onResponse(Call<Order> call, Response<Order> response) {
+                Log.d("response5 code", response.code() + "");
+                dialog.dismiss();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<Order> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void RemoveRequest(int order_id) {
+
+        Call<MessageResponse> call = serviceApi.deleteOrder(order_id,
+                "Bearer " + token
+        );
+
+        call.enqueue(new Callback<MessageResponse>() {
+            @Override
+            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                Log.d("response5 code", response.code() + "");
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<MessageResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void createDialog(int id) {
+        View view = dialogBinding.getRoot();
+        dialogBinding.submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String massage = dialogBinding.editComment.getText().toString();
+                AddRequest(id, massage, dialog);
+            }
+        });
+        dialog.setContentView(dialogBinding.getRoot());
     }
 }

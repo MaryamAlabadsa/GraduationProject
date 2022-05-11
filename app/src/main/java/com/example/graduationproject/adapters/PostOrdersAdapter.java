@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.LayoutPostOrderBinding;
 import com.example.graduationproject.listener.PostOrderRequestInterface;
-import com.example.graduationproject.listener.PostRequestInterface;
 import com.example.graduationproject.retrofit.request.Data;
 import com.example.graduationproject.retrofit.request.Order;
 import java.util.List;

@@ -6,20 +6,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
@@ -37,18 +31,14 @@ import com.example.graduationproject.fragments.ui.ProfileFragment;
 import com.example.graduationproject.model.PostOrdersInfo;
 import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
-import com.example.graduationproject.retrofit.login.SendLogin;
 import com.example.graduationproject.retrofit.logout.LogOut;
-import com.example.graduationproject.retrofit.register.RegisterResponse;
 import com.example.graduationproject.retrofit.register.User;
+import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 
 import static com.example.graduationproject.fragments.PagesFragment.ALL_POSTS;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -218,6 +208,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(i);
+                    deleteDeviceToken();
 
                 } else {
                     String errorMessage = parseError(response);
@@ -228,6 +219,28 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onFailure(Call<LogOut> call, Throwable t) {
 
+            }
+        });
+    }
+
+    private void deleteDeviceToken() {
+        Call<MessageResponse> call = serviceApi.sendDeviceToken("", "Bearer " + token);
+        call.enqueue(new Callback<MessageResponse>() {
+            @Override
+            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                Log.d("response1 code", response.code() + "");
+                if (response.isSuccessful()) {
+                    Log.d("Success", new Gson().toJson(response.body()));
+                } else {
+                    String errorMessage = parseError(response);
+                    Log.e("errorMessage", errorMessage + "");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MessageResponse> call, Throwable t) {
+                Log.d("onFailure2", t.getMessage() + "");
+                call.cancel();
             }
         });
     }

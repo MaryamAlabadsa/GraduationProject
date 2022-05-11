@@ -3,7 +3,7 @@ package com.example.graduationproject.retrofit.token;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SendDeviceTokenResponse {
+public class MessageResponse {
 
     @SerializedName("message")
     @Expose

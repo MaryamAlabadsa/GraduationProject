@@ -1,17 +1,11 @@
 package com.example.graduationproject.activities;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -23,20 +17,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.graduationproject.R;
-import com.example.graduationproject.databinding.ActivityMainBinding;
 import com.example.graduationproject.databinding.ActivitySignUpBinding;
 import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
 import com.example.graduationproject.retrofit.register.User;
-import com.example.graduationproject.retrofit.token.SendDeviceTokenResponse;
+import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
-import com.example.graduationproject.utils.FileUtil;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -54,14 +43,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends BaseActivity {
 
     AppSharedPreferences sharedPreferences;
     String token;
     ServiceApi serviceApi;
     ActivitySignUpBinding binding;
     Context context=SignUpActivity.this;
-    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,16 +80,13 @@ public class SignUpActivity extends AppCompatActivity {
         binding.register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressDialog = new ProgressDialog(context);
-                progressDialog.setMessage("Please Wait");
-                progressDialog.setCancelable(false);
-                progressDialog.show();
                String email= binding.email.getText().toString();
                String password= binding.password.getText().toString();
                String location= binding.location.getText().toString();
                String phone= binding.phone.getText().toString();
                String userName= binding.username.getText().toString();
                 register(file,email,password,location,phone,userName);
+                showDialog();
             }
         });
 
@@ -228,10 +213,10 @@ public class SignUpActivity extends AppCompatActivity {
     private void sendDeviceToken(){
         String token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
         String deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
-        Call<SendDeviceTokenResponse> call = serviceApi.sendDeviceToken(deviceToken,"Bearer " + token);
-        call.enqueue(new Callback<SendDeviceTokenResponse>() {
+        Call<MessageResponse> call = serviceApi.sendDeviceToken(deviceToken,"Bearer " + token);
+        call.enqueue(new Callback<MessageResponse>() {
             @Override
-            public void onResponse(Call<SendDeviceTokenResponse> call, Response<SendDeviceTokenResponse> response) {
+            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
                 Log.d("response1 code", response.code() + "");
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
@@ -243,7 +228,7 @@ public class SignUpActivity extends AppCompatActivity {
                 }
             }
             @Override
-            public void onFailure(Call<SendDeviceTokenResponse> call, Throwable t) {
+            public void onFailure(Call<MessageResponse> call, Throwable t) {
                 Log.d("onFailure2", t.getMessage() + "");
                 call.cancel();
             }

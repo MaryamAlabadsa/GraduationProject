@@ -4,13 +4,14 @@ import com.example.graduationproject.retrofit.categories.AllCategories;
 import com.example.graduationproject.retrofit.change.password.ChangePassword;
 import com.example.graduationproject.retrofit.login.SendLogin;
 import com.example.graduationproject.retrofit.logout.LogOut;
+import com.example.graduationproject.retrofit.notifiction.Notification;
 import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.post.Post;
 import com.example.graduationproject.retrofit.profile.donation.posts.ProfilePosts;
 import com.example.graduationproject.retrofit.profile.user.info.UserProfileInfo;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
 import com.example.graduationproject.retrofit.request.Order;
-import com.example.graduationproject.retrofit.token.SendDeviceTokenResponse;
+import com.example.graduationproject.retrofit.token.MessageResponse;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
@@ -116,7 +118,7 @@ public interface ServiceApi {
             , @Query("second_user") int second_user);
 
     @GET("sendDeviceToken/{id}")
-    Call<SendDeviceTokenResponse> sendDeviceToken(@Path("id") String id, @Header("Authorization") String token);
+    Call<MessageResponse> sendDeviceToken(@Path("id") String id, @Header("Authorization") String token);
 
     // profile
 
@@ -147,5 +149,12 @@ public interface ServiceApi {
             @Path("id") int userId,
             @Header("Authorization") String token);
 
+
+    @POST("notification")
+    Call<Notification> getNotification(
+            @Header("Authorization") String token);
+
+    @DELETE("order/{id}")
+    Call<MessageResponse> deleteOrder(@Path("id") int id, @Header("Authorization") String token);
 
 }

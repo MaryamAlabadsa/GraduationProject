@@ -83,7 +83,7 @@
 
         <TextView
             android:id="@+id/post_status"
-            android:layout_width="@dimen/_65sdp"
+            android:layout_width="@dimen/_50sdp"
             android:layout_height="@dimen/_25sdp"
             android:background="@drawable/button_publish"
             android:gravity="center"
@@ -101,17 +101,19 @@
             android:id="@+id/comment_btn"
             android:layout_width="@dimen/_65sdp"
             android:layout_height="@dimen/_25sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/post_status"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginRight="@dimen/_2sdp"
             android:background="@drawable/add_butt"
-            android:text="TextView"
-            android:textSize="@dimen/_8sdp"
-            android:gravity="center"
-            android:textColor="@color/white"
             android:fontFamily="@font/din_next_arabic_bold"
-            app:layout_constraintVertical_bias="0.871"/>
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="@color/white"
+
+            android:textSize="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/post_status"
+            app:layout_constraintStart_toEndOf="@+id/u_name_post"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.871" />
 
        </androidx.constraintlayout.widget.ConstraintLayout>
 

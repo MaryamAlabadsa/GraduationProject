@@ -61,15 +61,20 @@
         <entry key="..\:/Users/ucas/Desktop/GraduationProject/app/src/main/res/layout/post_item.xml" value="0.14673913043478262" />
         <entry key="..\:/Users/ucas/Desktop/GraduationProject/app/src/main/res/layout/spinner_dropdown.xml" value="0.1796875" />
         <entry key="..\:/Users/ucas/Desktop/GraduationProject/app/src/main/res/menu/nav_menu.xml" value="0.1796875" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/drawable/notification_view_shape.xml" value="0.1645" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/botton_dialog.xml" value="0.19202898550724637" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/category_item.xml" value="0.33" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/fragment_add_post.xml" value="0.22447916666666667" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/fragment_add_post2.xml" value="0.22447916666666667" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/fragment_all_posts.xml" value="0.19202898550724637" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/fragment_notification.xml" value="0.22447916666666667" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/fragment_post_orders.xml" value="0.1" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/layout_notification_item.xml" value="0.25" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/layout_post_item.xml" value="0.33" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/layout_profile_post_item.xml" value="0.22447916666666667" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/post_item.xml" value="0.14175724637681159" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/menu/nav_menu.xml" value="0.22447916666666667" />
       </map>
     </option>
   </component>

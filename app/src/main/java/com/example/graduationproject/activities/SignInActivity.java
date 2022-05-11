@@ -1,41 +1,23 @@
 package com.example.graduationproject.activities;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.graduationproject.R;
-import com.example.graduationproject.databinding.ActivityMainBinding;
 import com.example.graduationproject.databinding.ActivitySignInBinding;
 import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.login.SendLogin;
-import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
 import com.example.graduationproject.retrofit.register.User;
-import com.example.graduationproject.retrofit.token.SendDeviceTokenResponse;
+import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
-import com.theartofdev.edmodo.cropper.CropImage;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -69,9 +51,10 @@ public class SignInActivity extends BaseActivity {
                 String email = binding.email.getText().toString();
                 String password = binding.password.getText().toString();
                 if (email != null && password != null) {
+                    showDialog();
                     login(email, password);
                     Toast.makeText(context, "login", Toast.LENGTH_SHORT).show();
-//                    finish();
+                    finish();
                 }
             }
         });
@@ -137,21 +120,23 @@ public class SignInActivity extends BaseActivity {
     private void sendDeviceToken(){
         String token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
         String deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
-        Call<SendDeviceTokenResponse> call = serviceApi.sendDeviceToken(deviceToken,"Bearer " + token);
-        call.enqueue(new Callback<SendDeviceTokenResponse>() {
+        Call<MessageResponse> call = serviceApi.sendDeviceToken(deviceToken,"Bearer " + token);
+        call.enqueue(new Callback<MessageResponse>() {
             @Override
-            public void onResponse(Call<SendDeviceTokenResponse> call, Response<SendDeviceTokenResponse> response) {
+            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
                 Log.d("response1 code", response.code() + "");
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     startActivity(new Intent(context, MainActivity.class));
+                    progressDialog.dismiss();
+
                 } else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
                 }
             }
             @Override
-            public void onFailure(Call<SendDeviceTokenResponse> call, Throwable t) {
+            public void onFailure(Call<MessageResponse> call, Throwable t) {
                 Log.d("onFailure2", t.getMessage() + "");
                 call.cancel();
             }
