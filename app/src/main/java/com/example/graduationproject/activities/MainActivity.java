@@ -39,6 +39,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 
 import static com.example.graduationproject.fragments.PagesFragment.ALL_POSTS;
+import static com.example.graduationproject.fragments.PagesFragment.POST_ORDERS;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -73,7 +74,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, binding.mainDrawer, toolbarBinding.toolbar, 0, 0);
+                this,
+                binding.mainDrawer,
+                toolbarBinding.toolbar,
+                0,
+                0);
 
         drawer.setDrawerListener(toggle);
         toggle.syncState();
@@ -107,9 +112,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //        if (bundle != null) {
 //            switchFragment(PagesFragment.getValue(bundle.getInt("type", 0)), null);
 //        } else
+
+
         switchFragment(ALL_POSTS, null);
         Toast.makeText(context, token + "token ", Toast.LENGTH_SHORT).show();
 
+//        PostOrdersInfo info = new PostOrdersInfo(1, true,false,32);
+//
+//        switchFragment(POST_ORDERS, info);
 
     }
 
@@ -142,14 +152,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             case R.id.nav_settings:
 //                Intent intent = new Intent(this,
-//                        SettingsActivity.class);
+//                        RequestsMassages.class);
 //                startActivity(intent);
                 break;
 
             case R.id.nav_change_password:
-                Intent intent = new Intent(this,
+                Intent intent2 = new Intent(this,
                         ChangePasswordActivity.class);
-                startActivity(intent);
+                startActivity(intent2);
                 break;
 
 
@@ -265,7 +275,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (!isAllPost) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, new AllPostsFragment(), tag).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,
+                    new AllPostsFragment(),
+                    tag).commit();
             isAllPost = true;
         } else {
             super.onBackPressed();

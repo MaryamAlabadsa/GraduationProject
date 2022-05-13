@@ -3,17 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:visibility="visible">
 
     <ImageView
         android:id="@+id/iv_auto_image_slider"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#CB000000"/>
+        android:background="@color/light_gray" />
 
 
     <ImageView
@@ -34,23 +36,26 @@
         <TextView
             android:id="@+id/tv_post_title_image_slider"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_30sdp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="@dimen/_3sdp"
+            android:layout_marginStart="@dimen/_5sdp"
             android:padding="6dp"
-            android:textColor="#FFF"
+            android:gravity="center|start"
+            android:textColor="@color/white"
+            android:fontFamily="@font/din_next_arabic_bold"
             android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_post_des_image_slider"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_1sdp"
+            android:layout_height="@dimen/_20sdp"
             android:layout_marginBottom="25dp"
+            android:layout_marginStart="@dimen/_5sdp"
             android:padding="6dp"
-            android:textColor="@color/secondary_text"
+            android:textStyle="bold"
+            android:gravity="center|start"
+            android:textColor="@color/light_blue"
             android:textSize="12sp" />
-
     </LinearLayout>
 
 </FrameLayout>

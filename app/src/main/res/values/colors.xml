@@ -8,6 +8,8 @@
 <color name="light_blue">#E9EEF5</color>
 <color name="hint">#9C9C9C</color>
 <color name="back">#F9F9F9</color>
+<color name="dark_gray">#4B4B4B</color>
+<color name="light_gray">#CB777575</color>
 
 
 <color name="colorAccent">#009688</color>

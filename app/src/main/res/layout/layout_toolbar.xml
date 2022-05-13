@@ -5,7 +5,7 @@
     android:id="@+id/toolbar_container"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="@android:color/transparent">
+    android:background="@color/blue">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -14,7 +14,7 @@
         android:background="@android:color/transparent"
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/AppTheme.PopupOverlay"
-        tools:background="?attr/colorPrimary" />
+        tools:background="@color/blue" />
 
 
     <LinearLayout
@@ -26,22 +26,24 @@
 
         <ImageView
             android:id="@+id/iv_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_gravity="center"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:src="@drawable/mylogolayerlist" />
+            android:src="@drawable/dove" />
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:fontFamily="@font/din_next_arabic_bold"
             android:text="@string/app_name"
+            android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:typeface="serif"
+            android:textSize="20sp" />
 
     </LinearLayout>
 

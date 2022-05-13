@@ -75,7 +75,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull PostsAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+    public void onBindViewHolder(@NonNull PostsAdapter.MyViewHolder holder,
+                                 @SuppressLint("RecyclerView")
+                                 final int position) {
         holder.binding.numberRequestsPost.setText(list.get(position).getNumberOfRequests() + " request   ");
         holder.binding.uNamePost.setText("" + list.get(position).getFirstUserName());
         Glide.with(context).load(list.get(position).getFirstUserImageLink()).circleCrop()
@@ -100,7 +102,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         SliderAdapter adapter = new SliderAdapter(context);
 
         sliderView.setSliderAdapter(adapter);
-        SliderItem sliderItem = new SliderItem(list.get(position).getTitle(), list.get(position).getDescription(), list.get(position).getPostMedia());
+        SliderItem sliderItem = new SliderItem(list.get(position).getTitle(),
+                list.get(position).getDescription(),
+                list.get(position).getPostMedia());
         adapter.addItem(sliderItem);
 
         sliderView.setIndicatorAnimation(IndicatorAnimationType.SCALE_DOWN); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!

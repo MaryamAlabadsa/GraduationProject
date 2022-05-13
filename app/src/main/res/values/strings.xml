@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GraduationProject</string>
+    <string name="app_name">Peace</string>
     <string name="full_name">Full name</string>
     <string name="email">email</string>
     <string name="phone_num">phone number</string>
@@ -8,12 +8,13 @@
     <string name="confirm_password">confirm password</string>
     <string name="sign_up">Sign up</string>
     <string name="account_setting">Account setting</string>
-    <string name="setting">Setting</string>
+    <string name="requests_massages">Requests Massages</string>
     <string name="log_out">Log out</string>
-    <string name="see_your_profile">see your profile</string>
-    <string name="add_post">new Post</string>
-    <string name="notification">notification</string>
-    <string name="allPosts">all posts</string>
+    <string name="see_your_profile">My Profile</string>
+    <string name="add_post"> Add New Post</string>
+    <string name="notification">Notification</string>
+    <string name="allPosts">All Posts</string>
+    <string name="setting">Setting</string>
 
 
     <!--    <string-array name="Donations">-->
@@ -32,7 +33,7 @@
     <string name="changePassword">Change Password</string>
     <string name="orders">My Orders</string>
     <string name="finish">finish</string>
-    <string name="confirm">confirm</string>
+    <string name="confirm">Confirm</string>
     <string name="confirmation_message">confirmation message</string>
     <string name="beneficiary">beneficiary</string>
     <string name="donor">Donor</string>

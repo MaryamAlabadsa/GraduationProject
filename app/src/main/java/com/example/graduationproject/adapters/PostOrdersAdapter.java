@@ -26,7 +26,11 @@ public class PostOrdersAdapter extends RecyclerView.Adapter<PostOrdersAdapter.My
     Boolean isCompleted, isDonation;
     int userId;
 
-    public PostOrdersAdapter(Context context, PostOrderRequestInterface postOrderRequestInterface, Boolean isCompleted, Boolean isDonation, int userId) {
+    public PostOrdersAdapter(Context context,
+                             PostOrderRequestInterface postOrderRequestInterface,
+                             Boolean isCompleted,
+                             Boolean isDonation,
+                             int userId) {
         this.context = context;
         this.postOrderRequestInterface = postOrderRequestInterface;
         this.isCompleted = isCompleted;
@@ -79,7 +83,8 @@ public class PostOrdersAdapter extends RecyclerView.Adapter<PostOrdersAdapter.My
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull PostOrdersAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+    public void onBindViewHolder(@NonNull PostOrdersAdapter.MyViewHolder holder,
+                                 @SuppressLint("RecyclerView") final int position) {
         holder.binding.userName.setText(list.get(position).getUserName());
         holder.binding.postMassage.setText(list.get(position).getMassage());
         Glide.with(context).load(list.get(position).getUserImage()).circleCrop()

@@ -61,6 +61,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private FragmentSwitcher fragmentSwitcher;
     BottomSheetDialog dialog;
 
+
     // TODO: Rename and change types of parameters
     private int userId;
 
@@ -99,7 +100,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         dialogBinding = ButtonDialogBinding.inflate(inflater, container, false);
         context = getActivity();
         dialog = new BottomSheetDialog(context);
-        showDialog();
+//        showDialog();
         getProfileData();
         binding.btnDonationPost.setOnClickListener(this::onClick);
         binding.btnRequestPost.setOnClickListener(this::onClick);
@@ -302,7 +303,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void layout(Post post) {
                 if (post.getIsHeTheOwnerOfThePost()) {
-                    PostOrdersInfo info = new PostOrdersInfo(post.getId(), post.getIsCompleted(), post.getIsDonation(), post.getSecondUserId());
+                    PostOrdersInfo info = new PostOrdersInfo(post.getId(),
+                            post.getIsCompleted(),
+                            post.getIsDonation(),
+                            post.getSecondUserId());
                     fragmentSwitcher.switchFragment(PagesFragment.POST_ORDERS, info);
                 } else{
                     createDialog(post.getId());
