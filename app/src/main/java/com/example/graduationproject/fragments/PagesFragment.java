@@ -1,7 +1,7 @@
 package com.example.graduationproject.fragments;
 
 public enum PagesFragment {
-    ADD_POSTS(0), ALL_POSTS(3), POST_ORDERS(4), PROFILE(1), NOTIFICATION(2);
+    ADD_POSTS(0), ALL_POSTS(3), POST_ORDERS(4), PROFILE(1), NOTIFICATION(2), CHANGE_PASSWORD(5);
 
     private int[] value;
 

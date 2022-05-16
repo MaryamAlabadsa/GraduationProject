@@ -25,34 +25,7 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         sharedPreferences = new AppSharedPreferences(getApplicationContext());
-        RotateAnimation rotateAnimation = new RotateAnimation(0, 360f,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f);
 
-        rotateAnimation.setInterpolator(new LinearInterpolator());
-        rotateAnimation.setDuration(500);
-        rotateAnimation.setRepeatCount(Animation.RESTART);
-
-        findViewById(R.id.image).startAnimation(rotateAnimation);
-//        Thread t = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    Thread.sleep(2000);
-//                   if (isLogin()) {
-//                      // new WebService().startRequest(WebService.RequestAPI.PROFILE, SplashScreen.this);
-//                       startActivity(new Intent(SplashActivity.this,MainActivity.class));
-//                    } else {
-//                        Intent i = new Intent(SplashActivity.this, SignInActivity.class);
-//                        startActivity(i);
-//                        finish();
-//                    }
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//        t.run();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {

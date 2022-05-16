@@ -23,6 +23,8 @@ import com.example.graduationproject.adapters.CategoryAdapter;
 import com.example.graduationproject.adapters.ProfilePostsAdapter;
 import com.example.graduationproject.databinding.ButtonDialogBinding;
 import com.example.graduationproject.databinding.FragmentProfileBinding;
+import com.example.graduationproject.dialog.Dialoginterface;
+import com.example.graduationproject.dialog.MyDialogAddOrder;
 import com.example.graduationproject.fragments.BaseFragment;
 import com.example.graduationproject.fragments.FragmentSwitcher;
 import com.example.graduationproject.fragments.PagesFragment;
@@ -62,7 +64,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     FragmentProfileBinding binding;
     private static final String ARG_PARAM1 = "param1";
     private FragmentSwitcher fragmentSwitcher;
-    BottomSheetDialog dialog;
+    MyDialogAddOrder myDialogAddOrder;
 
 
     // TODO: Rename and change types of parameters
@@ -97,18 +99,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         context = getActivity();
+        view.setVisibility(View.INVISIBLE);
         serviceApi = Creator.getClient().create(ServiceApi.class);
         sharedPreferences = new AppSharedPreferences(getActivity().getApplicationContext());
         token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
         dialogBinding = ButtonDialogBinding.inflate(inflater, container, false);
-        context = getActivity();
-        Toast.makeText(context, token+"", Toast.LENGTH_SHORT).show();
-        dialog = new BottomSheetDialog(context);
-//        showDialog();
         getProfileData();
         binding.btnDonationPost.setOnClickListener(this::onClick);
         binding.btnRequestPost.setOnClickListener(this::onClick);
-
         return view;
     }
 
@@ -312,9 +310,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                             post.getIsDonation(),
                             post.getSecondUserId());
                     fragmentSwitcher.switchFragment(PagesFragment.POST_ORDERS, info);
-                } else{
+                } else {
                     createDialog(post.getId());
-                    dialog.show();
+                    myDialogAddOrder.show();
                 }
 
             }
@@ -361,6 +359,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 break;
         }
     }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -368,7 +367,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     }
 
-    private void AddRequest(int id_post, String massage, Dialog dialog) {
+    private void AddRequest(int id_post, String massage) {
 
         RequestBody post_id = RequestBody.create(MediaType.parse("multipart/form-data"), id_post + "");
         RequestBody mPost = RequestBody.create(MediaType.parse("multipart/form-data"), massage);
@@ -382,7 +381,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
                 Log.d("response5 code", response.code() + "");
-                dialog.dismiss();
+                myDialogAddOrder.dismiss();
                 progressDialog.dismiss();
             }
 
@@ -414,14 +413,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void createDialog(int id) {
-        View view = dialogBinding.getRoot();
-        dialogBinding.submit.setOnClickListener(new View.OnClickListener() {
+        myDialogAddOrder = new MyDialogAddOrder(context, new Dialoginterface() {
             @Override
-            public void onClick(View view) {
-                String massage = dialogBinding.editComment.getText().toString();
-                AddRequest(id, massage, dialog);
+            public void yes(String massage) {
+                AddRequest(id, massage);
+
             }
         });
-        dialog.setContentView(dialogBinding.getRoot());
     }
 }

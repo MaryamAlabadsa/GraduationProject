@@ -13,8 +13,8 @@
 
         <ImageView
             android:id="@+id/user_image"
-            android:layout_width="@dimen/_55sdp"
-            android:layout_height="@dimen/_55sdp"
+            android:layout_width="@dimen/_45sdp"
+            android:layout_height="@dimen/_45sdp"
             android:layout_marginTop="@dimen/_1sdp"
             android:scaleType="fitXY"
             android:src="@drawable/usericon"
@@ -25,40 +25,36 @@
             android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_5sdp"
             android:fontFamily="@font/din_next_arabic_bold"
-            android:padding="@dimen/_5sdp"
             android:text="Razan S. Abu Shaban"
             android:textColor="@color/black"
             android:textSize="@dimen/_10ssp"
+            android:layout_marginLeft="@dimen/_5sdp"
             app:layout_constraintStart_toEndOf="@id/user_image"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/post_time"
-            android:layout_width="@dimen/_90sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:fontFamily="@font/din_next_arabic_bold"
             android:text="two days"
             android:gravity="center|top|start"
             android:textSize="@dimen/_10ssp"
-            android:paddingStart="@dimen/_10ssp"
-            app:layout_constraintBottom_toBottomOf="@+id/user_image"
-            app:layout_constraintStart_toEndOf="@id/user_image" />
+            app:layout_constraintTop_toBottomOf="@+id/user_name"
+            app:layout_constraintStart_toStartOf="@id/user_name" />
 
         <TextView
             android:id="@+id/post_massage"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_20sdp"
             android:layout_marginTop="@dimen/_2sdp"
             android:fontFamily="@font/din_next_arabic_medium"
             android:text="post_massage"
             android:textSize="@dimen/_10sdp"
             android:padding="@dimen/_5sdp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/user_image"
             app:layout_constraintTop_toBottomOf="@id/user_image"
             tools:ignore="MissingConstraints" />
 

@@ -25,7 +25,7 @@
             app:sliderIndicatorOrientation="horizontal"
             app:sliderIndicatorPadding="3dp"
             app:sliderIndicatorRadius="2dp"
-            app:sliderIndicatorSelectedColor="@color/blue"
+            app:sliderIndicatorSelectedColor="@color/bink"
             app:sliderIndicatorUnselectedColor="@color/light_blue"
             app:sliderScrollTimeInSec="1"
             app:sliderStartAutoCycle="true"
@@ -58,7 +58,7 @@
 
         <TextView
             android:id="@+id/u_name_post"
-            android:layout_width="@dimen/_90sdp"
+            android:layout_width="@dimen/_80sdp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10sdp"
             android:text="TextView"
@@ -83,9 +83,8 @@
 
         <TextView
             android:id="@+id/post_status"
-            android:layout_width="@dimen/_65sdp"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/_25sdp"
-            android:background="@drawable/button_publish"
             android:gravity="center"
             android:text="TextView"
             android:textSize="@dimen/_8sdp"
@@ -93,26 +92,27 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.847"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:layout_marginRight="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_15sdp"
+            app:layout_constraintStart_toEndOf="@+id/comment_btn"
+            android:layout_marginRight="@dimen/_15sdp"
             app:layout_constraintVertical_bias="0.871" />
 
 
         <TextView
             android:id="@+id/comment_btn"
-            android:layout_width="@dimen/_65sdp"
-            android:layout_height="@dimen/_25sdp"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_30sdp"
             android:layout_marginRight="@dimen/_2sdp"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:background="@drawable/add_butt"
+            android:layout_marginLeft="@dimen/_8sdp"
+            android:background="@drawable/button_profile1"
             android:fontFamily="@font/din_next_arabic_bold"
             android:gravity="center"
             android:text="TextView"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingRight="@dimen/_10sdp"
             android:textColor="@color/white"
-
             android:textSize="@dimen/_8sdp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/post_status"
             app:layout_constraintStart_toEndOf="@+id/u_name_post"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.871" />

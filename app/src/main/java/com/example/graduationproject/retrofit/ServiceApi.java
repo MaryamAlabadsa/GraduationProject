@@ -10,6 +10,7 @@ import com.example.graduationproject.retrofit.post.Post;
 import com.example.graduationproject.retrofit.profile.donation.posts.ProfilePosts;
 import com.example.graduationproject.retrofit.profile.user.info.UserProfileInfo;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
+import com.example.graduationproject.retrofit.request.GetAllOrder;
 import com.example.graduationproject.retrofit.request.Order;
 import com.example.graduationproject.retrofit.token.MessageResponse;
 
@@ -108,7 +109,7 @@ public interface ServiceApi {
 
     @Multipart
     @POST("PostOrders")
-    Call<Order> getPostOrder(
+    Call<GetAllOrder> getPostOrder(
             @Header("Authorization") String token
             , @Part("id") RequestBody id);
 

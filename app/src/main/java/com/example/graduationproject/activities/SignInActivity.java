@@ -29,7 +29,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignInActivity extends BaseActivity {
-    ActivitySignInBinding binding;
+    com.example.graduationproject.databinding.ActivitySignInBinding binding;
 
     ServiceApi serviceApi;
     Context context = SignInActivity.this;

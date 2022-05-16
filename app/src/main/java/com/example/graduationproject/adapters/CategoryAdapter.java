@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.CategoryItemBinding;
 import com.example.graduationproject.listener.CategoryInterface;
@@ -57,15 +58,26 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
         return myViewHolder;
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void onBindViewHolder(@NonNull CategoryAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.binding.categoryName.setText("" + list.get(position).getName());
+        Glide.with(context)
+                .load(list.get(position).getImage())
+                .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.categoryImage);
 
         setUpActions(holder, position);
         if (position == selectedPosition) {
-            holder.binding.card.setBackgroundColor(context.getColor(R.color.colorPrimary));
+            holder.binding.card.setBackground(context.getDrawable(R.drawable.button_profile1));
+            holder.binding.categoryImage.setVisibility(View.VISIBLE);
+            holder.binding.categoryName.setTextColor(context.getColor(R.color.white));
+
+
         } else {
-            holder.binding.card.setBackgroundColor(context.getColor(R.color.primaryLight));
+            holder.binding.card.setBackground(context.getDrawable(R.drawable.button_profile2));
+            holder.binding.categoryImage.setVisibility(View.GONE);
+            holder.binding.categoryName.setTextColor(context.getColor(R.color.blue));
+
         }
     }
 

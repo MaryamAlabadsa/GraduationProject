@@ -22,6 +22,8 @@ import com.example.graduationproject.adapters.CategoryAdapter;
 import com.example.graduationproject.adapters.PostsAdapter;
 import com.example.graduationproject.databinding.ButtonDialogBinding;
 import com.example.graduationproject.databinding.FragmentAllPostsBinding;
+import com.example.graduationproject.dialog.Dialoginterface;
+import com.example.graduationproject.dialog.MyDialogAddOrder;
 import com.example.graduationproject.fragments.BaseFragment;
 import com.example.graduationproject.fragments.FragmentSwitcher;
 import com.example.graduationproject.fragments.PagesFragment;
@@ -59,8 +61,7 @@ public class AllPostsFragment extends BaseFragment {
     public static final String TAG = "ALL_POSTS";
     FragmentAllPostsBinding binding;
     Context context;
-    BottomSheetDialog dialog;
-    ButtonDialogBinding dialogBinding;
+    MyDialogAddOrder myDialogAddOrder;
     private FragmentSwitcher fragmentSwitcher;
     List<Category> data;
 
@@ -102,9 +103,9 @@ public class AllPostsFragment extends BaseFragment {
 
         binding = FragmentAllPostsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-        dialogBinding = ButtonDialogBinding.inflate(inflater, container, false);
+//        dialogBinding = ButtonDialogBinding.inflate(inflater, container, false);
         context = getActivity();
-        dialog = new BottomSheetDialog(context);
+//        dialog = new BottomSheetDialog(context);
         showDialog();
         getAllCategories();
         getAllPosts();
@@ -141,6 +142,8 @@ public class AllPostsFragment extends BaseFragment {
             public void onFailure(Call<AllCategories> call, Throwable t) {
                 Log.d("onFailure", t.getMessage() + "");
                 call.cancel();
+                progressDialog.dismiss();
+
             }
         });
     }
@@ -170,6 +173,8 @@ public class AllPostsFragment extends BaseFragment {
             public void onFailure(Call<AllPosts> call, Throwable t) {
                 Log.d("onFailure2", t.getMessage() + "");
                 call.cancel();
+                progressDialog.dismiss();
+
             }
         });
     }
@@ -260,7 +265,7 @@ public class AllPostsFragment extends BaseFragment {
                     fragmentSwitcher.switchFragment(PagesFragment.POST_ORDERS, info);
                 } else{
                     createDialog(post.getId());
-                    dialog.show();
+                    myDialogAddOrder.show();
                 }
 
             }
@@ -276,7 +281,6 @@ public class AllPostsFragment extends BaseFragment {
                 fragmentSwitcher.switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(userId));
             }
         });
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         adapter.setList(postList);
         binding.rvPost.setAdapter(adapter);
         Log.e("rv2", postList.size() + "");
@@ -296,7 +300,7 @@ public class AllPostsFragment extends BaseFragment {
 
     private void setCategoryRv(List<Category> data) {
 
-        data.add(0, new Category(0, "All"));
+        data.add(0, new Category(0, "All",R.drawable.all_category));
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 context, RecyclerView.HORIZONTAL, false);
         binding.rvCategory.setLayoutManager(layoutManager);
@@ -339,12 +343,13 @@ public class AllPostsFragment extends BaseFragment {
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
                 Log.d("response5 code", response.code() + "");
-                progressDialog.dismiss();
+                myDialogAddOrder.dismiss();
             }
 
             @Override
             public void onFailure(Call<Order> call, Throwable t) {
-
+                t.getMessage();
+                Toast.makeText(context, t.getMessage()+"", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -370,15 +375,13 @@ public class AllPostsFragment extends BaseFragment {
     }
 
     private void createDialog(int id) {
-        View view = dialogBinding.getRoot();
-        dialogBinding.submit.setOnClickListener(new View.OnClickListener() {
+        myDialogAddOrder = new MyDialogAddOrder(context, new Dialoginterface() {
             @Override
-            public void onClick(View view) {
-                String massage = dialogBinding.editComment.getText().toString();
+            public void yes(String massage) {
                 AddRequest(id, massage);
-                dialog.dismiss();
+
             }
         });
-        dialog.setContentView(dialogBinding.getRoot());
+
     }
 }

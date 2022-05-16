@@ -10,6 +10,7 @@ import java.io.Serializable;
 
 @Generated("jsonschema2pojo")
 public class Data implements Serializable {
+
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -34,7 +35,37 @@ public class Data implements Serializable {
     @SerializedName("user_phone_number")
     @Expose
     private String userPhoneNumber;
-    private final static long serialVersionUID = 6290194676996306573L;
+    private final static long serialVersionUID = -570308776082673763L;
+
+    /**
+     * No args constructor for use in serialization
+     *
+     */
+    public Data() {
+    }
+
+    /**
+     *
+     * @param createdAt
+     * @param userImage
+     * @param userPhoneNumber
+     * @param id
+     * @param postId
+     * @param massage
+     * @param userName
+     * @param userId
+     */
+    public Data(Integer id, String massage, Integer postId, Integer userId, String userName, String userImage, String createdAt, String userPhoneNumber) {
+        super();
+        this.id = id;
+        this.massage = massage;
+        this.postId = postId;
+        this.userId = userId;
+        this.userName = userName;
+        this.userImage = userImage;
+        this.createdAt = createdAt;
+        this.userPhoneNumber = userPhoneNumber;
+    }
 
     public Integer getId() {
         return id;

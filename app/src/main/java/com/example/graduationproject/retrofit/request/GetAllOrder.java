@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Generated("jsonschema2pojo")
-public class Order {
+public class GetAllOrder {
 
     @SerializedName("message")
     @Expose
     private String message;
     @SerializedName("data")
     @Expose
-    private Data data;
+    private List<Data> data = new ArrayList<Data>();
     private final static long serialVersionUID = 2567860251370830448L;
 
     public String getMessage() {
@@ -28,11 +28,12 @@ public class Order {
         this.message = message;
     }
 
-    public Data getData() {
+    public List<Data> getData() {
         return data;
     }
 
-    public void setData(Data data) {
+    public void setData(List<Data> data) {
         this.data = data;
     }
+
 }

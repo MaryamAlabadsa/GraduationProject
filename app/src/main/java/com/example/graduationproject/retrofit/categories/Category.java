@@ -15,15 +15,19 @@ public class Category implements Serializable
     @SerializedName("id")
     @Expose
     private Integer id;
-
-    public Category(Integer id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("image")
+    @Expose
+    private Object image;
+
+    public Category(Integer id, String name, Object image) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+    }
+
     private final static long serialVersionUID = 815187577766770285L;
 
     public Integer getId() {
@@ -47,5 +51,13 @@ public class Category implements Serializable
     @Override
     public String toString() {
         return name;
+    }
+
+    public Object getImage() {
+        return image;
+    }
+
+    public void setImage(Object image) {
+        this.image = image;
     }
 }

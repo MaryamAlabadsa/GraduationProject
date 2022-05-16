@@ -1,47 +1,87 @@
-package com.example.graduationproject.activities;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.graduationproject.fragments;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.graduationproject.R;
-import com.example.graduationproject.databinding.ActivityChangePasswordBinding;
-import com.example.graduationproject.databinding.ActivityMainBinding;
+import com.example.graduationproject.activities.SignInActivity;
+import com.example.graduationproject.databinding.FragmentChangePasswordBinding;
+import com.example.graduationproject.databinding.FragmentProfileBinding;
 import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.change.password.ChangePassword;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ChangePasswordActivity extends BaseActivity {
-    ActivityChangePasswordBinding binding;
-    Context context = ChangePasswordActivity.this;
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link ChangePasswordFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class ChangePasswordFragment extends BaseFragment {
+
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+    Context context;
+    FragmentChangePasswordBinding binding;
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+
+    public ChangePasswordFragment() {
+        // Required empty public constructor
+    }
+
+    public static ChangePasswordFragment newInstance(String param1, String param2) {
+        ChangePasswordFragment fragment = new ChangePasswordFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityChangePasswordBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        serviceApi = Creator.getClient().create(ServiceApi.class);
-        sharedPreferences = new AppSharedPreferences(getApplicationContext());
-        token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
 
-        binding.changePasswordBtn.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public int getFragmentTitle() {
+        return R.string.changePassword;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentChangePasswordBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+        context = getActivity();
+        serviceApi = Creator.getClient().create(ServiceApi.class);
+        sharedPreferences = new AppSharedPreferences(getActivity().getApplicationContext());
+        token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);        binding.changePasswordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 binding.progressBar.setVisibility(View.VISIBLE);
@@ -61,6 +101,8 @@ public class ChangePasswordActivity extends BaseActivity {
 
             }
         });
+
+        return view;
     }
 
     private void changePasswordRequest(String oldPassword, String password, String passwordConfirmation) {
@@ -112,6 +154,4 @@ public class ChangePasswordActivity extends BaseActivity {
         }
         return errorMsg;
     }
-
-
 }

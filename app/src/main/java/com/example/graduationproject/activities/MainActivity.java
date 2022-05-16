@@ -1,6 +1,7 @@
 package com.example.graduationproject.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,6 +30,7 @@ import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.ActivityMainBinding;
 import com.example.graduationproject.databinding.ButtonDialogBinding;
 import com.example.graduationproject.databinding.LayoutToolbarBinding;
+import com.example.graduationproject.fragments.ChangePasswordFragment;
 import com.example.graduationproject.fragments.ui.AddPostFragment;
 import com.example.graduationproject.fragments.ui.AllPostsFragment;
 import com.example.graduationproject.fragments.BaseFragment;
@@ -96,7 +98,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         toolbarBinding.toolbar.setTitle("");
         setSupportActionBar(toolbarBinding.toolbar);
 
-
+        binding.toolbarBack.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+                toolbarBinding.getRoot().setVisibility(View.VISIBLE);
+                binding.toolbarBack.setVisibility(View.INVISIBLE);
+            }
+        });
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this,
                 binding.mainDrawer,
@@ -107,6 +116,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         toggle.setDrawerIndicatorEnabled(true);
+
         toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,6 +143,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         switchFragment(ALL_POSTS, null);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -166,10 +177,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
 
             case R.id.nav_change_password:
-                Intent intent2 = new Intent(this,
-                        ChangePasswordActivity.class);
-                startActivity(intent2);
+                switchFragment(PagesFragment.CHANGE_PASSWORD, null);
                 break;
+
 
 
         }
@@ -184,80 +194,40 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         BaseFragment fragment = null;
         switch (pagesFragment) {
             case ADD_POSTS:
+                toolbarBinding.getRoot().setVisibility(View.VISIBLE);
                 fragment = new AddPostFragment();
                 break;
             case ALL_POSTS:
+                Toast.makeText(context, "All posts", Toast.LENGTH_SHORT).show();
+                toolbarBinding.getRoot().setVisibility(View.VISIBLE);
                 fragment = new AllPostsFragment();
                 break;
             case NOTIFICATION:
+                toolbarBinding.getRoot().setVisibility(View.VISIBLE);
                 fragment = new NotificationFragment();
                 break;
             case PROFILE:
+                toolbarBinding.getRoot().setVisibility(View.GONE);
+                binding.toolbarBack.setVisibility(View.VISIBLE);
                 fragment = ProfileFragment.newInstance(object.getUserId());
                 break;
             case POST_ORDERS:
+                toolbarBinding.getRoot().setVisibility(View.VISIBLE);
                 fragment = PostOrdersFragment.newInstance(object);
+                break;
+            case CHANGE_PASSWORD:
+                toolbarBinding.getRoot().setVisibility(View.VISIBLE);
+                fragment = new ChangePasswordFragment();
                 break;
         }
         toolbarBinding.tvTitle.setText(fragment.getFragmentTitle());
+
 
         if (ALL_POSTS == pagesFragment) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, tag).commit();
         } else {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, tag).commit();
         }
-    }
-
-    private void requestLogout() {
-
-        Call<LogOut> call = serviceApi.logout("Bearer " + token);
-        call.enqueue(new Callback<LogOut>() {
-
-            @Override
-            public void onResponse(Call<LogOut> call, Response<LogOut> response) {
-                if (response.isSuccessful()) {
-                    Log.d("Success", new Gson().toJson(response.body()));
-                    sharedPreferences.writeString(AppSharedPreferences.AUTHENTICATION, "");
-                    Intent i = new Intent(context, SplashActivity.class);
-                    Toast.makeText(context, R.string.session_was_expired_logout_processing, Toast.LENGTH_SHORT).show();
-                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(i);
-                    deleteDeviceToken();
-
-                } else {
-                    String errorMessage = parseError(response);
-                    Log.e("errorMessage", errorMessage + "");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<LogOut> call, Throwable t) {
-
-            }
-        });
-    }
-
-    private void deleteDeviceToken() {
-        Call<MessageResponse> call = serviceApi.sendDeviceToken("", "Bearer " + token);
-        call.enqueue(new Callback<MessageResponse>() {
-            @Override
-            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
-                Log.d("response1 code", response.code() + "");
-                if (response.isSuccessful()) {
-                    Log.d("Success", new Gson().toJson(response.body()));
-                } else {
-                    String errorMessage = parseError(response);
-                    Log.e("errorMessage", errorMessage + "");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MessageResponse> call, Throwable t) {
-                Log.d("onFailure2", t.getMessage() + "");
-                call.cancel();
-            }
-        });
     }
 
     @Override
@@ -275,6 +245,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case PROFILE:
                 binding.navView.getMenu().getItem(3).setChecked(true);
                 break;
+
         }
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -407,5 +378,56 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
+    private void requestLogout() {
+
+        Call<LogOut> call = serviceApi.logout("Bearer " + token);
+        call.enqueue(new Callback<LogOut>() {
+
+            @Override
+            public void onResponse(Call<LogOut> call, Response<LogOut> response) {
+                if (response.isSuccessful()) {
+                    Log.d("Success", new Gson().toJson(response.body()));
+                    sharedPreferences.writeString(AppSharedPreferences.AUTHENTICATION, "");
+                    Intent i = new Intent(context, SplashActivity.class);
+                    Toast.makeText(context, R.string.session_was_expired_logout_processing, Toast.LENGTH_SHORT).show();
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
+                    deleteDeviceToken();
+
+                } else {
+                    String errorMessage = parseError(response);
+                    Log.e("errorMessage", errorMessage + "");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LogOut> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void deleteDeviceToken() {
+        Call<MessageResponse> call = serviceApi.sendDeviceToken("", "Bearer " + token);
+        call.enqueue(new Callback<MessageResponse>() {
+            @Override
+            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                Log.d("response1 code", response.code() + "");
+                if (response.isSuccessful()) {
+                    Log.d("Success", new Gson().toJson(response.body()));
+                } else {
+                    String errorMessage = parseError(response);
+                    Log.e("errorMessage", errorMessage + "");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MessageResponse> call, Throwable t) {
+                Log.d("onFailure2", t.getMessage() + "");
+                call.cancel();
+            }
+        });
+    }
 
 }

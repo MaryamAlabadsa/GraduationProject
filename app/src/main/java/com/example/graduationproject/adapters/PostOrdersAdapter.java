@@ -14,6 +14,7 @@ import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.LayoutPostOrderBinding;
 import com.example.graduationproject.listener.PostOrderRequestInterface;
 import com.example.graduationproject.retrofit.request.Data;
+import com.example.graduationproject.retrofit.request.GetAllOrder;
 import com.example.graduationproject.retrofit.request.Order;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class PostOrdersAdapter extends RecyclerView.Adapter<PostOrdersAdapter.My
 
     Context context;
     List<Data> list;
-    Order order;
+    GetAllOrder order;
     PostOrderRequestInterface postOrderRequestInterface;
     Boolean isCompleted, isDonation;
     int userId;
@@ -39,7 +40,7 @@ public class PostOrdersAdapter extends RecyclerView.Adapter<PostOrdersAdapter.My
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setList(Order order) {
+    public void setList(GetAllOrder order) {
         this.order = order;
         this.list = order.getData();
         notifyDataSetChanged();

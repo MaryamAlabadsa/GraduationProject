@@ -37,6 +37,7 @@ import com.example.graduationproject.model.PostOrdersInfo;
 import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.post.Post;
 import com.example.graduationproject.retrofit.request.Data;
+import com.example.graduationproject.retrofit.request.GetAllOrder;
 import com.example.graduationproject.retrofit.request.Order;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -110,16 +111,16 @@ public class PostOrdersFragment extends BaseFragment {
     private void getPostsOrdersRequest() {
         RequestBody post_id = RequestBody.create(MediaType.parse("multipart/form-data"), postId + "");
 
-        Call<Order> call = serviceApi.getPostOrder(
+        Call<GetAllOrder> call = serviceApi.getPostOrder(
                 "Bearer " + token, post_id);
-        call.enqueue(new Callback<Order>() {
+        call.enqueue(new Callback<GetAllOrder>() {
             @Override
-            public void onResponse(Call<Order> call, Response<Order> response) {
+            public void onResponse(Call<GetAllOrder> call, Response<GetAllOrder> response) {
                 Log.d("response3 code", response.code() + "");
 
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
-                    Order getPostOrders = response.body();
+                    GetAllOrder getPostOrders = response.body();
                     setOrdersRv(getPostOrders);
                     progressDialog.dismiss();
 
@@ -130,7 +131,7 @@ public class PostOrdersFragment extends BaseFragment {
             }
 
             @Override
-            public void onFailure(Call<Order> call, Throwable t) {
+            public void onFailure(Call<GetAllOrder> call, Throwable t) {
                 Log.d("onFailure2", t.getMessage() + "");
                 call.cancel();
             }
@@ -184,7 +185,7 @@ public class PostOrdersFragment extends BaseFragment {
         builder.show();
     }
 
-    private void setOrdersRv(Order order) {
+    private void setOrdersRv(GetAllOrder order) {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 context, RecyclerView.VERTICAL, false);
         binding.postOrdersRecycle.setLayoutManager(layoutManager);
