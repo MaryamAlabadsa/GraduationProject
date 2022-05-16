@@ -108,6 +108,12 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         Glide.with(context).load(list.get(position).getUserImage()).circleCrop()
                 .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.uImgPost);
         LayoutPostItemBinding layoutPostItemBinding = holder.binding.layoutPost;
+        holder.binding.uNamePost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userIdtRequestInterface.layout(list.get(position).getUserId());
+            }
+        });
         setOrderPostHolder(layoutPostItemBinding, position);
     }
 
@@ -128,9 +134,10 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         binding.uNamePost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                userIdtRequestInterface.layout(list.get(position).getFirstUserId());
+                userIdtRequestInterface.layout(list.get(position).getPost().getFirstUserId());
             }
         });
+
     }
 
     private void setOrderPostImages(LayoutPostItemBinding binding,Post list) {

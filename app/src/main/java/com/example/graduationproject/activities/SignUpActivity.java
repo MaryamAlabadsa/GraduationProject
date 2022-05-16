@@ -1,12 +1,15 @@
 package com.example.graduationproject.activities;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.ProgressDialog;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,12 +23,14 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.graduationproject.databinding.ActivitySignUpBinding;
+import com.example.graduationproject.model.RegisterRequest;
 import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
 import com.example.graduationproject.retrofit.register.User;
 import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
+import com.example.graduationproject.utils.FileUtil;
 import com.google.gson.Gson;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -49,7 +54,7 @@ public class SignUpActivity extends BaseActivity {
     String token;
     ServiceApi serviceApi;
     ActivitySignUpBinding binding;
-    Context context=SignUpActivity.this;
+    Context context = SignUpActivity.this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,32 +85,34 @@ public class SignUpActivity extends BaseActivity {
         binding.register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               String email= binding.email.getText().toString();
-               String password= binding.password.getText().toString();
-               String location= binding.location.getText().toString();
-               String phone= binding.phone.getText().toString();
-               String userName= binding.username.getText().toString();
-                register(file,email,password,location,phone,userName);
-                showDialog();
+                String email = binding.email.getText().toString();
+                String password = binding.password.getText().toString();
+                String location = binding.location.getText().toString();
+                String phone = binding.phone.getText().toString();
+                String userName = binding.username.getText().toString();
+                RegisterRequest request = new RegisterRequest(email, password, location, phone, userName);
+                if (validation(request) != null) {
+                    register(file, validation(request));
+                    showDialog();
+                }
+
             }
         });
-
-
     }
 
-    private void register(File resourceFile, String uEmail, String uPassword, String uLocation, String uPhoneNumber, String uUserName) {
+    private void register(File resourceFile, RegisterRequest request) {
         MultipartBody.Part body = null;
         if (resourceFile != null) {
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), resourceFile);
-            body = MultipartBody.Part.createFormData("img", resourceFile.getName(), requestFile);
+            body = MultipartBody.Part.createFormData("image", resourceFile.getName(), requestFile);
         }
 
-        RequestBody name = RequestBody.create(MediaType.parse("multipart/form-data"), uUserName);
-        RequestBody email = RequestBody.create(MediaType.parse("multipart/form-data"), uEmail);
-        RequestBody phoneNumber = RequestBody.create(MediaType.parse("multipart/form-data"), uPhoneNumber);
-        RequestBody address = RequestBody.create(MediaType.parse("multipart/form-data"), uLocation);
-        RequestBody password = RequestBody.create(MediaType.parse("multipart/form-data"), uPassword);
-        RequestBody passwordConfirmation = RequestBody.create(MediaType.parse("multipart/form-data"), uPassword);
+        RequestBody name = RequestBody.create(MediaType.parse("multipart/form-data"), request.getUser_name());
+        RequestBody email = RequestBody.create(MediaType.parse("multipart/form-data"), request.getEmail());
+        RequestBody phoneNumber = RequestBody.create(MediaType.parse("multipart/form-data"), request.getPhone());
+        RequestBody address = RequestBody.create(MediaType.parse("multipart/form-data"), request.getLocation());
+        RequestBody password = RequestBody.create(MediaType.parse("multipart/form-data"), request.getPassword());
+        RequestBody passwordConfirmation = RequestBody.create(MediaType.parse("multipart/form-data"), request.getPassword());
         Call<RegisterResponse> call = serviceApi.register("application/json"
                 , name
                 , email
@@ -114,16 +121,15 @@ public class SignUpActivity extends BaseActivity {
                 , password
                 , passwordConfirmation
                 , body);
-
         call.enqueue(new Callback<RegisterResponse>() {
             @Override
             public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
                 Log.d("response code", response.code() + "");
                 if (response.isSuccessful() || response.code() == 200) {
                     assert response.body() != null;
-                    User user =response.body().getData().getUser();
-                    Gson gson=new Gson();
-                    String userString=gson.toJson(user);
+                    User user = response.body().getData().getUser();
+                    Gson gson = new Gson();
+                    String userString = gson.toJson(user);
 
                     sharedPreferences.writeString(AppSharedPreferences.USER, userString);
                     sharedPreferences.writeString(AppSharedPreferences.AUTHENTICATION, response.body().getData().getToken());
@@ -131,18 +137,20 @@ public class SignUpActivity extends BaseActivity {
                 } else {
                     String errorMessage = parseError2(response);
                     Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
-                    binding.email.setError(errorMessage);
                     progressDialog.dismiss();
                     Log.e("errorMessage", errorMessage + "");
                 }
             }
+
             @Override
             public void onFailure(Call<RegisterResponse> call, Throwable t) {
                 Log.d("onFailure", t.getMessage() + "");
                 call.cancel();
             }
         });
+//
     }
+
     public String parseError2(Response<?> response) {
         String errorMsg = null;
         try {
@@ -186,8 +194,9 @@ public class SignUpActivity extends BaseActivity {
                 == PackageManager.PERMISSION_GRANTED;
         return res1 && res2;
     }
+
     Uri userImg;
-    File file = null;
+    File file;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -200,6 +209,7 @@ public class SignUpActivity extends BaseActivity {
                     InputStream stream = getContentResolver().openInputStream(userImg);
                     Bitmap bitmap = BitmapFactory.decodeStream(stream);
                     binding.pickImage.setImageBitmap(bitmap);
+                   file= FileUtil.from(context, userImg);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -210,10 +220,11 @@ public class SignUpActivity extends BaseActivity {
 
         }
     }
-    private void sendDeviceToken(){
+
+    private void sendDeviceToken() {
         String token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
         String deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
-        Call<MessageResponse> call = serviceApi.sendDeviceToken(deviceToken,"Bearer " + token);
+        Call<MessageResponse> call = serviceApi.sendDeviceToken(deviceToken, "Bearer " + token);
         call.enqueue(new Callback<MessageResponse>() {
             @Override
             public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
@@ -227,11 +238,33 @@ public class SignUpActivity extends BaseActivity {
 //                    Log.e("errorMessage", errorMessage + "");
                 }
             }
+
             @Override
             public void onFailure(Call<MessageResponse> call, Throwable t) {
                 Log.d("onFailure2", t.getMessage() + "");
                 call.cancel();
             }
         });
+    }
+
+    private RegisterRequest validation(RegisterRequest request) {
+        if (request.getEmail().trim().isEmpty()) {
+            binding.email.setError("can not be empty");
+            return null;
+        } else if (request.getPassword().trim().isEmpty()) {
+            binding.password.setError("can not be empty");
+            return null;
+        } else if (request.getLocation().trim().isEmpty()) {
+            binding.location.setError("can not be empty");
+            return null;
+        } else if (request.getUser_name().trim().isEmpty()) {
+            binding.username.setError("can not be empty");
+            return null;
+        } else if (request.getPhone().trim().isEmpty()) {
+            binding.phone.setError("can not be empty");
+            return null;
+        } else
+            return request;
+
     }
 }

@@ -120,6 +120,11 @@ public interface ServiceApi {
     @GET("sendDeviceToken/{id}")
     Call<MessageResponse> sendDeviceToken(@Path("id") String id, @Header("Authorization") String token);
 
+    @Multipart
+    @POST("updateUserImage")
+    Call<MessageResponse> updateUserImage(@Header("Accept") String accept, @Part MultipartBody.Part image
+            , @Header("Authorization") String token);
+
     // profile
 
     @POST("myDonationPosts")
@@ -140,7 +145,7 @@ public interface ServiceApi {
             @Path("id") int userId,
             @Header("Authorization") String token);
 
-    @POST("MyProfileInfo/{id}")
+    @POST("myProfileInfo")
     Call<UserProfileInfo> getMyProfileInfo(
             @Header("Authorization") String token);
 
@@ -150,7 +155,7 @@ public interface ServiceApi {
             @Header("Authorization") String token);
 
 
-    @POST("notification")
+    @GET("notification")
     Call<Notification> getNotification(
             @Header("Authorization") String token);
 

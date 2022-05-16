@@ -118,6 +118,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
 
     private void setOrderButton(MyViewHolder holder, int position) {
         if (list.get(position).getIsHeTheOwnerOfThePost()) {
+            holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    addOrderInterface.layout(list.get(position));
+                    notifyDataSetChanged();
+                }
+            });
             holder.binding.commentBtn.setText("Show orders");
         } else {
             if (list.get(position).getIsCompleted())
@@ -132,15 +139,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
                     }
                 });
             }
-            else {
-                holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        addOrderInterface.layout(list.get(position));
-                        notifyDataSetChanged();
+            else {   holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    addOrderInterface.layout(list.get(position));
+                    notifyDataSetChanged();
 
-                    }
-                });
+                }
+            });
                 holder.binding.commentBtn.setText("Add order");
             }
         }

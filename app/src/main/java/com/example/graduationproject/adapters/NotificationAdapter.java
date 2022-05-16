@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -66,13 +67,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull NotificationAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+        String message;
         if (list.get(position).getType().equals("accept_request")) {
+            message = list.get(position).getSenderName() + "accept your request";
 
-        }else {
+        } else {
+            message = list.get(position).getSenderName() + " send you a request";
 
         }
-        //        holder.binding.tvNotificationText.setText(list.get(position).);
-
+        holder.binding.tvNotificationText.setText(message);
 
     }
 

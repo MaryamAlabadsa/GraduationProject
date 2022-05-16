@@ -2,68 +2,73 @@
 package com.example.graduationproject.retrofit.profile.user.info;
 
 import java.io.Serializable;
+
 import javax.annotation.Generated;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("jsonschema2pojo")
-public class Data implements Serializable
-{
+public class Data implements Serializable {
 
-    @SerializedName("user")
+    @SerializedName("user_image")
     @Expose
-    private User user;
+    private String userImage;
+    @SerializedName("user_name")
+    @Expose
+    private String userName;
     @SerializedName("num_donation_post")
     @Expose
-    private Integer numDonationPost;
+    private String numDonationPost;
+
     @SerializedName("num_request_post")
     @Expose
-    private Integer numRequestPost;
+    private String numRequestPost;
+
     private final static long serialVersionUID = 8222112933100028097L;
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Data() {
     }
 
-    /**
-     * 
-     * @param numDonationPost
-     * @param user
-     * @param numRequestPost
-     */
-    public Data(User user, Integer numDonationPost, Integer numRequestPost) {
-        super();
-        this.user = user;
+    public Data(String userImage, String userName, String numDonationPost, String numRequestPost) {
+        this.userImage = userImage;
+        this.userName = userName;
         this.numDonationPost = numDonationPost;
         this.numRequestPost = numRequestPost;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserImage() {
+        return userImage;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
     }
 
-    public Integer getNumDonationPost() {
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getNumDonationPost() {
         return numDonationPost;
     }
 
-    public void setNumDonationPost(Integer numDonationPost) {
+    public void setNumDonationPost(String numDonationPost) {
         this.numDonationPost = numDonationPost;
     }
 
-    public Integer getNumRequestPost() {
+    public String getNumRequestPost() {
         return numRequestPost;
     }
 
-    public void setNumRequestPost(Integer numRequestPost) {
+    public void setNumRequestPost(String numRequestPost) {
         this.numRequestPost = numRequestPost;
     }
-
 }

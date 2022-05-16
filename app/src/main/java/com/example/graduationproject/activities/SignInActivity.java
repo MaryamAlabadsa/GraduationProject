@@ -48,13 +48,15 @@ public class SignInActivity extends BaseActivity {
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = binding.email.getText().toString();
+                String email = binding.email.getText().toString().trim();
                 String password = binding.password.getText().toString();
+                SendLogin sendLogin = new SendLogin();
+                sendLogin.setEmail(email);
+                sendLogin.setPassword(password); /** GET List Resources **/
                 if (email != null && password != null) {
                     showDialog();
-                    login(email, password);
-                    Toast.makeText(context, "login", Toast.LENGTH_SHORT).show();
-                    finish();
+                    login(sendLogin);
+//                    finish();
                 }
             }
         });
@@ -67,10 +69,8 @@ public class SignInActivity extends BaseActivity {
         });
     }
 
-    private void login(String email, String password) {
-        SendLogin sendLogin = new SendLogin();
-        sendLogin.setEmail(email);
-        sendLogin.setPassword(password); /** GET List Resources **/
+    private void login(SendLogin sendLogin) {
+
         Call<RegisterResponse> call = serviceApi.login("application/json", sendLogin);
         call.enqueue(new Callback<RegisterResponse>() {
 
@@ -86,11 +86,11 @@ public class SignInActivity extends BaseActivity {
                     sharedPreferences.writeString(AppSharedPreferences.USER, userString);
                     sharedPreferences.writeString(AppSharedPreferences.AUTHENTICATION, response.body().getData().getToken());
                     sendDeviceToken();
-
                 } else {
                     String errorMessage = parseError2(response);
                     Toast.makeText(SignInActivity.this, errorMessage + "", Toast.LENGTH_SHORT).show();
                     binding.email.setError(errorMessage);
+                    progressDialog.dismiss();
                     Log.e("errorMessage", errorMessage + "");
                 }
             }
@@ -120,6 +120,7 @@ public class SignInActivity extends BaseActivity {
     private void sendDeviceToken(){
         String token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
         String deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
+
         Call<MessageResponse> call = serviceApi.sendDeviceToken(deviceToken,"Bearer " + token);
         call.enqueue(new Callback<MessageResponse>() {
             @Override
@@ -129,9 +130,11 @@ public class SignInActivity extends BaseActivity {
                     Log.d("Success", new Gson().toJson(response.body()));
                     startActivity(new Intent(context, MainActivity.class));
                     progressDialog.dismiss();
+                    finish();
 
                 } else {
                     String errorMessage = parseError(response);
+                    Toast.makeText(SignInActivity.this, errorMessage+"", Toast.LENGTH_SHORT).show();
                     Log.e("errorMessage", errorMessage + "");
                 }
             }

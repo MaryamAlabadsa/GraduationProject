@@ -30,7 +30,7 @@
             android:padding="@dimen/_5sdp"
             android:text="Razan S. Abu Shaban"
             android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
+            android:textSize="@dimen/_10ssp"
             app:layout_constraintStart_toEndOf="@id/user_image"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,7 +43,7 @@
             android:text="two days"
             android:gravity="center|top|start"
             android:textSize="@dimen/_10ssp"
-            android:paddingStart="@dimen/_7ssp"
+            android:paddingStart="@dimen/_10ssp"
             app:layout_constraintBottom_toBottomOf="@+id/user_image"
             app:layout_constraintStart_toEndOf="@id/user_image" />
 
@@ -55,7 +55,7 @@
             android:layout_marginTop="@dimen/_2sdp"
             android:fontFamily="@font/din_next_arabic_medium"
             android:text="post_massage"
-            android:textSize="@dimen/_12sdp"
+            android:textSize="@dimen/_10sdp"
             android:padding="@dimen/_5sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -64,16 +64,17 @@
 
         <TextView
             android:id="@+id/accept_order_btn"
-            android:layout_width="@dimen/_90sdp"
-            android:layout_height="@dimen/_35sdp"
-             android:background="@drawable/button_profile1"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:background="@drawable/button_profile1"
             android:fontFamily="@font/din_next_arabic_medium"
             android:text="Accept Order"
             android:textColor="@color/white"
-            android:textSize="@dimen/_12ssp"
+            android:textSize="@dimen/_9ssp"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
-             tools:ignore="MissingConstraints"
+            tools:ignore="MissingConstraints"
+            app:layout_constraintLeft_toRightOf="@id/user_name"
             tools:layout_editor_absoluteY="16dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -92,11 +92,13 @@ public class NotificationFragment extends BaseFragment {
 
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
-                    binding.tv.setVisibility(View.VISIBLE);
+                    binding.tv.setVisibility(View.GONE);
+                    binding.rvNotification.setVisibility(View.VISIBLE);
                     setNotificationRv(response.body().getData());
                     progressDialog.dismiss();
 
                 } else {
+                    progressDialog.dismiss();
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
                 }
@@ -126,7 +128,7 @@ public class NotificationFragment extends BaseFragment {
 
     private void setNotificationRv(List<Datum> list) {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
-                context, RecyclerView.HORIZONTAL, false);
+                context, RecyclerView.VERTICAL, false);
         binding.rvNotification.setLayoutManager(layoutManager);
         NotificationAdapter adapter = new NotificationAdapter(context);
         adapter.setList(list);

@@ -25,6 +25,9 @@ public class Datum implements Serializable
     @SerializedName("type")
     @Expose
     private String type;
+    @SerializedName("sender_name")
+    @Expose
+    private String senderName;
     private final static long serialVersionUID = 2792360874378452260L;
 
     /**
@@ -33,23 +36,26 @@ public class Datum implements Serializable
      */
     public Datum() {
     }
-
     /**
-     * 
+     *
      * @param senderId
      * @param receiverId
      * @param id
      * @param postId
      * @param type
+     * @param senderName
      */
-    public Datum(Integer id, Integer postId, Integer senderId, Integer receiverId, String type) {
-        super();
+    public Datum(Integer id, Integer postId, Integer senderId, Integer receiverId, String type, String senderName) {
         this.id = id;
         this.postId = postId;
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.type = type;
+        this.senderName = senderName;
     }
+
+
+
 
     public Integer getId() {
         return id;
@@ -91,4 +97,11 @@ public class Datum implements Serializable
         this.type = type;
     }
 
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
 }

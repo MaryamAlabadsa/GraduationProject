@@ -5,24 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".fragments.ui.PostOrdersFragment">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_50sdp"
-        android:background="@color/light_blue"
-        android:gravity="center"
-        android:text="@string/requests_massages"
-        android:textColor="@color/blue"
-        android:textSize="@dimen/_20ssp"
-        android:textStyle="bold"
-        android:typeface="serif"
-        tools:ignore="MissingConstraints" />
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/post_orders_recycle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_50sdp"
         />
 </FrameLayout>

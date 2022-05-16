@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     android:orientation="vertical"
     android:visibility="visible"
     tools:context=".fragments.ui.ProfileFragment">
@@ -23,9 +24,9 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginTop="@dimen/_45sdp"
-        android:src="@drawable/profile_user"
-        android:padding="3dp"
         android:background="@drawable/profile_stroke"
+        android:padding="3dp"
+        android:src="@drawable/profile_user"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -50,8 +51,8 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
-        android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_20sdp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/full_name">
@@ -61,7 +62,7 @@
             android:layout_width="@dimen/_35sdp"
             android:layout_height="@dimen/_40sdp"
             android:layout_centerInParent="true"
-             android:gravity="end|center"
+            android:gravity="end|center"
             android:padding="@dimen/_4sdp"
             android:text="255"
             android:textColor="@color/blue"
@@ -76,7 +77,7 @@
             android:layout_width="@dimen/_70sdp"
             android:layout_height="@dimen/_40sdp"
             android:layout_centerInParent="true"
-             android:gravity="start|center"
+            android:gravity="start|center"
             android:includeFontPadding="false"
             android:text="Request"
             android:textColor="@color/dark_gray"
@@ -127,38 +128,58 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_35sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginStart="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_10sdp"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-         android:layout_marginEnd="@dimen/_20sdp"
-        android:layout_marginStart="@dimen/_20sdp">
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:background="@drawable/button_profile2"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <LinearLayout
+            android:id="@+id/linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/btn_donation_post"
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:fontFamily="@font/din_next_arabic_bold"
+                android:gravity="center"
+                android:text="Donation"
+                android:textColor="@color/blue"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="MissingConstraints" />
+
+            <TextView
+                android:id="@+id/btn_request_post"
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:fontFamily="@font/din_next_arabic_bold"
+                android:gravity="center"
+                android:text="Request"
+                android:textColor="@color/blue"
+                tools:ignore="MissingConstraints" />
 
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_donation_post"
-            android:layout_width="@dimen/_120sdp"
-            android:layout_height="@dimen/_35sdp"
-            android:text="Donation"
-            android:textColor="@color/blue"
-            android:gravity="center"
-            android:fontFamily="@font/din_next_arabic_bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/button_profile2"
-            tools:ignore="MissingConstraints" />
+        </LinearLayout>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_request_post"
-            android:layout_width="@dimen/_120sdp"
-            android:layout_height="@dimen/_35sdp"
-             android:text="Request"
-            android:gravity="center"
-            android:fontFamily="@font/din_next_arabic_bold"
-            app:layout_constraintEnd_toStartOf="@+id/btn_donation_post"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:background="@drawable/button_profile1"
-            android:textColor="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="MissingConstraints" />
+        <View
+            android:id="@+id/line_view"
+            android:layout_width="80dp"
+            android:layout_height="2dp"
+            android:layout_marginLeft="@dimen/_40sdp"
+            app:layout_constraintTop_toBottomOf="@id/linear"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:background="@color/blue" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -170,5 +191,5 @@
         android:layout_marginTop="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-        app:layout_constraintVertical_bias="0.051"/>
+        app:layout_constraintVertical_bias="0.051" />
 </androidx.constraintlayout.widget.ConstraintLayout>

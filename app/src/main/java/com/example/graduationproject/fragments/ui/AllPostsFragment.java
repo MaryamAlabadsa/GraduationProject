@@ -108,7 +108,6 @@ public class AllPostsFragment extends BaseFragment {
         showDialog();
         getAllCategories();
         getAllPosts();
-        Toast.makeText(context, token+"", Toast.LENGTH_SHORT).show();
         return view;
     }
 

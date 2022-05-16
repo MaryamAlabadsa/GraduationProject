@@ -13,6 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
@@ -99,6 +102,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
         dialogBinding = ButtonDialogBinding.inflate(inflater, container, false);
         context = getActivity();
+        Toast.makeText(context, token+"", Toast.LENGTH_SHORT).show();
         dialog = new BottomSheetDialog(context);
 //        showDialog();
         getProfileData();
@@ -111,11 +115,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void getProfileData() {
         showDialog();
         if (userId == 0) {
+            Toast.makeText(context, "my profie", Toast.LENGTH_SHORT).show();
             setMyProfileInfo();
-            getMyRequestPosts();
         } else {
             setUserProfileInfo();
-            getMyRequestPosts();
         }
     }
 
@@ -129,12 +132,15 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 Log.d("response1 code", response.code() + "");
 
                 if (response.isSuccessful()) {
+                    Toast.makeText(context, "mu info", Toast.LENGTH_SHORT).show();
                     Log.d("Success", new Gson().toJson(response.body()));
-                    Glide.with(context).load(response.body().getData().getUser().getImageLink()).circleCrop()
+                    Glide.with(context).load(response.body().getData().getUserImage()).circleCrop()
                             .placeholder(R.drawable.ic_launcher_foreground).into(binding.profileImage);
-                    binding.fullName.setText(response.body().getData().getUser().getName());
+                    binding.fullName.setText(response.body().getData().getUserName());
                     binding.tvDonationPostsNum.setText(response.body().getData().getNumDonationPost() + "");
                     binding.tvRequestPostsNum.setText(response.body().getData().getNumRequestPost() + "");
+                    getMyRequestPosts();
+
                 } else {
 //                    String errorMessage
 //                    = parseError(response);
@@ -160,14 +166,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
-                    Glide.with(context).load(response.body().getData().getUser().getImageLink()).circleCrop()
+                    Glide.with(context).load(response.body().getData().getUserImage()).circleCrop()
                             .placeholder(R.drawable.ic_launcher_foreground).into(binding.profileImage);
-                    binding.fullName.setText(response.body().getData().getUser().getName());
+                    binding.fullName.setText(response.body().getData().getUserName());
                     binding.tvDonationPostsNum.setText(response.body().getData().getNumDonationPost() + "");
                     binding.tvRequestPostsNum.setText(response.body().getData().getNumRequestPost() + "");
-                    progressDialog.dismiss();
-
-
+                    getUserRequestPosts(userId);
                 } else {
 //                    String errorMessage
 //                    = parseError(response);
@@ -343,6 +347,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     getMyDonationPosts();
                 else
                     getUserDonationPosts(userId);
+                Animation anim = AnimationUtils.loadAnimation(context, R.anim.anim);
+                binding.lineView.startAnimation(anim);
                 break;
 
             case R.id.btn_request_post:
@@ -350,6 +356,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     getMyRequestPosts();
                 else
                     getUserRequestPosts(userId);
+                Animation anim2 = AnimationUtils.loadAnimation(context, R.anim.anim2);
+                binding.lineView.startAnimation(anim2);
                 break;
         }
     }
