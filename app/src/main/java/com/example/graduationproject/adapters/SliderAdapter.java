@@ -21,13 +21,13 @@ import java.util.List;
 public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapterVH> {
 
     private Context context;
-    private List<SliderItem> mSliderItems = new ArrayList<>();
+    private List<String> mSliderItems = new ArrayList<>();
 
     public SliderAdapter(Context context) {
         this.context = context;
     }
 
-    public void renewItems(List<SliderItem> sliderItems) {
+    public void renewItems(List<String> sliderItems) {
         this.mSliderItems = sliderItems;
         notifyDataSetChanged();
     }
@@ -37,8 +37,8 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
         notifyDataSetChanged();
     }
 
-    public void addItem(SliderItem sliderItem) {
-        this.mSliderItems.add(sliderItem);
+    public void addItem(List<String> sliderItem) {
+        this.mSliderItems=sliderItem;
         notifyDataSetChanged();
     }
 
@@ -53,14 +53,14 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
 
     @Override
     public void onBindViewHolder(SliderAdapterVH viewHolder, final int position) {
-        SliderItem sliderItem = mSliderItems.get(0);
-        viewHolder.binding.tvPostDesImageSlider.setText(sliderItem.getDescription());
-        viewHolder.binding.tvPostTitleImageSlider.setText(sliderItem.getTitle());
+//        SliderItem sliderItem = mSliderItems.get(0);
+//        viewHolder.binding.tvPostDesImageSlider.setText(sliderItem.getDescription());
+//        viewHolder.binding.tvPostTitleImageSlider.setText(sliderItem.getTitle());
 
-        for (int i = 0; i < sliderItem.getImageList().size(); i++) {
+        for (int i = 0; i < mSliderItems.size(); i++) {
 
             Glide.with(viewHolder.itemView)
-                    .load(sliderItem.getImageList().get(i))
+                    .load(mSliderItems)
                     .fitCenter()
                     .into(viewHolder.binding.ivAutoImageSlider);
         }
@@ -69,7 +69,6 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "This is item in position " + position, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -77,7 +76,7 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
     @Override
     public int getCount() {
         //slider view count could be dynamic size
-        return mSliderItems.get(0).getImageList().size();
+        return mSliderItems.size();
     }
 
     class SliderAdapterVH extends SliderViewAdapter.ViewHolder {

@@ -102,10 +102,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         SliderAdapter adapter = new SliderAdapter(context);
 
         sliderView.setSliderAdapter(adapter);
-        SliderItem sliderItem = new SliderItem(list.get(position).getTitle(),
-                list.get(position).getDescription(),
-                list.get(position).getPostMedia());
-        adapter.addItem(sliderItem);
+//        SliderItem sliderItem = new SliderItem(list.get(position).getTitle(),
+//                list.get(position).getDescription(),
+//                list.get(position).getPostMedia());
+        adapter.addItem( list.get(position).getPostMedia());
 
         sliderView.setIndicatorAnimation(IndicatorAnimationType.SCALE_DOWN); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
         sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);

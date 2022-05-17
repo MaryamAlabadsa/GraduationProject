@@ -181,7 +181,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
 
 
-
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -305,6 +304,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     ImageView userImage = headerView.findViewById(R.id.user_image);
                     userImage.setImageBitmap(bitmap);
                     file = FileUtil.from(context, userImg);
+                    changeUserImageRequest();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -328,26 +329,38 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 } else {
                     if (!checkStoragePermission()) {
                         requestStoragePermission();
-                    } else PickImage();
+                    } else {
+                        Toast.makeText(context, "2", Toast.LENGTH_SHORT).show();
+                        PickImage();
+                        showDialog();
+                    }
                 }
             }
         });
-        changeUserImageRequest();
     }
 
     private void changeUserImageRequest() {
+        Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
         MultipartBody.Part body = null;
         if (file != null) {
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
             body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
         }
-        Call<MessageResponse> call = serviceApi.updateUserImage("application/json", body, token);
-        call.enqueue(new Callback<MessageResponse>() {
+        Call<RegisterResponse> call = serviceApi.updateUserImage("application/json", body, "Bearer " + token);
+        Toast.makeText(context, token+"", Toast.LENGTH_SHORT).show();
+        call.enqueue(new Callback<RegisterResponse>() {
             @Override
-            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
                 Log.d("response code", response.code() + "");
                 if (response.isSuccessful() || response.code() == 200) {
                     assert response.body() != null;
+                    User user = response.body().getData().getUser();
+                    Gson gson = new Gson();
+                    String userString = gson.toJson(user);
+
+                    sharedPreferences.writeString(AppSharedPreferences.USER, userString);
+
+                    progressDialog.dismiss();
                     Toast.makeText(MainActivity.this, response.message() + "", Toast.LENGTH_SHORT).show();
                 } else {
                     String errorMessage = parseError2(response);
@@ -357,7 +370,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
 
             @Override
-            public void onFailure(Call<MessageResponse> call, Throwable t) {
+            public void onFailure(Call<RegisterResponse> call, Throwable t) {
                 Log.d("onFailure", t.getMessage() + "");
                 call.cancel();
             }

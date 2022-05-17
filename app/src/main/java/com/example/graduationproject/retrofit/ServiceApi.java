@@ -123,7 +123,7 @@ public interface ServiceApi {
 
     @Multipart
     @POST("updateUserImage")
-    Call<MessageResponse> updateUserImage(@Header("Accept") String accept, @Part MultipartBody.Part image
+    Call<RegisterResponse> updateUserImage(@Header("Accept") String accept, @Part MultipartBody.Part image
             , @Header("Authorization") String token);
 
     // profile
