@@ -10,6 +10,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,6 +40,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -53,9 +55,13 @@ public class AddPostFragment extends BaseFragment {
     public static final String TAG = "ADD_POSTS";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String IMAGE1 = "image1";
+    private static final String IMAGE2 = "image2";
+    private static final String IMAGE3 = "image3";
     Context context;
     List<Category> categories;
-    ArrayList<File> imagesList;
+    HashMap<String, File> imagesList;
+    //    ArrayList<File> imagesList;
     int imageNum = 0;
     private FragmentSwitcher fragmentSwitcher;
 
@@ -104,7 +110,7 @@ public class AddPostFragment extends BaseFragment {
         View view = binding.getRoot();
         context = getActivity();
         categories = new ArrayList<>();
-        imagesList = new ArrayList<>();
+        imagesList = new HashMap<String, File>();
         showDialog();
         getAllCategories();
 
@@ -185,7 +191,7 @@ public class AddPostFragment extends BaseFragment {
 
 
     String pTitle, pDescription;
-    int isDonation=-1;
+    int isDonation = -1;
     Integer category;
 
     private void spinnerCode(List<Category> categories) {
@@ -227,22 +233,18 @@ public class AddPostFragment extends BaseFragment {
             binding.descriptionPost.requestFocus();
             binding.descriptionPost.setError("FIELD CANNOT BE EMPTY IN DESCRIPTION");
             return "error2";
-        }
-
-        else if (imagesList.isEmpty()) {
-//            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-//            alert.setTitle("ALERT");
-//            alert.setMessage("PLEASE UPLOAD PHOTO");
-//            alert.setPositiveButton("ok",null);
-//            alert.show();
+        } else if (imagesList.isEmpty()) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+            alert.setTitle("ALERT");
+            alert.setMessage("PLEASE UPLOAD PHOTO");
+            alert.setPositiveButton("ok", null);
+            alert.show();
             Toast.makeText(context, "PLEASE UPLOAD PHOTO", Toast.LENGTH_SHORT).show();
             return "error4";
-        }
-        else if (isDonation == 1 || isDonation == 0  ) {
+        } else if (isDonation == 1 || isDonation == 0) {
             Toast.makeText(context, "PLEASE SELECTED REQUEST OR DONATION", Toast.LENGTH_SHORT).show();
             return "error 5 ";
-        }
-        else {
+        } else {
             Toast.makeText(context, "VALIDATION  SUCCESSFUL", Toast.LENGTH_SHORT).show();
             return "";
         }
@@ -250,17 +252,17 @@ public class AddPostFragment extends BaseFragment {
     }
 
 
-    private void addPostRequest(ArrayList<File> imagesList, String uTitle, String uDescription, int pCategory, int pIsDonation) {
-
+    private void addPostRequest(HashMap<String, File> imagesList, String uTitle, String uDescription, int pCategory, int pIsDonation) {
 
         List<MultipartBody.Part> resourceBody = new ArrayList<>();
         for (int i = 0; i < imagesList.size(); i++) {
+            int num=i+1;
             MultipartBody.Part body = null;
             RequestBody requestFile =
                     RequestBody.create(MediaType.parse("multipart/form-data")
-                            , imagesList.get(i));
+                            ,imagesList.get("image"+num));
             body = MultipartBody.Part.createFormData(
-                    "assets[" + i + "]", imagesList.get(i).getName(), requestFile);
+                    "assets[" + i + "]", imagesList.get("image"+num).getName(), requestFile);
             resourceBody.add(body);
 
         }
@@ -325,18 +327,24 @@ public class AddPostFragment extends BaseFragment {
                                 Log.e("data", data.getDataString() + "");
                                 File file = null;
                                 try {
-                                    if (imageNum == 1) {
-                                        binding.imagePost1.setImageURI(data.getData());
-                                    } else if (imageNum == 2) {
-                                        binding.imagePost2.setImageURI(data.getData());
-                                    } else if (imageNum == 3) {
-                                        binding.imagePost3.setImageURI(data.getData());
-                                    }
                                     file = FileUtil.from(context, data.getData());
+
+                                    if (imageNum == 1) {
+                                        binding.image1.setImageURI(data.getData());
+//                                        binding.image2.setColorFilter(ContextCompat.getColor(context, R.color.bink), android.graphics.PorterDuff.Mode.MULTIPLY);
+                                        binding.imagePost2.setVisibility(View.VISIBLE);
+                                        imagesList.put(IMAGE1, file);
+                                    } else if (imageNum == 2) {
+                                        imagesList.put(IMAGE2, file);
+                                        binding.imagePost3.setVisibility(View.VISIBLE);
+                                        binding.image2.setImageURI(data.getData());
+                                    } else if (imageNum == 3) {
+                                        imagesList.put(IMAGE3, file);
+                                        binding.image3.setImageURI(data.getData());
+                                    }
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
-                                imagesList.add(file);
 
                             }
                         }
