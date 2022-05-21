@@ -2,6 +2,8 @@ package com.example.graduationproject.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,7 +22,7 @@ import com.example.graduationproject.utils.AppSharedPreferences;
 
 public class SplashActivity extends BaseActivity {
     Handler handler = new Handler();
-
+Context context=SplashActivity.this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +34,12 @@ public class SplashActivity extends BaseActivity {
             public void run() {
                 run_activity();
                 if(getIntent().getExtras()!=null ){
-                    Toast.makeText(SplashActivity.this, getIntent().getStringExtra("title")+"", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SplashActivity.this, getIntent().getStringExtra("post_id")+"", Toast.LENGTH_SHORT).show();
                     Intent notificationIntent = new Intent(SplashActivity.this,MainActivity.class);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(context
+                            , 0
+                            , notificationIntent
+                            , 0);
 //                    notificationIntent.setData(notificationIntent);
                     startActivity(notificationIntent);
                     finish();

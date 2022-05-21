@@ -52,33 +52,40 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
-        Log.d(TAG, "Message_data_payload: " + remoteMessage.getData());
 
         if (remoteMessage.getData().size() > 0) {
+            Log.d(TAG, "Message_data_payload: " + remoteMessage.getData());
             Map<String, String> params = remoteMessage.getData();
-
-            JSONArray object = null;
-            try {
-                object = new JSONArray(params);
-                Toast.makeText(this, "g", Toast.LENGTH_SHORT).show();
-
-                Log.e("JSON_ARRAY", object.toString());
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            int post_id=0;
+//            JSONArray object = null;
 //            try {
+//                object = new JSONArray(params);
+//                for (int i = 0; i < object.length(); i++) {
+//                    JSONObject notificationDetail = object.getJSONObject(i);
 //
-//                if (object.) {
-//                    String type = object.getString("post_id");
-//                    Log.d("type2", type + "");
-//                    if (remoteMessage.getNotification() != null)
-//                        sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), Integer.parseInt(type));
+//                    post_id=notificationDetail.getInt("post_id");
 //                }
+//                Toast.makeText(this, post_id+"", Toast.LENGTH_SHORT).show();
+//
+//                Log.e("JSON_ARRAY", object.toString());
+//                Log.e("JSON_ARRAY_post_id", post_id+"");
 //
 //            } catch (JSONException e) {
 //                e.printStackTrace();
 //            }
+            JSONObject object = new JSONObject(params);
+            Log.e("JSON OBJECT", object.toString());
+            try {
+                if (object.has("post_id")) {
+                    int postId = object.getInt("post_id");
+                    Log.d("post_iddd", postId + "");
+                    if (remoteMessage.getNotification() != null)
+                        sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), postId);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
         }
         // Check if message contains a notification payload.
