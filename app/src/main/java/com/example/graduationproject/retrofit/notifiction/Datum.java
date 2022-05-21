@@ -24,7 +24,7 @@ public class Datum implements Serializable
     private Integer receiverId;
     @SerializedName("sent_at")
     @Expose
-    private Integer sent_at;
+    private String sent_at;
     @SerializedName("type")
     @Expose
     private String type;
@@ -40,7 +40,7 @@ public class Datum implements Serializable
     public Datum() {
     }
 
-    public Datum(Integer id, Integer postId, Integer senderId, Integer receiverId, Integer sent_at, String type, String senderName) {
+    public Datum(Integer id, Integer postId, Integer senderId, Integer receiverId, String sent_at, String type, String senderName) {
         this.id = id;
         this.postId = postId;
         this.senderId = senderId;
@@ -50,11 +50,11 @@ public class Datum implements Serializable
         this.senderName = senderName;
     }
 
-    public Integer getSent_at() {
+    public String getSent_at() {
         return sent_at;
     }
 
-    public void setSent_at(Integer sent_at) {
+    public void setSent_at(String sent_at) {
         this.sent_at = sent_at;
     }
 

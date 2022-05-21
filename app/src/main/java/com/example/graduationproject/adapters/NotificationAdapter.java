@@ -76,6 +76,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         }
         holder.binding.tvNotificationText.setText(message);
+        holder.binding.tvNotificationDate.setText(list.get(position).getSent_at());
 
     }
 

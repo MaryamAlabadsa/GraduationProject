@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -91,6 +92,7 @@ public class NotificationFragment extends BaseFragment {
                 Log.d("response code", response.code() + "");
 
                 if (response.isSuccessful()) {
+                    Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
                     Log.d("Success", new Gson().toJson(response.body()));
                     binding.tv.setVisibility(View.GONE);
                     binding.rvNotification.setVisibility(View.VISIBLE);
@@ -101,11 +103,15 @@ public class NotificationFragment extends BaseFragment {
                     progressDialog.dismiss();
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
+                    Toast.makeText(context, errorMessage+"", Toast.LENGTH_SHORT).show();
+
                 }
             }
 
             @Override
             public void onFailure(Call<Notification> call, Throwable t) {
+                Toast.makeText(context, t.getMessage()+"3", Toast.LENGTH_SHORT).show();
+
                 Log.d("onFailure2", t.getMessage() + "");
                 call.cancel();
             }
