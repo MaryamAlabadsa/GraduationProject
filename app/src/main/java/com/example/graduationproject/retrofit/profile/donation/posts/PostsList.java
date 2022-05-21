@@ -4,6 +4,7 @@ package com.example.graduationproject.retrofit.profile.donation.posts;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.annotation.Generated;
 
 import com.example.graduationproject.retrofit.post.Post;
@@ -11,8 +12,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("jsonschema2pojo")
-public class PostsList implements Serializable
-{
+public class PostsList implements Serializable {
 
 
     @SerializedName("status")
@@ -93,6 +93,9 @@ public class PostsList implements Serializable
     @SerializedName("user_phone_number")
     @Expose
     private String userPhoneNumber;
+    @SerializedName("published_at")
+    @Expose
+    private String publishedAt;
     @SerializedName("post")
     @Expose
     private Post post;
@@ -100,13 +103,42 @@ public class PostsList implements Serializable
 
     /**
      * No args constructor for use in serialization
-     *
      */
     public PostsList() {
     }
 
+    public PostsList(Integer status, Integer id, String title, String description, Boolean isDonation, Integer categoryId, Integer firstUserId, Integer secondUserId, String categoryName, Integer numberOfRequests, String firstUserName, String secondUserName, Object postFirstUserEmail, String postSecondUserEmail, List<String> postMedia, String firstUserImageLink, Boolean isOrdered, Boolean isHeTheOwnerOfThePost, Boolean isCompleted, String massage, Integer postId, Integer userId, String userName, String userImage, String createdAt, String userPhoneNumber, String publishedAt, Post post) {
+        this.status = status;
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.isDonation = isDonation;
+        this.categoryId = categoryId;
+        this.firstUserId = firstUserId;
+        this.secondUserId = secondUserId;
+        this.categoryName = categoryName;
+        this.numberOfRequests = numberOfRequests;
+        this.firstUserName = firstUserName;
+        this.secondUserName = secondUserName;
+        this.postFirstUserEmail = postFirstUserEmail;
+        this.postSecondUserEmail = postSecondUserEmail;
+        this.postMedia = postMedia;
+        this.firstUserImageLink = firstUserImageLink;
+        this.isOrdered = isOrdered;
+        this.isHeTheOwnerOfThePost = isHeTheOwnerOfThePost;
+        this.isCompleted = isCompleted;
+        this.massage = massage;
+        this.postId = postId;
+        this.userId = userId;
+        this.userName = userName;
+        this.userImage = userImage;
+        this.createdAt = createdAt;
+        this.userPhoneNumber = userPhoneNumber;
+        this.publishedAt = publishedAt;
+        this.post = post;
+    }
+
     /**
-     *
      * @param secondUserId
      * @param postSecondUserEmail
      * @param userPhoneNumber
@@ -135,36 +167,7 @@ public class PostsList implements Serializable
      * @param status
      * @param firstUserImageLink
      */
-    public PostsList(Integer status, Integer id, String title, String description, Boolean isDonation, Integer categoryId, Integer firstUserId, Integer secondUserId, String categoryName, Integer numberOfRequests, String firstUserName, String secondUserName, Object postFirstUserEmail, String postSecondUserEmail, List<String> postMedia, String firstUserImageLink, Boolean isOrdered, Boolean isHeTheOwnerOfThePost, Boolean isCompleted, String massage, Integer postId, Integer userId, String userName, String userImage, String createdAt, String userPhoneNumber, Post post) {
-        super();
-        this.status = status;
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.isDonation = isDonation;
-        this.categoryId = categoryId;
-        this.firstUserId = firstUserId;
-        this.secondUserId = secondUserId;
-        this.categoryName = categoryName;
-        this.numberOfRequests = numberOfRequests;
-        this.firstUserName = firstUserName;
-        this.secondUserName = secondUserName;
-        this.postFirstUserEmail = postFirstUserEmail;
-        this.postSecondUserEmail = postSecondUserEmail;
-        this.postMedia = postMedia;
-        this.firstUserImageLink = firstUserImageLink;
-        this.isOrdered = isOrdered;
-        this.isHeTheOwnerOfThePost = isHeTheOwnerOfThePost;
-        this.isCompleted = isCompleted;
-        this.massage = massage;
-        this.postId = postId;
-        this.userId = userId;
-        this.userName = userName;
-        this.userImage = userImage;
-        this.createdAt = createdAt;
-        this.userPhoneNumber = userPhoneNumber;
-        this.post = post;
-    }
+
 
     public Integer getStatus() {
         return status;
@@ -382,4 +385,11 @@ public class PostsList implements Serializable
         this.post = post;
     }
 
+    public String getPublishedAt() {
+        return publishedAt;
+    }
+
+    public void setPublishedAt(String publishedAt) {
+        this.publishedAt = publishedAt;
+    }
 }

@@ -197,7 +197,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 fragment = new AddPostFragment();
                 break;
             case ALL_POSTS:
-                Toast.makeText(context, "All posts", Toast.LENGTH_SHORT).show();
                 toolbarBinding.getRoot().setVisibility(View.VISIBLE);
                 fragment = new AllPostsFragment();
                 break;
@@ -330,7 +329,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     if (!checkStoragePermission()) {
                         requestStoragePermission();
                     } else {
-                        Toast.makeText(context, "2", Toast.LENGTH_SHORT).show();
                         PickImage();
                         showDialog();
                     }
@@ -340,14 +338,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void changeUserImageRequest() {
-        Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
         MultipartBody.Part body = null;
         if (file != null) {
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
             body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
         }
         Call<RegisterResponse> call = serviceApi.updateUserImage("application/json", body, "Bearer " + token);
-        Toast.makeText(context, token+"", Toast.LENGTH_SHORT).show();
         call.enqueue(new Callback<RegisterResponse>() {
             @Override
             public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
@@ -359,8 +355,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     String userString = gson.toJson(user);
 
                     sharedPreferences.writeString(AppSharedPreferences.USER, userString);
-
-                    progressDialog.dismiss();
+                    Log.e("image link",user.getImageLink()+"");
                     Toast.makeText(MainActivity.this, response.message() + "", Toast.LENGTH_SHORT).show();
                 } else {
                     String errorMessage = parseError2(response);

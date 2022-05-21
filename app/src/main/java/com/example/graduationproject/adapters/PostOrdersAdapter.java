@@ -88,6 +88,7 @@ public class PostOrdersAdapter extends RecyclerView.Adapter<PostOrdersAdapter.My
                                  @SuppressLint("RecyclerView") final int position) {
         holder.binding.userName.setText(list.get(position).getUserName());
         holder.binding.postMassage.setText(list.get(position).getMassage());
+        holder.binding.postTime.setText(list.get(position).getPublishedAt());
         Glide.with(context).load(list.get(position).getUserImage()).circleCrop()
                 .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.userImage);
 

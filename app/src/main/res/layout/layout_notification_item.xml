@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/_5sdp"
     android:layout_marginTop="@dimen/_5sdp"
+    android:layout_marginBottom="@dimen/_5sdp"
     android:background="@color/white"
     android:minHeight="@dimen/_40sdp">
 
@@ -19,15 +19,17 @@
             android:layout_width="@dimen/_10sdp"
             android:layout_height="@dimen/_10sdp"
             android:background="@drawable/notification_view_shape"
-            app:layout_constraintStart_toStartOf="parent"
+            android:padding="@dimen/_5sdp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/tv_notification_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_notification_text"
             android:layout_marginLeft="@dimen/_10sdp"
+            android:padding="@dimen/_5sdp"
             app:layout_constraintBottom_toBottomOf="@id/view"
             app:layout_constraintStart_toEndOf="@+id/view"
             app:layout_constraintTop_toTopOf="@+id/view" />

@@ -79,7 +79,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
                                  @SuppressLint("RecyclerView")
                                  final int position) {
         holder.binding.numberRequestsPost.setText(list.get(position).getNumberOfRequests() + " request   ");
+        holder.binding.uDatePost.setText(list.get(position).getPublishedAt());
         holder.binding.uNamePost.setText("" + list.get(position).getFirstUserName());
+        holder.binding.tvPostTitleImageSlider.setText("" + list.get(position).getTitle());
+        holder.binding.tvPostDesImageSlider.setText("" + list.get(position).getDescription());
         Glide.with(context).load(list.get(position).getFirstUserImageLink()).circleCrop()
                 .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.uImgPost);
 

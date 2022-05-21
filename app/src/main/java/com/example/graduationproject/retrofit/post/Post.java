@@ -68,6 +68,9 @@ public class Post {
     @SerializedName("is_completed")
     @Expose
     private Boolean isCompleted;
+    @SerializedName("published_at")
+    @Expose
+    private String publishedAt;
     private final static long serialVersionUID = -9076844435418703799L;
 
     /**
@@ -75,6 +78,29 @@ public class Post {
      *
      */
     public Post() {
+    }
+
+    public Post(Integer id, String title, String description, Boolean isDonation, Integer categoryId, Integer firstUserId, Integer secondUserId, String categoryName, Integer numberOfRequests, String firstUserName, String secondUserName, Object postFirstUserEmail, String postSecondUserEmail, List<String> postMedia, String firstUserImageLink, Boolean isOrdered, Integer orderId, Boolean isHeTheOwnerOfThePost, Boolean isCompleted, String publishedAt) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.isDonation = isDonation;
+        this.categoryId = categoryId;
+        this.firstUserId = firstUserId;
+        this.secondUserId = secondUserId;
+        this.categoryName = categoryName;
+        this.numberOfRequests = numberOfRequests;
+        this.firstUserName = firstUserName;
+        this.secondUserName = secondUserName;
+        this.postFirstUserEmail = postFirstUserEmail;
+        this.postSecondUserEmail = postSecondUserEmail;
+        this.postMedia = postMedia;
+        this.firstUserImageLink = firstUserImageLink;
+        this.isOrdered = isOrdered;
+        this.orderId = orderId;
+        this.isHeTheOwnerOfThePost = isHeTheOwnerOfThePost;
+        this.isCompleted = isCompleted;
+        this.publishedAt = publishedAt;
     }
 
     /**
@@ -99,28 +125,6 @@ public class Post {
      * @param firstUserImageLink
      * @param isCompleted
      */
-    public Post(Integer id, String title, String description, Boolean isDonation, Integer categoryId, Integer firstUserId, Integer secondUserId, String categoryName, Integer numberOfRequests, String firstUserName, String secondUserName, Object postFirstUserEmail, String postSecondUserEmail, List<String> postMedia, String firstUserImageLink, Boolean isOrdered, Integer orderId, Boolean isHeTheOwnerOfThePost, Boolean isCompleted) {
-        super();
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.isDonation = isDonation;
-        this.categoryId = categoryId;
-        this.firstUserId = firstUserId;
-        this.secondUserId = secondUserId;
-        this.categoryName = categoryName;
-        this.numberOfRequests = numberOfRequests;
-        this.firstUserName = firstUserName;
-        this.secondUserName = secondUserName;
-        this.postFirstUserEmail = postFirstUserEmail;
-        this.postSecondUserEmail = postSecondUserEmail;
-        this.postMedia = postMedia;
-        this.firstUserImageLink = firstUserImageLink;
-        this.isOrdered = isOrdered;
-        this.orderId = orderId;
-        this.isHeTheOwnerOfThePost = isHeTheOwnerOfThePost;
-        this.isCompleted = isCompleted;
-    }
 
     public Integer getId() {
         return id;
@@ -274,4 +278,11 @@ public class Post {
         this.isCompleted = isCompleted;
     }
 
+    public String getPublishedAt() {
+        return publishedAt;
+    }
+
+    public void setPublishedAt(String publishedAt) {
+        this.publishedAt = publishedAt;
+    }
 }

@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.Toast;
 
 
 import com.example.graduationproject.R;
@@ -30,7 +31,14 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void run() {
                 run_activity();
-                if (isLogin()) {
+                if(getIntent().getExtras()!=null ){
+                    Toast.makeText(SplashActivity.this, getIntent().getStringExtra("title")+"", Toast.LENGTH_SHORT).show();
+                    Intent notificationIntent = new Intent(SplashActivity.this,MainActivity.class);
+//                    notificationIntent.setData(notificationIntent);
+                    startActivity(notificationIntent);
+                    finish();
+                }
+                else if (isLogin()) {
                     // new WebService().startRequest(WebService.RequestAPI.PROFILE, SplashScreen.this);
                     startActivity(new Intent(SplashActivity.this,MainActivity.class));
                 } else {

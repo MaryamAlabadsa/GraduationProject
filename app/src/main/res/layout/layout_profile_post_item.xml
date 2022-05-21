@@ -45,7 +45,7 @@
             android:layout_marginTop="@dimen/_2ssp"
             android:fontFamily="@font/din_next_arabic_medium"
             android:text="TextView"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/bink"
             android:textSize="@dimen/_7ssp"
             app:layout_constraintStart_toEndOf="@+id/u_img_post"
             app:layout_constraintTop_toBottomOf="@+id/u_name_post" />

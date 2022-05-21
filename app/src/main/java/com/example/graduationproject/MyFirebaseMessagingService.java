@@ -1,19 +1,34 @@
 package com.example.graduationproject;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.media.AudioAttributes;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 
+import com.example.graduationproject.activities.MainActivity;
 import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.categories.AllCategories;
 import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.utils.AppSharedPreferences;
 import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.NotificationParams;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,6 +39,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
+    String TAG = "MyFirebaseMessagingService";
+
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
@@ -33,31 +50,95 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     @Override
-    public void onMessageReceived(@NonNull RemoteMessage message) {
-        super.onMessageReceived(message);
-        Log.e("onMessageReceived", "Done");
-        if (message.getNotification() != null) {
-            Log.d("TAG", "Message Notification Body: " + message.getNotification().getTitle());
-            Log.d("TAG", "Message Notification Body: " + message.getNotification().getBody());
-        }
-        if (message.getData().size() > 0) {
-            Log.d("TAG", "Message data payload: " + message.getData());
-            Map<String, String> params = message.getData();
-            JSONObject object = new JSONObject(params);
-            Log.e("JSON OBJECT", object.toString());
-            if (object.has("type")) {
-                try {
-                    String type = object.getString("type");
-                    Log.d("type", type);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+    public void onMessageReceived(RemoteMessage remoteMessage) {
+        Log.d(TAG, "From: " + remoteMessage.getFrom());
+        Log.d(TAG, "Message_data_payload: " + remoteMessage.getData());
+
+        if (remoteMessage.getData().size() > 0) {
+            Map<String, String> params = remoteMessage.getData();
+
+            JSONArray object = null;
+            try {
+                object = new JSONArray(params);
+                Toast.makeText(this, "g", Toast.LENGTH_SHORT).show();
+
+                Log.e("JSON_ARRAY", object.toString());
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+//            try {
+//
+//                if (object.) {
+//                    String type = object.getString("post_id");
+//                    Log.d("type2", type + "");
+//                    if (remoteMessage.getNotification() != null)
+//                        sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), Integer.parseInt(type));
+//                }
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+
         }
+        // Check if message contains a notification payload.
+        if (remoteMessage.getNotification() != null) {
+            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+        }
+
+        // Also if you intend on generating your own notifications as a result of a received FCM
+        // message, here is where that should be initiated. See sendNotification method below.
+        sendNotification(remoteMessage.getNotification().getTitle(),remoteMessage.getNotification().getBody(),0);
     }
 
+    //This method is only generating push notification
+    private void sendNotification(String messageTitle, String messageBody, int type) {
 
+        PendingIntent contentIntent = null;
+        Intent intent = null;
 
+        intent = new Intent(this, MainActivity.class);
 
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        contentIntent = PendingIntent.getActivity(this, 0 /* request code */, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        CharSequence tickerText = messageBody;
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "M_CH_ID");
+
+        notificationBuilder.setAutoCancel(true)
+                .setSmallIcon(R.drawable.logo)
+                .setPriority(Notification.PRIORITY_MAX) // this is deprecated in API 26 but you can still use for below 26. check below update for 26 API
+                .setContentTitle(messageTitle)
+                .setContentText(messageBody)
+                .setContentIntent(contentIntent)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(tickerText));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .build();
+
+            String channelId = getString(R.string.app_name);
+            NotificationChannel channel = new NotificationChannel(channelId, messageTitle, NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(messageBody);
+            channel.enableVibration(true);
+            channel.setSound(sound, audioAttributes);
+            notificationManager.createNotificationChannel(channel);
+            notificationBuilder.setChannelId(channelId);
+        }
+
+        notificationManager.notify(0, notificationBuilder.build());
+//        count++;
+    }
 
 }
+
+
+
+
+

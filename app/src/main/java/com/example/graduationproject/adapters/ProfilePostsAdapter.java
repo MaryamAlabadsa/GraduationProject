@@ -105,6 +105,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void setOrderHolder(MyOrderViewHolder holder, int position) {
         holder.binding.uNamePost.setText(list.get(position).getUserName());
+        holder.binding.uDatePost.setText(list.get(position).getPublishedAt());
         Glide.with(context).load(list.get(position).getUserImage()).circleCrop()
                 .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.uImgPost);
         LayoutPostItemBinding layoutPostItemBinding = holder.binding.layoutPost;
@@ -125,6 +126,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         binding.numberRequestsPost.setText(post.getNumberOfRequests() + " request   ");
         binding.uNamePost.setText("" + post.getFirstUserName());
+        binding.uDatePost.setText("" + post.getPublishedAt());
         Glide.with(context).load(post.getFirstUserImageLink()).circleCrop()
                 .placeholder(R.drawable.ic_launcher_foreground).into(binding.uImgPost);
         setOrderPostImages(binding,post);
@@ -172,7 +174,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         addOrderInterface.layout(list);
                     }
                 });
-               binding.commentBtn.setText("Add");
+               binding.commentBtn.setText("Add order");
             }
         }
     }
@@ -193,6 +195,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private void setPostHolder(MyPostViewHolder holder, int position) {
         ((MyPostViewHolder) holder).binding.numberRequestsPost.setText(list.get(position).getNumberOfRequests() + " request   ");
         ((MyPostViewHolder) holder).binding.uNamePost.setText("" + list.get(position).getFirstUserName());
+        ((MyPostViewHolder) holder).binding.uDatePost.setText("" + list.get(position).getPublishedAt());
         Glide.with(context).load(list.get(position).getFirstUserImageLink()).circleCrop()
                 .placeholder(R.drawable.ic_launcher_foreground).into(((MyPostViewHolder) holder).binding.uImgPost);
         setPostImages(holder, position);

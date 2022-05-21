@@ -57,13 +57,13 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
 //        viewHolder.binding.tvPostDesImageSlider.setText(sliderItem.getDescription());
 //        viewHolder.binding.tvPostTitleImageSlider.setText(sliderItem.getTitle());
 
-        for (int i = 0; i < mSliderItems.size(); i++) {
+//        for (int i = 0; i < mSliderItems.size(); i++) {
 
             Glide.with(viewHolder.itemView)
-                    .load(mSliderItems)
+                    .load(mSliderItems.get(position))
                     .fitCenter()
                     .into(viewHolder.binding.ivAutoImageSlider);
-        }
+//        }
 
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {

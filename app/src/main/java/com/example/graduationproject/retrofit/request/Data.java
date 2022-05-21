@@ -35,6 +35,9 @@ public class Data implements Serializable {
     @SerializedName("user_phone_number")
     @Expose
     private String userPhoneNumber;
+    @SerializedName("published_at")
+    @Expose
+    private String publishedAt;
     private final static long serialVersionUID = -570308776082673763L;
 
     /**
@@ -42,6 +45,18 @@ public class Data implements Serializable {
      *
      */
     public Data() {
+    }
+
+    public Data(Integer id, String massage, Integer postId, Integer userId, String userName, String userImage, String createdAt, String userPhoneNumber, String publishedAt) {
+        this.id = id;
+        this.massage = massage;
+        this.postId = postId;
+        this.userId = userId;
+        this.userName = userName;
+        this.userImage = userImage;
+        this.createdAt = createdAt;
+        this.userPhoneNumber = userPhoneNumber;
+        this.publishedAt = publishedAt;
     }
 
     /**
@@ -55,17 +70,7 @@ public class Data implements Serializable {
      * @param userName
      * @param userId
      */
-    public Data(Integer id, String massage, Integer postId, Integer userId, String userName, String userImage, String createdAt, String userPhoneNumber) {
-        super();
-        this.id = id;
-        this.massage = massage;
-        this.postId = postId;
-        this.userId = userId;
-        this.userName = userName;
-        this.userImage = userImage;
-        this.createdAt = createdAt;
-        this.userPhoneNumber = userPhoneNumber;
-    }
+
 
     public Integer getId() {
         return id;
@@ -131,4 +136,11 @@ public class Data implements Serializable {
         this.userPhoneNumber = userPhoneNumber;
     }
 
+    public String getPublishedAt() {
+        return publishedAt;
+    }
+
+    public void setPublishedAt(String publishedAt) {
+        this.publishedAt = publishedAt;
+    }
 }

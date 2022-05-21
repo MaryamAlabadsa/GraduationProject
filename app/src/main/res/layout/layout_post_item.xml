@@ -44,6 +44,40 @@
             android:textStyle="bold"
             android:textColor="@color/white"
             tools:ignore="MissingConstraints" />
+        <LinearLayout
+            android:id="@+id/fl_shadow_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/imageSlider"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_post_title_image_slider"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:padding="6dp"
+                android:gravity="center|start"
+                android:textColor="@color/white"
+                android:fontFamily="@font/din_next_arabic_bold"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_post_des_image_slider"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginBottom="25dp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:padding="6dp"
+                android:textStyle="bold"
+                android:gravity="center|start"
+                android:textColor="@color/light_blue"
+                android:textSize="12sp" />
+        </LinearLayout>
+
 
         <ImageView
             android:id="@+id/u_img_post"
@@ -62,10 +96,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10sdp"
             android:text="TextView"
-            android:textSize="@dimen/_10ssp"
+            android:textSize="@dimen/_8ssp"
             android:fontFamily="@font/din_next_arabic_medium"
             android:textColor="@color/black"
-            android:layout_marginTop="@dimen/_5ssp"
             app:layout_constraintStart_toEndOf="@+id/u_img_post"
             app:layout_constraintTop_toTopOf="@+id/u_img_post" />
         <TextView
@@ -76,8 +109,8 @@
             android:text="TextView"
             android:textSize="@dimen/_8ssp"
             android:fontFamily="@font/din_next_arabic_medium"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_marginTop="@dimen/_5ssp"
+            android:textColor="@color/bink"
+            android:layout_marginTop="@dimen/_1ssp"
             app:layout_constraintStart_toEndOf="@+id/u_img_post"
             app:layout_constraintTop_toBottomOf="@+id/u_name_post" />
 
