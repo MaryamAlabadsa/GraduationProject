@@ -82,18 +82,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
-        sendNotification(remoteMessage.getNotification().getTitle(),remoteMessage.getNotification().getBody(),0);
     }
 
     //This method is only generating push notification
-    private void sendNotification(String messageTitle, String messageBody, int type) {
+    private void sendNotification(String messageTitle, String messageBody, int post_id) {
 
         PendingIntent contentIntent = null;
         Intent intent = null;
 
-        intent = new Intent(this, SplashActivity.class);
+        intent = new Intent(this, MainActivity.class);
+        Log.e("post_id",post_id+"");
+        intent.putExtra("post_id",post_id+"");
 
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         contentIntent = PendingIntent.getActivity(this, 0 /* request code */, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 //        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

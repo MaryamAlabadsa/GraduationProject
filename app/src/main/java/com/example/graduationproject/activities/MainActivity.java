@@ -102,6 +102,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
         String post_id_notifaction = getIntent().getStringExtra("post_id");
         if (post_id_notifaction != null) {
+            Toast.makeText(context, post_id_notifaction+"", Toast.LENGTH_SHORT).show();
             showDialog();
             getPostDetails(Integer.parseInt(post_id_notifaction));
         }
