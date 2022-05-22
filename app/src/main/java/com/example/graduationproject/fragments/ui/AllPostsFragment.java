@@ -30,8 +30,10 @@ import com.example.graduationproject.adapters.PostsAdapter;
 import com.example.graduationproject.databinding.ButtonDialogBinding;
 import com.example.graduationproject.databinding.FragmentAllPostsBinding;
 import com.example.graduationproject.databinding.LayoutPostDetialsBinding;
+import com.example.graduationproject.dialog.DialogRadiointerface;
 import com.example.graduationproject.dialog.Dialoginterface;
 import com.example.graduationproject.dialog.MyDialogAddOrder;
+import com.example.graduationproject.dialog.MyDialogٌRadioButton;
 import com.example.graduationproject.fragments.BaseFragment;
 import com.example.graduationproject.fragments.FragmentSwitcher;
 import com.example.graduationproject.fragments.PagesFragment;
@@ -72,6 +74,7 @@ public class AllPostsFragment extends BaseFragment {
     FragmentAllPostsBinding binding;
     Context context;
     MyDialogAddOrder myDialogAddOrder;
+    MyDialogٌRadioButton myDialogٌRadioButton;
     private FragmentSwitcher fragmentSwitcher;
     List<Category> data;
 
@@ -104,6 +107,7 @@ public class AllPostsFragment extends BaseFragment {
         }
 
 
+
     }
 
     @Override
@@ -119,8 +123,8 @@ public class AllPostsFragment extends BaseFragment {
         binding.filterChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDialog();
-            }
+                createFilterDialog();
+             }
         });
         showDialog();
         getAllCategories();
@@ -397,6 +401,16 @@ public class AllPostsFragment extends BaseFragment {
             public void yes(String massage) {
                 AddRequest(id, massage);
 
+            }
+        });
+
+    }
+
+    private void createFilterDialog() {
+        myDialogٌRadioButton = new MyDialogٌRadioButton(context, new DialogRadiointerface() {
+            @Override
+            public void yes(int isDonation) {
+                Toast.makeText(context, isDonation + "", Toast.LENGTH_SHORT).show();
             }
         });
 

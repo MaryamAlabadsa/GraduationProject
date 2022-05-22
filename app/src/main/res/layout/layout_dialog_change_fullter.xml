@@ -47,10 +47,11 @@
                  android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:checkedButton="@id/donation_radio_but">
 
                 <RadioButton
-                    android:id="@+id/radio_don"
+                    android:id="@+id/donation_radio_but"
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/din_next_arabic_light"
@@ -63,7 +64,7 @@
                     android:typeface="serif" />
 
                 <RadioButton
-                    android:id="@+id/radio_req"
+                    android:id="@+id/request_radio_but"
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/din_next_arabic_light"
@@ -86,7 +87,7 @@
 
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/add_order_btn"
+                    android:id="@+id/ok_button"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_28sdp"
                     android:layout_marginRight="@dimen/_10sdp"
