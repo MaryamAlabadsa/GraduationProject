@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +31,7 @@ import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.ActivityMainBinding;
 import com.example.graduationproject.databinding.ButtonDialogBinding;
 import com.example.graduationproject.databinding.LayoutToolbarBinding;
+import com.example.graduationproject.dialog.MyBottomSheetDialog;
 import com.example.graduationproject.fragments.ChangePasswordFragment;
 import com.example.graduationproject.fragments.ui.AddPostFragment;
 import com.example.graduationproject.fragments.ui.AllPostsFragment;
@@ -99,7 +101,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         toolbarBinding.toolbar.setTitle("");
         setSupportActionBar(toolbarBinding.toolbar);
 
-
+//        Button show = findViewById(R.id.filter_change);
+//        show.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                new MyBottomSheetDialog();
+//
+//            }
+//        });
 
 
         binding.toolbarBack.setNavigationOnClickListener(new View.OnClickListener() {
@@ -445,5 +454,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
         });
     }
+//    private void showBottomSheetDialog() {
+//
+//        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+//        bottomSheetDialog.setContentView(R.layout.bottom_dialog_detials);
+//
+//        bottomSheetDialog.show();
+//    }
 
 }
