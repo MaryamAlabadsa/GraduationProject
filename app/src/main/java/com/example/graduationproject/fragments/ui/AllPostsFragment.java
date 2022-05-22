@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
@@ -50,6 +49,7 @@ import com.example.graduationproject.retrofit.post.Post;
 import com.example.graduationproject.retrofit.post.PostDetails;
 import com.example.graduationproject.retrofit.request.Order;
 import com.example.graduationproject.retrofit.token.MessageResponse;
+import com.example.graduationproject.utils.AppSharedPreferences;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 
@@ -77,7 +77,7 @@ public class AllPostsFragment extends BaseFragment {
     MyDialogٌRadioButton myDialogٌRadioButton;
     private FragmentSwitcher fragmentSwitcher;
     List<Category> data;
-
+    int readInt;
     Intent intent;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -107,7 +107,6 @@ public class AllPostsFragment extends BaseFragment {
         }
 
 
-
     }
 
     @Override
@@ -117,18 +116,19 @@ public class AllPostsFragment extends BaseFragment {
 
         binding = FragmentAllPostsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
-//        dialogBinding = ButtonDialogBinding.inflate(inflater, container, false);
         context = getActivity();
-//        dialog = new BottomSheetDialog(context);
+        readInt = sharedPreferences.readInt(AppSharedPreferences.IS_DONATION);
+
+        isDonation(readInt);
+
         binding.filterChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 createFilterDialog();
-             }
+            }
         });
         showDialog();
         getAllCategories();
-        getAllPosts();
         return view;
     }
 
@@ -201,10 +201,11 @@ public class AllPostsFragment extends BaseFragment {
     }
 
     private void getPostsByCategory(int id) {
+
         RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), id + "");
 
         Call<AllPosts> call = serviceApi.getPostByCategory(
-                "Bearer " + token, category_id);
+                "Bearer " + token, category_id, readInt);
         call.enqueue(new Callback<AllPosts>() {
             @Override
             public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
@@ -215,7 +216,6 @@ public class AllPostsFragment extends BaseFragment {
                     AllPosts getAllPosts = response.body();
                     setPostsRv(getAllPosts.getData());
                     progressDialog.dismiss();
-
                 } else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
@@ -232,10 +232,9 @@ public class AllPostsFragment extends BaseFragment {
 
 
     private void getPostDividedByIsDonation(int id) {
-        RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), id + "");
 
         Call<AllPosts> call = serviceApi.getPostDividedByIsDonation(
-                "Bearer " + token, category_id);
+                "Bearer " + token, id);
         call.enqueue(new Callback<AllPosts>() {
             @Override
             public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
@@ -246,7 +245,6 @@ public class AllPostsFragment extends BaseFragment {
                     AllPosts getAllPosts = response.body();
                     setPostsRv(getAllPosts.getData());
                     progressDialog.dismiss();
-
                 } else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
@@ -307,18 +305,6 @@ public class AllPostsFragment extends BaseFragment {
         Log.e("rv2", postList.size() + "");
     }
 
-//    private void createDialog(int id) {
-//        View view = dialogBinding.getRoot();
-//        dialogBinding.submit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String massage = dialogBinding.editComment.getText().toString();
-//                AddRequest(id, massage,dialog);
-//            }
-//        });
-//        dialog.setContentView(dialogBinding.getRoot());
-//    }
-
     private void setCategoryRv(List<Category> data) {
 
         data.add(0, new Category(0, "All", R.drawable.all_category));
@@ -329,10 +315,12 @@ public class AllPostsFragment extends BaseFragment {
             @Override
             public void layout(int id) {
                 if (id == 0) {
+                    sharedPreferences.writeInt(AppSharedPreferences.IS_DONATION, 0);
                     showDialog();
-                    getAllPosts();
+                    getPostDividedByIsDonation(0);
 
                 } else {
+                    sharedPreferences.writeInt(AppSharedPreferences.IS_DONATION, id);
                     showDialog();
                     getPostsByCategory(id);
 
@@ -370,7 +358,6 @@ public class AllPostsFragment extends BaseFragment {
             @Override
             public void onFailure(Call<Order> call, Throwable t) {
                 t.getMessage();
-                Toast.makeText(context, t.getMessage() + "", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -410,9 +397,25 @@ public class AllPostsFragment extends BaseFragment {
         myDialogٌRadioButton = new MyDialogٌRadioButton(context, new DialogRadiointerface() {
             @Override
             public void yes(int isDonation) {
-                Toast.makeText(context, isDonation + "", Toast.LENGTH_SHORT).show();
+                isDonation(isDonation);
+                showDialog();
             }
         });
-
+        myDialogٌRadioButton.show();
     }
+
+    private void isDonation(int isDonation) {
+        int post_category = sharedPreferences.readInt(AppSharedPreferences.POST_CATEGORY);
+
+        if (isDonation == 0) {
+            binding.filterText.setText("Donation posts");
+        } else {
+            binding.filterText.setText("Request posts");
+        }
+        if (post_category == 0)
+            getPostDividedByIsDonation(isDonation);
+        else
+            getPostsByCategory(post_category);
+    }
+
 }

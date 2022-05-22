@@ -5,12 +5,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.LayoutDialogAddOrderBinding;
 import com.example.graduationproject.databinding.LayoutDialogChangeFullterBinding;
+import com.example.graduationproject.utils.AppSharedPreferences;
 
 
 public class MyDialogٌRadioButton extends Dialog {
@@ -31,20 +33,32 @@ public class MyDialogٌRadioButton extends Dialog {
         setCancelable(false);
         binding = LayoutDialogChangeFullterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         this.getWindow().setStatusBarColor(ContextCompat.getColor(context, R.color.coustom_blue)); //change status bar background
+
+        AppSharedPreferences sharedPreferences = new AppSharedPreferences(context);
+        int readInt = sharedPreferences.readInt(AppSharedPreferences.IS_DONATION);
+        if (readInt == 0) {
+            binding.donationRadioBut.setChecked(true);
+            Toast.makeText(context, readInt+"", Toast.LENGTH_SHORT).show();
+
+        } else{
+            binding.requestRadioBut.setChecked(true);
+
+        }
 
         binding.okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validation()!=null) {
 
-                    int isDonation = 0;
-                    if (binding.requestRadioBut.isChecked()){
-                        isDonation = 1;
-                    }
-                    dialogRadiointerface.yes(isDonation);
+                int isDonation = 0;
+                if (binding.requestRadioBut.isChecked()) {
+                    isDonation = 1;
                 }
+                sharedPreferences.writeInt(AppSharedPreferences.IS_DONATION, isDonation);
+
+                dialogRadiointerface.yes(isDonation);
+                dismiss();
+
             }
         });
         binding.closeBtn.setOnClickListener(new View.OnClickListener() {
@@ -61,14 +75,4 @@ public class MyDialogٌRadioButton extends Dialog {
         });
     }
 
-    private String validation() {
-//        if (binding.addOrderEt.getText().toString().trim().isEmpty()) {
-//            binding.addOrderEt.requestFocus();
-//            binding.addOrderEt.setError("THIS FIELD CANNOT BE EMPTY");
-//            return null;
-//        } else {
-//            return binding.addOrderEt.getText().toString();
-//        }
-        return "";
-    }
 }

@@ -60,19 +60,17 @@ public interface ServiceApi {
             , @Part List<MultipartBody.Part> resources);
 
     @Multipart
-    @POST("PostByCategory")
+    @POST("PostByCategory/{id}")
     Call<AllPosts> getPostByCategory(
             @Header("Authorization") String token
-            , @Part("category_id") RequestBody category_id
+            , @Part("category_id") RequestBody category_id,
+            @Path("id") int id
     );
 
-    @Multipart
-    @POST("getPostDividedByIsDonation")
+    @POST("PostDividedByIsDonation/{id}")
     Call<AllPosts> getPostDividedByIsDonation(
-            @Header("Authorization") String token
-            , @Part("is_donation") RequestBody is_donation
-    );
-
+            @Header("Authorization") String token,
+            @Path("id") int id);
 
     @POST("login")
     Call<RegisterResponse> login
