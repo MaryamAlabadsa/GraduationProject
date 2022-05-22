@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutDialogContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#410F5DAB">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutDialog"
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="@dimen/_130sdp"
+        android:background="@drawable/bottom_coment"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.462">
+
+        <ImageButton
+            android:id="@+id/close_btn"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:background="@drawable/bottom_coment"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/delete"
+            tools:ignore="VectorDrawableCompat" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5sdp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/close_btn">
+
+
+            <RadioGroup
+                android:id="@+id/radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_below="@id/spinner_post"
+                 android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radio_don"
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/din_next_arabic_light"
+                    android:text="Donation"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:theme="@style/mySwitch"
+                    android:typeface="serif" />
+
+                <RadioButton
+                    android:id="@+id/radio_req"
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/din_next_arabic_light"
+                    android:text="Request"
+                    android:layout_marginStart="@dimen/_15sdp"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:theme="@style/mySwitch"
+                    android:typeface="serif" />
+            </RadioGroup>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/add_order_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_28sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_profile1"
+                    android:text="Ok"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_10ssp"
+                    android:textStyle="bold" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/cancel_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_28sdp"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_profile2"
+                    android:text="Cancel"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/_10ssp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import com.example.graduationproject.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-public class MyBottomSheetDialog extends BottomSheetDialogFragment {
+public class BottomSheetDialog extends BottomSheetDialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable
