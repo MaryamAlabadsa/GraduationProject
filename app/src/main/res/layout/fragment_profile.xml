@@ -22,11 +22,11 @@
         android:id="@+id/profile_image"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/_45sdp"
         android:background="@drawable/profile_stroke"
         android:padding="3dp"
-        android:src="@drawable/profile_user"
-       android:layout_centerHorizontal="true" />
+        android:src="@drawable/profile_user" />
 
     <TextView
         android:id="@+id/full_name"

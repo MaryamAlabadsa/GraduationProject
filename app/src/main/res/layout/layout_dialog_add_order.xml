@@ -11,7 +11,7 @@
         android:id="@+id/layoutDialog"
         android:layout_width="@dimen/_250sdp"
         android:layout_height="@dimen/_130sdp"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/bottom_coment"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintRight_toRightOf="parent"

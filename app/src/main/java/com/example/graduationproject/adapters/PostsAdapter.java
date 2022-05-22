@@ -38,7 +38,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     BottomSheetDialog dialog;
 
 
-    public PostsAdapter(Context context, PostAddOrderInterface addOrderInterface,PostRemoveOrderInterface removeOrderInterface, UserIdtRequestInterface userIdtRequestInterface) {
+    public PostsAdapter(Context context,
+                        PostAddOrderInterface addOrderInterface,
+                        PostRemoveOrderInterface removeOrderInterface,
+                        UserIdtRequestInterface userIdtRequestInterface) {
         list = new ArrayList<>();
         this.context = context;
         this.addOrderInterface = addOrderInterface;

@@ -48,6 +48,7 @@ import com.example.graduationproject.retrofit.register.User;
 import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
 import com.example.graduationproject.utils.FileUtil;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -82,6 +83,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     View headerView;
     LayoutToolbarBinding toolbarBinding;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,12 +93,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         serviceApi = Creator.getClient().create(ServiceApi.class);
         token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
 
-
         toolbarBinding = binding.mainToolbar;
         drawer = binding.mainDrawer;
 
         toolbarBinding.toolbar.setTitle("");
         setSupportActionBar(toolbarBinding.toolbar);
+
+
+
 
         binding.toolbarBack.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +110,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 binding.toolbarBack.setVisibility(View.INVISIBLE);
             }
         });
+
+
+
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this,
                 binding.mainDrawer,
