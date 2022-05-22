@@ -7,6 +7,7 @@ import com.example.graduationproject.retrofit.logout.LogOut;
 import com.example.graduationproject.retrofit.notifiction.Notification;
 import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.post.Post;
+import com.example.graduationproject.retrofit.post.PostDetails;
 import com.example.graduationproject.retrofit.profile.donation.posts.ProfilePosts;
 import com.example.graduationproject.retrofit.profile.user.info.UserProfileInfo;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
@@ -31,7 +32,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ServiceApi {
-    String ENDPOINT = "http://3.84.126.63/api/";
+    String ENDPOINT = "http://35.173.249.147/api/";
 
     //  get
 
@@ -159,6 +160,11 @@ public interface ServiceApi {
     @GET("notification")
     Call<Notification> getNotification(
             @Header("Authorization") String token);
+
+    @GET("post/{id}")
+    Call<PostDetails> getPostDetails(
+            @Header("Authorization") String token, @Path("id") int userId
+    );
 
     @DELETE("order/{id}")
     Call<MessageResponse> deleteOrder(@Path("id") int id, @Header("Authorization") String token);

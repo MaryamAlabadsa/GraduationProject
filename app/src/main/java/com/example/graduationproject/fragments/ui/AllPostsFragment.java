@@ -1,5 +1,6 @@
 package com.example.graduationproject.fragments.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -14,14 +15,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.activities.MainActivity;
 import com.example.graduationproject.adapters.CategoryAdapter;
+import com.example.graduationproject.adapters.PostOrdersAdapter;
 import com.example.graduationproject.adapters.PostsAdapter;
 import com.example.graduationproject.databinding.ButtonDialogBinding;
 import com.example.graduationproject.databinding.FragmentAllPostsBinding;
+import com.example.graduationproject.databinding.LayoutPostDetialsBinding;
 import com.example.graduationproject.dialog.Dialoginterface;
 import com.example.graduationproject.dialog.MyDialogAddOrder;
 import com.example.graduationproject.fragments.BaseFragment;
@@ -29,6 +37,7 @@ import com.example.graduationproject.fragments.FragmentSwitcher;
 import com.example.graduationproject.fragments.PagesFragment;
 import com.example.graduationproject.listener.CategoryInterface;
 import com.example.graduationproject.listener.PostAddOrderInterface;
+import com.example.graduationproject.listener.PostOrderRequestInterface;
 import com.example.graduationproject.listener.PostRemoveOrderInterface;
 import com.example.graduationproject.listener.UserIdtRequestInterface;
 import com.example.graduationproject.model.PostOrdersInfo;
@@ -36,6 +45,7 @@ import com.example.graduationproject.retrofit.categories.AllCategories;
 import com.example.graduationproject.retrofit.categories.Category;
 import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.post.Post;
+import com.example.graduationproject.retrofit.post.PostDetails;
 import com.example.graduationproject.retrofit.request.Order;
 import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -106,11 +116,18 @@ public class AllPostsFragment extends BaseFragment {
 //        dialogBinding = ButtonDialogBinding.inflate(inflater, container, false);
         context = getActivity();
 //        dialog = new BottomSheetDialog(context);
+        binding.filterChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+            }
+        });
         showDialog();
         getAllCategories();
         getAllPosts();
         return view;
     }
+
 
     int isDonation = -1;
 
@@ -263,7 +280,7 @@ public class AllPostsFragment extends BaseFragment {
                 if (post.getIsHeTheOwnerOfThePost()) {
                     PostOrdersInfo info = new PostOrdersInfo(post.getId(), post.getIsCompleted(), post.getIsDonation(), post.getSecondUserId());
                     fragmentSwitcher.switchFragment(PagesFragment.POST_ORDERS, info);
-                } else{
+                } else {
                     createDialog(post.getId());
                     myDialogAddOrder.show();
                 }
@@ -300,19 +317,18 @@ public class AllPostsFragment extends BaseFragment {
 
     private void setCategoryRv(List<Category> data) {
 
-        data.add(0, new Category(0, "All",R.drawable.all_category));
+        data.add(0, new Category(0, "All", R.drawable.all_category));
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 context, RecyclerView.HORIZONTAL, false);
         binding.rvCategory.setLayoutManager(layoutManager);
         CategoryAdapter adapter = new CategoryAdapter(context, new CategoryInterface() {
             @Override
             public void layout(int id) {
-                if (id == 0){
+                if (id == 0) {
                     showDialog();
                     getAllPosts();
 
-                }
-                else{
+                } else {
                     showDialog();
                     getPostsByCategory(id);
 
@@ -329,6 +345,7 @@ public class AllPostsFragment extends BaseFragment {
         fragmentSwitcher = (FragmentSwitcher) context;
 
     }
+
     public void AddRequest(int id_post, String massage) {
 
         RequestBody post_id = RequestBody.create(MediaType.parse("multipart/form-data"), id_post + "");
@@ -349,7 +366,7 @@ public class AllPostsFragment extends BaseFragment {
             @Override
             public void onFailure(Call<Order> call, Throwable t) {
                 t.getMessage();
-                Toast.makeText(context, t.getMessage()+"", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, t.getMessage() + "", Toast.LENGTH_SHORT).show();
             }
         });
     }

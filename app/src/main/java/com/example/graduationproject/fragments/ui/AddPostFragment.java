@@ -30,6 +30,7 @@ import com.example.graduationproject.fragments.PagesFragment;
 import com.example.graduationproject.retrofit.categories.AllCategories;
 import com.example.graduationproject.retrofit.categories.Category;
 import com.example.graduationproject.retrofit.post.AllPosts;
+import com.example.graduationproject.retrofit.post.PostDetails;
 import com.example.graduationproject.retrofit.register.User;
 import com.example.graduationproject.utils.AppSharedPreferences;
 import com.example.graduationproject.utils.FileUtil;
@@ -383,5 +384,6 @@ public class AddPostFragment extends BaseFragment {
             }
         });
     }
+
 
 }

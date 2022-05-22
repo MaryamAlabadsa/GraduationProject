@@ -22,7 +22,6 @@ public class PostOrdersAdapter extends RecyclerView.Adapter<PostOrdersAdapter.My
 
     Context context;
     List<Data> list;
-    GetAllOrder order;
     PostOrderRequestInterface postOrderRequestInterface;
     Boolean isCompleted, isDonation;
     int userId;
@@ -40,9 +39,8 @@ public class PostOrdersAdapter extends RecyclerView.Adapter<PostOrdersAdapter.My
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setList(GetAllOrder order) {
-        this.order = order;
-        this.list = order.getData();
+    public void setList(List<Data> list) {
+        this.list = list;
         notifyDataSetChanged();
 
     }
@@ -110,19 +108,9 @@ public class PostOrdersAdapter extends RecyclerView.Adapter<PostOrdersAdapter.My
                 }
             });
         }
-        //        setOrderTime(holder, position);
     }
 
-//    private void setOrderTime(PostOrdersAdapter.MyViewHolder holder, int position) {
-//        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-//        String dateString = formatter.format(new Date(Long.parseLong(list.get(position).getCreatedAt())));
-//        holder.binding.postTime.setText(dateString);
-//    }
-////"2022-04-11T15:23:28.000000Z"
-//    private void getTime(){
-//
-//
-//    }
+
 
     @Override
     public int getItemCount() {

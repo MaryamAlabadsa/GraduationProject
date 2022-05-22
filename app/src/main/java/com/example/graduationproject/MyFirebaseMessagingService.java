@@ -58,28 +58,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message_data_payload: " + remoteMessage.getData());
             Map<String, String> params = remoteMessage.getData();
             int post_id=0;
-//            JSONArray object = null;
-//            try {
-//                object = new JSONArray(params);
-//                for (int i = 0; i < object.length(); i++) {
-//                    JSONObject notificationDetail = object.getJSONObject(i);
-//
-//                    post_id=notificationDetail.getInt("post_id");
-//                }
-//                Toast.makeText(this, post_id+"", Toast.LENGTH_SHORT).show();
-//
-//                Log.e("JSON_ARRAY", object.toString());
-//                Log.e("JSON_ARRAY_post_id", post_id+"");
-//
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
+
             JSONObject object = new JSONObject(params);
             Log.e("JSON OBJECT", object.toString());
             try {
                 if (object.has("post_id")) {
                     int postId = object.getInt("post_id");
                     Log.d("post_iddd", postId + "");
+                    Log.d("getTitle", remoteMessage.getNotification().getTitle() + "");
                     if (remoteMessage.getNotification() != null)
                         sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), postId);
                 }

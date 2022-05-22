@@ -19,7 +19,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable
             ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        View v = inflater.inflate(R.layout.bottom_dialog_detials,
+        View v = inflater.inflate(R.layout.layout_post_detials,
                 container, false);
 
         Button show = v.findViewById(R.id.filter_change);

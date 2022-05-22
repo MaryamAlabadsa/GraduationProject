@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+   >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_details"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_image"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_35sdp"
+            android:background="@drawable/profile_stroke"
+            android:padding="3dp"
+            android:src="@drawable/profile_user"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/user_name_text"
+            android:layout_width="@dimen/_80sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:fontFamily="@font/din_next_arabic_medium"
+            android:text="TextView"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_8ssp"
+            app:layout_constraintStart_toEndOf="@+id/user_image"
+            app:layout_constraintTop_toTopOf="@+id/user_image"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/post_date_text"
+            android:layout_width="@dimen/_90sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:fontFamily="@font/din_next_arabic_medium"
+            android:text="TextView"
+            android:textColor="@color/bink"
+            android:textSize="@dimen/_8ssp"
+            app:layout_constraintBottom_toBottomOf="@+id/user_image"
+            app:layout_constraintStart_toEndOf="@+id/user_image"
+            app:layout_constraintTop_toBottomOf="@+id/user_name_text"
+            tools:ignore="MissingConstraints" />
+
+
+        <TextView
+            android:id="@+id/post_request_text"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:background="@drawable/button_profile1"
+            android:fontFamily="@font/din_next_arabic_bold"
+            android:gravity="center"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingRight="@dimen/_10sdp"
+            android:text="TextView"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="@+id/post_date_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.857"
+            app:layout_constraintStart_toEndOf="@+id/user_name_text"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.732"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/post_title_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:fontFamily="@font/din_next_arabic_bold"
+            android:gravity="center|start"
+            android:text="Chair Post"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/_15ssp"
+            app:layout_constraintTop_toBottomOf="@+id/user_image"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/post_description_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:fontFamily="@font/din_next_arabic_bold"
+            android:gravity="start|center"
+            android:paddingStart="@dimen/_5sdp"
+            android:text="session was expired was expired logout processing logout logout processing session was expired logout processing"
+            app:layout_constraintTop_toBottomOf="@+id/post_title_text"
+            tools:ignore="MissingConstraints" />
+
+
+        <TextView
+            android:id="@+id/status_detials"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:fontFamily="@font/din_next_arabic_bold"
+            android:gravity="center|start"
+            android:text="Status"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/_15ssp"
+            app:layout_constraintTop_toBottomOf="@+id/post_description_text"
+            tools:ignore="MissingConstraints" />
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/status_detials"
+            tools:ignore="MissingConstraints">
+
+            <Button
+                android:id="@+id/complete_btn"
+                android:layout_width="@dimen/_60sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_gravity="center"
+                android:background="@drawable/button_complete"
+                android:text="Complete"
+                android:textColor="@color/green"
+                android:textSize="@dimen/_8ssp" />
+
+            <Button
+                android:id="@+id/request_btn"
+                android:layout_width="@dimen/_60sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/_6sdp"
+                android:background="@drawable/button_profile2"
+                android:text="Request"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_8ssp" />
+
+            <Button
+                android:id="@+id/pending_btn"
+                android:layout_width="@dimen/_60sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/_6sdp"
+                android:background="@drawable/button_pending"
+                android:text="Pending"
+                android:textColor="@color/red"
+                android:textSize="@dimen/_8ssp" />
+
+            <Button
+                android:id="@+id/donation_btn"
+                android:layout_width="@dimen/_60sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/_6sdp"
+                android:background="@drawable/button_profile1"
+                android:text="Donation"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_8ssp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/orders_detials"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:fontFamily="@font/din_next_arabic_bold"
+            android:gravity="center|start"
+            android:text="Orders"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/_15ssp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/order_text"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:fontFamily="@font/din_next_arabic_bold"
+            android:gravity="center|start"
+            android:text="orders not available"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10ssp"
+            app:layout_constraintTop_toBottomOf="@+id/orders_detials"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/order_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            app:layout_constraintTop_toBottomOf="@+id/orders_detials" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

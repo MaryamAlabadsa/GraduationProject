@@ -33,14 +33,10 @@ Context context=SplashActivity.this;
             @Override
             public void run() {
                 run_activity();
-                if(getIntent().getExtras()!=null ){
+                if(getIntent().getExtras()!=null&&getIntent().getStringExtra("post_id")!=null ){
                     Toast.makeText(SplashActivity.this, getIntent().getStringExtra("post_id")+"", Toast.LENGTH_SHORT).show();
                     Intent notificationIntent = new Intent(SplashActivity.this,MainActivity.class);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(context
-                            , 0
-                            , notificationIntent
-                            , 0);
-//                    notificationIntent.setData(notificationIntent);
+                    notificationIntent.putExtra("post_id",getIntent().getStringExtra("post_id"));
                     startActivity(notificationIntent);
                     finish();
                 }

@@ -196,7 +196,7 @@ public class PostOrdersFragment extends BaseFragment {
                 createAcceptOrderDialog(userId);
             }
         },isCompleted,isDonation,secondUser);
-        adapter.setList(order);
+        adapter.setList(order.getData());
         binding.postOrdersRecycle.setAdapter(adapter);
         Log.e("rv2", order.getData().size() + "");
 
