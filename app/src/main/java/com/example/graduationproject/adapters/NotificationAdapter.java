@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.LayoutNotificationItemBinding;
 
+import com.example.graduationproject.listener.NotificationInterface;
 import com.example.graduationproject.retrofit.notifiction.Datum;
 import com.example.graduationproject.retrofit.post.Post;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -30,11 +31,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     Context context;
     List<Datum> list;
+    NotificationInterface notificationInterface;
 
-
-    public NotificationAdapter(Context context) {
+    public NotificationAdapter(Context context, NotificationInterface notificationInterface) {
         list = new ArrayList<>();
         this.context = context;
+        this.notificationInterface = notificationInterface;
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -64,20 +66,32 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     }
 
+    String message;
+
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull NotificationAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-        String message;
         if (list.get(position).getType().equals("accept_request")) {
             message = list.get(position).getSenderName() + "accept your request";
 
+        } else if (list.get(position).getType().equals("admin")) {
+            holder.binding.view.setBackground(context.getDrawable(R.drawable.notification_view_shape_red));
+            if (list.get(position).getPostId()!=0){
+                message = list.get(position).getSenderName() + " add post ";
+            }else {
+                message = list.get(position).getSenderName() + " create new account";
+            }
         } else {
             message = list.get(position).getSenderName() + " send you a request";
-
         }
         holder.binding.tvNotificationText.setText(message);
         holder.binding.tvNotificationDate.setText(list.get(position).getSent_at());
-
+        holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notificationInterface.layout(list.get(position).getPostId()+"", list.get(position).getSenderId()+"");
+            }
+        });
     }
 
 

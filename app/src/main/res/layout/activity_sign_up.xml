@@ -164,7 +164,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginRight="40dp"
                 android:layout_marginBottom="60dp"
-                android:background="@drawable/button2">
+                android:background="@drawable/button_profile1">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -172,7 +172,7 @@
                     android:layout_centerInParent="true"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
-                    android:text="Create An Account"
+                    android:text="Create Account"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold"

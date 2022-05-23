@@ -62,6 +62,7 @@ import com.google.gson.Gson;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import static com.example.graduationproject.fragments.PagesFragment.ALL_POSTS;
+import static com.example.graduationproject.fragments.PagesFragment.NOTIFICATION;
 import static com.example.graduationproject.fragments.PagesFragment.POST_ORDERS;
 
 import org.json.JSONArray;
@@ -100,12 +101,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         sharedPreferences = new AppSharedPreferences(getApplicationContext());
         serviceApi = Creator.getClient().create(ServiceApi.class);
         token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
-        String post_id_notifaction = getIntent().getStringExtra("post_id");
-        if (post_id_notifaction != null) {
-            Toast.makeText(context, post_id_notifaction+"", Toast.LENGTH_SHORT).show();
-            showDialog();
-            getPostDetails(Integer.parseInt(post_id_notifaction));
-        }
 
         toolbarBinding = binding.mainToolbar;
         drawer = binding.mainDrawer;
@@ -121,6 +116,23 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 binding.toolbarBack.setVisibility(View.INVISIBLE);
             }
         });
+
+        String post_id_notifaction = getIntent().getStringExtra("post_id");
+        String user_id_notifaction = getIntent().getStringExtra("user_id");
+        if (post_id_notifaction != null) {
+            Toast.makeText(context, post_id_notifaction+"", Toast.LENGTH_SHORT).show();
+            showDialog();
+            getPostDetails(Integer.parseInt(post_id_notifaction));
+            switchFragment(NOTIFICATION, null);
+
+        }else if (user_id_notifaction!=null){
+            Toast.makeText(context, user_id_notifaction+"", Toast.LENGTH_SHORT).show();
+            switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(Integer.parseInt(user_id_notifaction)));
+        }else
+            switchFragment(ALL_POSTS, null);
+
+
+
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this,
@@ -156,7 +168,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
         changeUserImage();
 
-        switchFragment(ALL_POSTS, null);
     }
 
     @SuppressLint("ResourceAsColor")
@@ -203,10 +214,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     String tag;
+    BaseFragment fragment = null;
 
     @Override
     public void switchFragment(PagesFragment pagesFragment, PostOrdersInfo object) {
-        BaseFragment fragment = null;
         switch (pagesFragment) {
             case ADD_POSTS:
                 toolbarBinding.getRoot().setVisibility(View.VISIBLE);
@@ -261,6 +272,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
 
         }
+        toolbarBinding.tvTitle.setText(fragment.getFragmentTitle());
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (!isAllPost) {

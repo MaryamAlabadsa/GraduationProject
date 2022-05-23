@@ -33,12 +33,22 @@ Context context=SplashActivity.this;
             @Override
             public void run() {
                 run_activity();
-                if(getIntent().getExtras()!=null&&getIntent().getStringExtra("post_id")!=null ){
-                    Toast.makeText(SplashActivity.this, getIntent().getStringExtra("post_id")+"", Toast.LENGTH_SHORT).show();
-                    Intent notificationIntent = new Intent(SplashActivity.this,MainActivity.class);
-                    notificationIntent.putExtra("post_id",getIntent().getStringExtra("post_id"));
-                    startActivity(notificationIntent);
-                    finish();
+                if(getIntent().getExtras()!=null&&(getIntent().getStringExtra("post_id")!=null||getIntent().getStringExtra("user_id")!=null)){
+                    if (getIntent().getStringExtra("post_id")!=null ){
+                        Toast.makeText(SplashActivity.this, getIntent().getStringExtra("post_id")+"", Toast.LENGTH_SHORT).show();
+                        Intent notificationIntent = new Intent(SplashActivity.this,MainActivity.class);
+                        notificationIntent.putExtra("post_id",getIntent().getStringExtra("post_id"));
+                        startActivity(notificationIntent);
+                        finish();
+                    }
+                   else if (getIntent().getStringExtra("user_id")!=null ){
+                        Toast.makeText(SplashActivity.this, getIntent().getStringExtra("user_id")+"", Toast.LENGTH_SHORT).show();
+                        Intent notificationIntent = new Intent(SplashActivity.this,MainActivity.class);
+                        notificationIntent.putExtra("user_id",getIntent().getStringExtra("user_id"));
+                        startActivity(notificationIntent);
+                        finish();
+                    }
+
                 }
                 else if (isLogin()) {
                     // new WebService().startRequest(WebService.RequestAPI.PROFILE, SplashScreen.this);

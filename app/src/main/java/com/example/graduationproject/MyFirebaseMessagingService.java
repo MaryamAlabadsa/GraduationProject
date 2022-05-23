@@ -57,17 +57,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message_data_payload: " + remoteMessage.getData());
             Map<String, String> params = remoteMessage.getData();
-            int post_id=0;
 
             JSONObject object = new JSONObject(params);
             Log.e("JSON OBJECT", object.toString());
             try {
                 if (object.has("post_id")) {
                     int postId = object.getInt("post_id");
-                    Log.d("post_iddd", postId + "");
-                    Log.d("getTitle", remoteMessage.getNotification().getTitle() + "");
                     if (remoteMessage.getNotification() != null)
-                        sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), postId);
+                        sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), postId+"",null);
+                } else if (object.has("user_id")) {
+                    int userId = object.getInt("user_id");
+                    if (remoteMessage.getNotification() != null)
+                        sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), null,userId+"");
                 }
 
             } catch (JSONException e) {
@@ -85,14 +86,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     //This method is only generating push notification
-    private void sendNotification(String messageTitle, String messageBody, int post_id) {
+    private void sendNotification(String messageTitle, String messageBody, String postId,String userId) {
 
         PendingIntent contentIntent = null;
         Intent intent = null;
 
-        intent = new Intent(this, MainActivity.class);
-        Log.e("post_id",post_id+"");
-        intent.putExtra("post_id",post_id+"");
+        intent = new Intent(this, SplashActivity.class);
+        intent.putExtra("post_id", postId );
+        intent.putExtra("user_id", userId);
 
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         contentIntent = PendingIntent.getActivity(this, 0 /* request code */, intent, PendingIntent.FLAG_UPDATE_CURRENT);

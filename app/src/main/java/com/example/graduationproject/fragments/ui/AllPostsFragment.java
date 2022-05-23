@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -79,6 +80,7 @@ public class AllPostsFragment extends BaseFragment {
     List<Category> data;
     int readInt;
     Intent intent;
+    int page = 1, limit = 2;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -129,6 +131,18 @@ public class AllPostsFragment extends BaseFragment {
         });
         showDialog();
         getAllCategories();
+        binding.scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
+                    page++;
+//                    binding.progressBar.setVisibility(View.VISIBLE);
+                    showDialog();
+                    getPostDividedByIsDonation(isDonation, page, limit);
+
+                }
+            }
+        });
         return view;
     }
 
@@ -200,12 +214,12 @@ public class AllPostsFragment extends BaseFragment {
         });
     }
 
-    private void getPostsByCategory(int id) {
+    private void getPostsByCategory(int id,int page,int limit) {
 
         RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), id + "");
 
         Call<AllPosts> call = serviceApi.getPostByCategory(
-                "Bearer " + token, category_id, readInt);
+                "Bearer " + token, category_id, readInt,page,limit);
         call.enqueue(new Callback<AllPosts>() {
             @Override
             public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
@@ -230,11 +244,10 @@ public class AllPostsFragment extends BaseFragment {
         });
     }
 
-
-    private void getPostDividedByIsDonation(int id) {
+    private void getPostDividedByIsDonation(int id, int page, int limit) {
 
         Call<AllPosts> call = serviceApi.getPostDividedByIsDonation(
-                "Bearer " + token, id);
+                "Bearer " + token, id,page,limit);
         call.enqueue(new Callback<AllPosts>() {
             @Override
             public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
@@ -245,6 +258,7 @@ public class AllPostsFragment extends BaseFragment {
                     AllPosts getAllPosts = response.body();
                     setPostsRv(getAllPosts.getData());
                     progressDialog.dismiss();
+//                    binding.progressBar.setVisibility(View.GONE);
                 } else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
@@ -317,12 +331,11 @@ public class AllPostsFragment extends BaseFragment {
                 if (id == 0) {
                     sharedPreferences.writeInt(AppSharedPreferences.IS_DONATION, 0);
                     showDialog();
-                    getPostDividedByIsDonation(0);
-
+                    getPostDividedByIsDonation(0, page, limit);
                 } else {
                     sharedPreferences.writeInt(AppSharedPreferences.IS_DONATION, id);
                     showDialog();
-                    getPostsByCategory(id);
+                    getPostsByCategory(id,page,limit);
 
                 }
             }
@@ -413,9 +426,9 @@ public class AllPostsFragment extends BaseFragment {
             binding.filterText.setText("Request posts");
         }
         if (post_category == 0)
-            getPostDividedByIsDonation(isDonation);
+            getPostDividedByIsDonation(isDonation, page, limit);
         else
-            getPostsByCategory(post_category);
+            getPostsByCategory(post_category,page,limit);
     }
 
 }

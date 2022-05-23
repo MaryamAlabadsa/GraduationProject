@@ -42,7 +42,7 @@ public interface ServiceApi {
 
     @GET("post")
     Call<AllPosts> getAllPosts(
-            @Header("Authorization") String token);
+            @Header("AuthorizatioFn") String token);
 
 //    @GET("donationPosts")
 //    Call<AllDonationsPosts> getDonationPosts(
@@ -65,12 +65,16 @@ public interface ServiceApi {
             @Header("Authorization") String token
             , @Part("category_id") RequestBody category_id,
             @Path("id") int id
+            , @Query("page") int page
+            , @Query("limit") int limit
     );
 
     @POST("PostDividedByIsDonation/{id}")
     Call<AllPosts> getPostDividedByIsDonation(
             @Header("Authorization") String token,
-            @Path("id") int id);
+            @Path("id") int id
+            , @Query("page") int page
+            , @Query("limit") int limit);
 
     @POST("login")
     Call<RegisterResponse> login
