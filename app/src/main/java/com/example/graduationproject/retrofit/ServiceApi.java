@@ -170,5 +170,7 @@ public interface ServiceApi {
 
     @DELETE("order/{id}")
     Call<MessageResponse> deleteOrder(@Path("id") int id, @Header("Authorization") String token);
+   @POST("UpdateUserName")
+    Call<RegisterResponse> updateUserName( @Header("Authorization") String token , @Query("name") String name);
 
 }

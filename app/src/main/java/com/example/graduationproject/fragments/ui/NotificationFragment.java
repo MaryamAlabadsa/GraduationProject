@@ -26,6 +26,7 @@ import com.example.graduationproject.adapters.PostOrdersAdapter;
 import com.example.graduationproject.databinding.FragmentAllPostsBinding;
 import com.example.graduationproject.databinding.FragmentNotificationBinding;
 import com.example.graduationproject.fragments.BaseFragment;
+import com.example.graduationproject.fragments.MyTitleEventBus;
 import com.example.graduationproject.fragments.PagesFragment;
 import com.example.graduationproject.listener.CategoryInterface;
 import com.example.graduationproject.listener.NotificationInterface;
@@ -38,6 +39,7 @@ import com.example.graduationproject.retrofit.post.PostDetails;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -90,6 +92,10 @@ public class NotificationFragment extends BaseFragment {
         binding = FragmentNotificationBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         context = getActivity();
+
+        //event bus
+        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ALL_POSTS, TAG));
+
         showDialog();
         getNotification();
         return view;

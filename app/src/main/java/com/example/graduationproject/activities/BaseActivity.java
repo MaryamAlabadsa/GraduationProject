@@ -18,7 +18,7 @@ import retrofit2.Response;
 public class BaseActivity extends AppCompatActivity {
     AppSharedPreferences sharedPreferences;
     String token;
-    ServiceApi serviceApi;
+    static ServiceApi serviceApi;
     public ProgressDialog progressDialog;
 
 

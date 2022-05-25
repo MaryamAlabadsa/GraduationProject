@@ -26,6 +26,7 @@ import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.FragmentAddPostBinding;
 import com.example.graduationproject.fragments.BaseFragment;
 import com.example.graduationproject.fragments.FragmentSwitcher;
+import com.example.graduationproject.fragments.MyTitleEventBus;
 import com.example.graduationproject.fragments.PagesFragment;
 import com.example.graduationproject.retrofit.categories.AllCategories;
 import com.example.graduationproject.retrofit.categories.Category;
@@ -36,6 +37,7 @@ import com.example.graduationproject.utils.AppSharedPreferences;
 import com.example.graduationproject.utils.FileUtil;
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -44,6 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -70,7 +73,7 @@ public class AddPostFragment extends BaseFragment {
     private String mParam1;
     private String mParam2;
 
-    public AddPostFragment() {
+    public  AddPostFragment() {
         // Required empty public constructor
     }
 
@@ -95,12 +98,10 @@ public class AddPostFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
 
 
@@ -114,6 +115,10 @@ public class AddPostFragment extends BaseFragment {
         imagesList = new HashMap<String, File>();
         showDialog();
         getAllCategories();
+
+
+        //event bus
+        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ADD_POSTS, "Add Post"));
 
         binding.imagePost1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,10 +161,7 @@ public class AddPostFragment extends BaseFragment {
                     .placeholder(R.drawable.ic_launcher_foreground).into(binding.imageProfile);
             binding.userName.setText(user1.getName());
         }
-        //Spinner Code
-//        spinnerCode();
 
-//        Log.e("category", category);
         binding.postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -223,7 +225,7 @@ public class AddPostFragment extends BaseFragment {
     public String ValidationAllFields() {
 
         if (binding.spinner.getSelectedItem().toString().trim().equals("Pick one")) {
-            Toast.makeText(context, "Error Spinner", Toast.LENGTH_SHORT).show();
+            Toasty.error(context, "Error Spinner", Toast.LENGTH_SHORT).show();
             return "error1";
         } else if (pTitle.isEmpty()) {
             binding.titlePost.requestFocus();
@@ -240,13 +242,12 @@ public class AddPostFragment extends BaseFragment {
             alert.setMessage("PLEASE UPLOAD PHOTO");
             alert.setPositiveButton("ok", null);
             alert.show();
-            Toast.makeText(context, "PLEASE UPLOAD PHOTO", Toast.LENGTH_SHORT).show();
+            Toasty.error(context, "PLEASE UPLOAD PHOTO", Toast.LENGTH_SHORT).show();
             return "error4";
-        } else if (isDonation == 1 || isDonation == 0) {
-            Toast.makeText(context, "PLEASE SELECTED REQUEST OR DONATION", Toast.LENGTH_SHORT).show();
+        } else if (isDonation == -1) {
+            Toasty.error(context, "PLEASE SELECTED REQUEST OR DONATION", Toast.LENGTH_SHORT).show();
             return "error 5 ";
         } else {
-            Toast.makeText(context, "VALIDATION  SUCCESSFUL", Toast.LENGTH_SHORT).show();
             return "";
         }
 

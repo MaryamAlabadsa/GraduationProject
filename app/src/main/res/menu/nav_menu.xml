@@ -5,7 +5,7 @@
         <item
             android:id="@+id/allPosts"
             android:icon="@drawable/all_posts"
-            android:title="@string/allPosts" />
+            android:title="@string/home" />
         <item
             android:id="@+id/add_post"
             android:icon="@drawable/plus"
@@ -23,10 +23,6 @@
 
     <item android:title="@string/account_setting">
         <menu>
-            <item
-                android:id="@+id/nav_settings"
-                android:icon="@drawable/ic_settings"
-                android:title="@string/setting" />
             <item
                 android:id="@+id/nav_change_password"
                 android:icon="@drawable/password"

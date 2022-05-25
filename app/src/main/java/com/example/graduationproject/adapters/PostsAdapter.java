@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.LayoutPostItemBinding;
 import com.example.graduationproject.listener.PostAddOrderInterface;
+import com.example.graduationproject.listener.PostDetialsInterface;
 import com.example.graduationproject.listener.PostRemoveOrderInterface;
 import com.example.graduationproject.listener.UserIdtRequestInterface;
 import com.example.graduationproject.model.SliderItem;
@@ -34,19 +35,28 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     Context context;
     List<Post> list;
     PostAddOrderInterface addOrderInterface;
-    PostRemoveOrderInterface removeOrderInterface;    UserIdtRequestInterface userIdtRequestInterface;
-    BottomSheetDialog dialog;
-
+    PostRemoveOrderInterface removeOrderInterface;
+    UserIdtRequestInterface userIdtRequestInterface;
+PostDetialsInterface postDetialsInterface;
 
     public PostsAdapter(Context context,
+                        PostDetialsInterface postDetialsInterface,
                         PostAddOrderInterface addOrderInterface,
                         PostRemoveOrderInterface removeOrderInterface,
                         UserIdtRequestInterface userIdtRequestInterface) {
         list = new ArrayList<>();
         this.context = context;
+        this.postDetialsInterface = postDetialsInterface;
         this.addOrderInterface = addOrderInterface;
-        this.removeOrderInterface=removeOrderInterface;
+        this.removeOrderInterface = removeOrderInterface;
         this.userIdtRequestInterface = userIdtRequestInterface;
+    }
+
+
+    public void resetItem(Post item, int position) {
+        list.add(position,item);
+        notifyDataSetChanged();
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -79,8 +89,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull PostsAdapter.MyViewHolder holder,
-                                 @SuppressLint("RecyclerView")
-                                 final int position) {
+                                 @SuppressLint("RecyclerView") final int position) {
         holder.binding.numberRequestsPost.setText(list.get(position).getNumberOfRequests() + " request   ");
         holder.binding.uDatePost.setText(list.get(position).getPublishedAt());
         holder.binding.uNamePost.setText("" + list.get(position).getFirstUserName());
@@ -99,6 +108,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
                 userIdtRequestInterface.layout(list.get(position).getFirstUserId());
             }
         });
+        holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                postDetialsInterface.layout(list.get(position).getId());
+            }
+        });
 
 
     }
@@ -108,10 +123,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         SliderAdapter adapter = new SliderAdapter(context);
 
         sliderView.setSliderAdapter(adapter);
-//        SliderItem sliderItem = new SliderItem(list.get(position).getTitle(),
-//                list.get(position).getDescription(),
-//                list.get(position).getPostMedia());
-        adapter.addItem( list.get(position).getPostMedia());
+
+        adapter.addItem(list.get(position).getPostMedia());
 
         sliderView.setIndicatorAnimation(IndicatorAnimationType.SCALE_DOWN); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
         sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
@@ -127,7 +140,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
             holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    addOrderInterface.layout(list.get(position));
+                    addOrderInterface.layout(list.get(position),position);
                     notifyDataSetChanged();
                 }
             });
@@ -135,24 +148,24 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         } else {
             if (list.get(position).getIsCompleted())
                 holder.binding.commentBtn.setVisibility(View.INVISIBLE);
-            else if (list.get(position).getIsOrdered()){
+            else if (list.get(position).getIsOrdered()) {
                 holder.binding.commentBtn.setText("Remove order");
                 holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        removeOrderInterface.layout(list.get(position));
+                        removeOrderInterface.layout(list.get(position),position);
                         notifyDataSetChanged();
                     }
                 });
-            }
-            else {   holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    addOrderInterface.layout(list.get(position));
-                    notifyDataSetChanged();
+            } else {
+                holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        addOrderInterface.layout(list.get(position),position);
+                        notifyDataSetChanged();
 
-                }
-            });
+                    }
+                });
                 holder.binding.commentBtn.setText("Add order");
             }
         }

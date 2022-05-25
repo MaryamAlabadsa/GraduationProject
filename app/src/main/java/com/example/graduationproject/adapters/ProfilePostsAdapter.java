@@ -55,6 +55,11 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
 
+    public void resetItem(Post post, int position) {
+        list.get(position).setPost(post);
+        notifyDataSetChanged();
+    }
+
     static class MyPostViewHolder extends RecyclerView.ViewHolder {
         LayoutPostItemBinding binding;
 
@@ -130,7 +135,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         Glide.with(context).load(post.getFirstUserImageLink()).circleCrop()
                 .placeholder(R.drawable.ic_launcher_foreground).into(binding.uImgPost);
         setOrderPostImages(binding,post);
-        setOrderPostOrderButton(binding,post);
+        setOrderPostOrderButton(binding,post,position);
         setOrderPostStatus(binding,post);
 
         binding.uNamePost.setOnClickListener(new View.OnClickListener() {
@@ -159,7 +164,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         sliderView.startAutoCycle();
     }
 
-    private void setOrderPostOrderButton(LayoutPostItemBinding binding,Post list) {
+    private void setOrderPostOrderButton(LayoutPostItemBinding binding,Post list,int position) {
         if (list.getIsHeTheOwnerOfThePost()) {
             binding.commentBtn.setText("Show orders");
         } else {
@@ -171,7 +176,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 binding.commentBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        addOrderInterface.layout(list);
+                        addOrderInterface.layout(list,position);
                     }
                 });
                binding.commentBtn.setText("Add order");
@@ -239,7 +244,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        removeOrderInterface.layout(list.get(position).getPost());
+                        removeOrderInterface.layout(list.get(position).getPost(),position);
                     }
                 });
             }
@@ -248,7 +253,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        addOrderInterface.layout(list.get(position).getPost());
+                        addOrderInterface.layout(list.get(position).getPost(),position);
                     }
                 });
             }

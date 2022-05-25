@@ -1,4 +1,4 @@
-package com.example.graduationproject.fragments;
+package com.example.graduationproject.fragments.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,9 @@ import android.widget.Toast;
 import com.example.graduationproject.R;
 import com.example.graduationproject.activities.SignInActivity;
 import com.example.graduationproject.databinding.FragmentChangePasswordBinding;
-import com.example.graduationproject.databinding.FragmentProfileBinding;
+import com.example.graduationproject.fragments.BaseFragment;
+import com.example.graduationproject.fragments.MyTitleEventBus;
+import com.example.graduationproject.fragments.PagesFragment;
 import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.change.password.ChangePassword;
@@ -23,6 +25,7 @@ import com.example.graduationproject.retrofit.register.RegisterResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import retrofit2.Call;
@@ -79,6 +82,8 @@ public class ChangePasswordFragment extends BaseFragment {
         binding = FragmentChangePasswordBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         context = getActivity();
+        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.CHANGE_PASSWORD, "change password"));
+
         serviceApi = Creator.getClient().create(ServiceApi.class);
         sharedPreferences = new AppSharedPreferences(getActivity().getApplicationContext());
         token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);        binding.changePasswordBtn.setOnClickListener(new View.OnClickListener() {

@@ -1,5 +1,6 @@
 package com.example.graduationproject.fragments.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ import com.example.graduationproject.retrofit.post.Post;
 import com.example.graduationproject.retrofit.profile.donation.posts.PostsList;
 import com.example.graduationproject.retrofit.profile.donation.posts.ProfilePosts;
 import com.example.graduationproject.retrofit.profile.user.info.UserProfileInfo;
+import com.example.graduationproject.retrofit.register.RegisterResponse;
 import com.example.graduationproject.retrofit.register.User;
 import com.example.graduationproject.retrofit.request.Order;
 import com.example.graduationproject.retrofit.token.MessageResponse;
@@ -48,6 +50,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -65,7 +68,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private static final String ARG_PARAM1 = "param1";
     private FragmentSwitcher fragmentSwitcher;
     MyDialogAddOrder myDialogAddOrder;
-
+    ProfilePostsAdapter adapter;
 
     // TODO: Rename and change types of parameters
     private int userId;
@@ -99,7 +102,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         context = getActivity();
-        view.setVisibility(View.INVISIBLE);
+//        view.setVisibility(View.INVISIBLE);
+        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.progressBar.getProgress();
         serviceApi = Creator.getClient().create(ServiceApi.class);
         sharedPreferences = new AppSharedPreferences(getActivity().getApplicationContext());
         token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
@@ -107,11 +112,15 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         getProfileData();
         binding.btnDonationPost.setOnClickListener(this::onClick);
         binding.btnRequestPost.setOnClickListener(this::onClick);
+        binding.editUserName.setOnClickListener(this::onClick);
+        binding.saveEditUserName.setOnClickListener(this::onClick);
+        if (userId == 0)
+            binding.editUserName.setVisibility(View.GONE);
+
         return view;
     }
 
     private void getProfileData() {
-        showDialog();
         if (userId == 0) {
             Toast.makeText(context, "my profie", Toast.LENGTH_SHORT).show();
             setMyProfileInfo();
@@ -134,7 +143,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     Log.d("Success", new Gson().toJson(response.body()));
                     Glide.with(context).load(response.body().getData().getUserImage()).circleCrop()
                             .placeholder(R.drawable.ic_launcher_foreground).into(binding.profileImage);
-                    binding.fullName.setText(response.body().getData().getUserName());
+                    binding.userNameText.setText(response.body().getData().getUserName());
                     binding.tvDonationPostsNum.setText(response.body().getData().getNumDonationPost() + "");
                     binding.tvRequestPostsNum.setText(response.body().getData().getNumRequestPost() + "");
                     getMyRequestPosts();
@@ -166,7 +175,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     Log.d("Success", new Gson().toJson(response.body()));
                     Glide.with(context).load(response.body().getData().getUserImage()).circleCrop()
                             .placeholder(R.drawable.ic_launcher_foreground).into(binding.profileImage);
-                    binding.fullName.setText(response.body().getData().getUserName());
+                    binding.userNameText.setText(response.body().getData().getUserName());
                     binding.tvDonationPostsNum.setText(response.body().getData().getNumDonationPost() + "");
                     binding.tvRequestPostsNum.setText(response.body().getData().getNumRequestPost() + "");
                     getUserRequestPosts(userId);
@@ -195,9 +204,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     setRvData(response.body().getData().getPostsList());
-                    progressDialog.dismiss();
                     binding.getRoot().setVisibility(View.VISIBLE);
-
+                    binding.progressBar.setVisibility(View.GONE);
                 } else {
 //                    String errorMessage
 //                    = parseError(response);
@@ -223,7 +231,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     setRvData(response.body().getData().getPostsList());
-                    progressDialog.dismiss();
+                    binding.progressBar.setVisibility(View.GONE);
                     binding.getRoot().setVisibility(View.VISIBLE);
 
                 } else {
@@ -251,7 +259,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     setRvData(response.body().getData().getPostsList());
-                    progressDialog.dismiss();
+                    binding.progressBar.setVisibility(View.GONE);
                     binding.getRoot().setVisibility(View.VISIBLE);
 
                 } else {
@@ -279,7 +287,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     setRvData(response.body().getData().getPostsList());
-                    progressDialog.dismiss();
+                    binding.progressBar.setVisibility(View.GONE);
                     binding.getRoot().setVisibility(View.VISIBLE);
 
                 } else {
@@ -301,9 +309,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 context, RecyclerView.VERTICAL, false);
         binding.rvPosts.setLayoutManager(layoutManager);
-        ProfilePostsAdapter adapter = new ProfilePostsAdapter(context, new PostAddOrderInterface() {
+        adapter = new ProfilePostsAdapter(context, new PostAddOrderInterface() {
             @Override
-            public void layout(Post post) {
+            public void layout(Post post, int position) {
                 if (post.getIsHeTheOwnerOfThePost()) {
                     PostOrdersInfo info = new PostOrdersInfo(post.getId(),
                             post.getIsCompleted(),
@@ -311,15 +319,15 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                             post.getSecondUserId());
                     fragmentSwitcher.switchFragment(PagesFragment.POST_ORDERS, info);
                 } else {
-                    createDialog(post.getId());
+                    createDialog(post.getId(), post, position);
                     myDialogAddOrder.show();
                 }
 
             }
         }, new PostRemoveOrderInterface() {
             @Override
-            public void layout(Post post) {
-                RemoveRequest(post.getOrderId());
+            public void layout(Post post, int position) {
+                RemoveRequest(post.getOrderId(), post, position);
             }
         }, new UserIdtRequestInterface() {
             @Override
@@ -345,8 +353,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     getMyDonationPosts();
                 else
                     getUserDonationPosts(userId);
-                Animation anim = AnimationUtils.loadAnimation(context, R.anim.anim);
-                binding.lineView.startAnimation(anim);
+                Animation anim2 = AnimationUtils.loadAnimation(context, R.anim.anim2);
+                binding.lineView.startAnimation(anim2);
                 break;
 
             case R.id.btn_request_post:
@@ -354,10 +362,56 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     getMyRequestPosts();
                 else
                     getUserRequestPosts(userId);
-                Animation anim2 = AnimationUtils.loadAnimation(context, R.anim.anim2);
-                binding.lineView.startAnimation(anim2);
+                Animation anim = AnimationUtils.loadAnimation(context, R.anim.anim);
+                binding.lineView.startAnimation(anim);
+                break;
+            case R.id.edit_user_name:
+                binding.userNameText.setClickable(true);
+                binding.userNameText.setEnabled(true);
+                binding.userNameText.setBackground(context.getDrawable(R.drawable.button_profile2));
+                binding.editUserName.setVisibility(View.GONE);
+                binding.saveEditUserName.setVisibility(View.VISIBLE);
+                break;
+            case R.id.save_edit_user_name:
+                binding.userNameText.setBackground(context.getDrawable(R.drawable.text_input));
+                binding.userNameText.setClickable(false);
+                binding.userNameText.setEnabled(false);
+                binding.editUserName.setVisibility(View.VISIBLE);
+                binding.saveEditUserName.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.VISIBLE);
+                String newName = binding.userNameText.getText().toString();
+                updateUserName(newName);
                 break;
         }
+    }
+
+    private void updateUserName(String newName) {
+        Call<RegisterResponse> call = serviceApi.updateUserName(
+                "Bearer " + token,newName
+        );
+
+        call.enqueue(new Callback<RegisterResponse>() {
+            @SuppressLint("CheckResult")
+            @Override
+            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                Log.d("response5 code", response.code() + "");
+
+                binding.progressBar.setVisibility(View.GONE);
+                Toasty.success(context, R.string.success_operation);
+                User user = response.body().getData().getUser();
+                Gson gson = new Gson();
+                String userString = gson.toJson(user);
+
+                sharedPreferences.writeString(AppSharedPreferences.USER, userString);
+
+            }
+
+            @SuppressLint("CheckResult")
+            @Override
+            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                Toasty.error(context, R.string.filed_operation);
+            }
+        });
     }
 
     @Override
@@ -367,7 +421,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     }
 
-    private void AddRequest(int id_post, String massage) {
+    public void AddRequest(int id_post, String massage, Post post, int position) {
 
         RequestBody post_id = RequestBody.create(MediaType.parse("multipart/form-data"), id_post + "");
         RequestBody mPost = RequestBody.create(MediaType.parse("multipart/form-data"), massage);
@@ -381,44 +435,64 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
                 Log.d("response5 code", response.code() + "");
+                changeAddButton(post, position);
                 myDialogAddOrder.dismiss();
-                progressDialog.dismiss();
+                Toasty.success(context, R.string.success_operation);
             }
 
             @Override
             public void onFailure(Call<Order> call, Throwable t) {
-
+                t.getMessage();
+                myDialogAddOrder.dismiss();
+                Toasty.error(context, R.string.filed_operation);
             }
         });
     }
 
-    private void RemoveRequest(int order_id) {
+    private void changeAddButton(Post post, int position) {
+        post.setIsOrdered(true);
+        adapter.resetItem(post, position);
+    }
+
+    private void changeRemoveButton(Post post, int position) {
+        post.setIsOrdered(false);
+        adapter.resetItem(post, position);
+    }
+
+    private void RemoveRequest(int order_id, Post post, int position) {
 
         Call<MessageResponse> call = serviceApi.deleteOrder(order_id,
                 "Bearer " + token
         );
 
         call.enqueue(new Callback<MessageResponse>() {
+            @SuppressLint("CheckResult")
             @Override
             public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
                 Log.d("response5 code", response.code() + "");
-                progressDialog.dismiss();
+                changeRemoveButton(post, position);
+                binding.progressBar.setVisibility(View.GONE);
+                Toasty.success(context, R.string.success_operation);
+
             }
 
+            @SuppressLint("CheckResult")
             @Override
             public void onFailure(Call<MessageResponse> call, Throwable t) {
-
+                Toasty.error(context, R.string.filed_operation);
             }
         });
     }
 
-    private void createDialog(int id) {
+    private void createDialog(int id, Post post, int position) {
         myDialogAddOrder = new MyDialogAddOrder(context, new Dialoginterface() {
             @Override
             public void yes(String massage) {
-                AddRequest(id, massage);
+                AddRequest(id, massage, post, position);
 
             }
         });
+
     }
+
 }

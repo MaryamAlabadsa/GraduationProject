@@ -37,5 +37,8 @@
     <string name="confirmation_message">confirmation message</string>
     <string name="beneficiary">beneficiary</string>
     <string name="donor">Donor</string>
+    <string name="filed_operation">Failed operation</string>
+    <string name="success_operation">success operation</string>
+    <string name="home">Home</string>
 
 </resources>

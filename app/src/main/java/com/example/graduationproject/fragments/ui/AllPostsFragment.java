@@ -1,45 +1,34 @@
 package com.example.graduationproject.fragments.ui;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
-import com.example.graduationproject.activities.MainActivity;
 import com.example.graduationproject.adapters.CategoryAdapter;
-import com.example.graduationproject.adapters.PostOrdersAdapter;
 import com.example.graduationproject.adapters.PostsAdapter;
-import com.example.graduationproject.databinding.ButtonDialogBinding;
 import com.example.graduationproject.databinding.FragmentAllPostsBinding;
-import com.example.graduationproject.databinding.LayoutPostDetialsBinding;
 import com.example.graduationproject.dialog.DialogRadiointerface;
 import com.example.graduationproject.dialog.Dialoginterface;
 import com.example.graduationproject.dialog.MyDialogAddOrder;
 import com.example.graduationproject.dialog.MyDialogٌRadioButton;
 import com.example.graduationproject.fragments.BaseFragment;
 import com.example.graduationproject.fragments.FragmentSwitcher;
+import com.example.graduationproject.fragments.MyTitleEventBus;
 import com.example.graduationproject.fragments.PagesFragment;
 import com.example.graduationproject.listener.CategoryInterface;
 import com.example.graduationproject.listener.PostAddOrderInterface;
-import com.example.graduationproject.listener.PostOrderRequestInterface;
+import com.example.graduationproject.listener.PostDetialsInterface;
 import com.example.graduationproject.listener.PostRemoveOrderInterface;
 import com.example.graduationproject.listener.UserIdtRequestInterface;
 import com.example.graduationproject.model.PostOrdersInfo;
@@ -47,17 +36,18 @@ import com.example.graduationproject.retrofit.categories.AllCategories;
 import com.example.graduationproject.retrofit.categories.Category;
 import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.post.Post;
-import com.example.graduationproject.retrofit.post.PostDetails;
 import com.example.graduationproject.retrofit.request.Order;
 import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.example.graduationproject.utils.UtilMethods;
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -80,10 +70,11 @@ public class AllPostsFragment extends BaseFragment {
     List<Category> data;
     int readInt;
     Intent intent;
-    int page = 1, limit = 2;
+    int page = 0, limit = 3;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    PostsAdapter adapter;
 
     public AllPostsFragment() {
         // Required empty public constructor
@@ -108,8 +99,8 @@ public class AllPostsFragment extends BaseFragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -120,6 +111,9 @@ public class AllPostsFragment extends BaseFragment {
         View view = binding.getRoot();
         context = getActivity();
         readInt = sharedPreferences.readInt(AppSharedPreferences.IS_DONATION);
+        //event bus
+        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ALL_POSTS, "All post"));
+
 
         isDonation(readInt);
 
@@ -214,12 +208,12 @@ public class AllPostsFragment extends BaseFragment {
         });
     }
 
-    private void getPostsByCategory(int id,int page,int limit) {
+    private void getPostsByCategory(int id, int page, int limit) {
 
         RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), id + "");
 
         Call<AllPosts> call = serviceApi.getPostByCategory(
-                "Bearer " + token, category_id, readInt,page,limit);
+                "Bearer " + token, category_id, readInt, page, limit);
         call.enqueue(new Callback<AllPosts>() {
             @Override
             public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
@@ -247,7 +241,7 @@ public class AllPostsFragment extends BaseFragment {
     private void getPostDividedByIsDonation(int id, int page, int limit) {
 
         Call<AllPosts> call = serviceApi.getPostDividedByIsDonation(
-                "Bearer " + token, id,page,limit);
+                "Bearer " + token, id, page, limit);
         call.enqueue(new Callback<AllPosts>() {
             @Override
             public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
@@ -290,23 +284,31 @@ public class AllPostsFragment extends BaseFragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 context, RecyclerView.VERTICAL, false);
         binding.rvPost.setLayoutManager(layoutManager);
-        PostsAdapter adapter = new PostsAdapter(context, new PostAddOrderInterface() {
+        adapter = new PostsAdapter(context, new PostDetialsInterface() {
+            @SuppressLint("CheckResult")
             @Override
-            public void layout(Post post) {
+            public void layout(int id) {
+
+                UtilMethods.getPostDetails(id, context, serviceApi, token);
+
+            }
+        }, new PostAddOrderInterface() {
+            @Override
+            public void layout(Post post, int position) {
                 if (post.getIsHeTheOwnerOfThePost()) {
                     PostOrdersInfo info = new PostOrdersInfo(post.getId(), post.getIsCompleted(), post.getIsDonation(), post.getSecondUserId());
                     fragmentSwitcher.switchFragment(PagesFragment.POST_ORDERS, info);
                 } else {
-                    createDialog(post.getId());
+                    createDialog(post.getId(), post, position);
                     myDialogAddOrder.show();
                 }
 
             }
         }, new PostRemoveOrderInterface() {
             @Override
-            public void layout(Post post) {
+            public void layout(Post post, int position) {
                 showDialog();
-                RemoveRequest(post.getOrderId());
+                RemoveRequest(post.getOrderId(), post, position);
             }
         }, new UserIdtRequestInterface() {
             @Override
@@ -335,7 +337,7 @@ public class AllPostsFragment extends BaseFragment {
                 } else {
                     sharedPreferences.writeInt(AppSharedPreferences.IS_DONATION, id);
                     showDialog();
-                    getPostsByCategory(id,page,limit);
+                    getPostsByCategory(id, page, limit);
 
                 }
             }
@@ -351,7 +353,7 @@ public class AllPostsFragment extends BaseFragment {
 
     }
 
-    public void AddRequest(int id_post, String massage) {
+    public void AddRequest(int id_post, String massage, Post post, int position) {
 
         RequestBody post_id = RequestBody.create(MediaType.parse("multipart/form-data"), id_post + "");
         RequestBody mPost = RequestBody.create(MediaType.parse("multipart/form-data"), massage);
@@ -365,41 +367,61 @@ public class AllPostsFragment extends BaseFragment {
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
                 Log.d("response5 code", response.code() + "");
+                changeAddButton(post, position);
                 myDialogAddOrder.dismiss();
+                Toasty.success(context, R.string.success_operation);
             }
 
             @Override
             public void onFailure(Call<Order> call, Throwable t) {
                 t.getMessage();
+                myDialogAddOrder.dismiss();
+                Toasty.error(context, R.string.filed_operation);
             }
         });
     }
 
-    private void RemoveRequest(int order_id) {
+    private void changeAddButton(Post post, int position) {
+        post.setIsOrdered(true);
+        adapter.resetItem(post, position);
+    }
+
+    private void changeRemoveButton(Post post, int position) {
+        post.setIsOrdered(false);
+        adapter.resetItem(post, position);
+    }
+
+
+    private void RemoveRequest(int order_id, Post post, int position) {
 
         Call<MessageResponse> call = serviceApi.deleteOrder(order_id,
                 "Bearer " + token
         );
 
         call.enqueue(new Callback<MessageResponse>() {
+            @SuppressLint("CheckResult")
             @Override
             public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
                 Log.d("response5 code", response.code() + "");
+                changeRemoveButton(post, position);
                 progressDialog.dismiss();
+                Toasty.success(context, R.string.success_operation);
+
             }
 
+            @SuppressLint("CheckResult")
             @Override
             public void onFailure(Call<MessageResponse> call, Throwable t) {
-
+                Toasty.error(context, R.string.filed_operation);
             }
         });
     }
 
-    private void createDialog(int id) {
+    private void createDialog(int id, Post post, int position) {
         myDialogAddOrder = new MyDialogAddOrder(context, new Dialoginterface() {
             @Override
             public void yes(String massage) {
-                AddRequest(id, massage);
+                AddRequest(id, massage, post, position);
 
             }
         });
@@ -428,7 +450,8 @@ public class AllPostsFragment extends BaseFragment {
         if (post_category == 0)
             getPostDividedByIsDonation(isDonation, page, limit);
         else
-            getPostsByCategory(post_category,page,limit);
+            getPostsByCategory(post_category, page, limit);
     }
+
 
 }

@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
@@ -55,6 +56,7 @@ public class SignUpActivity extends BaseActivity {
     ServiceApi serviceApi;
     ActivitySignUpBinding binding;
     Context context = SignUpActivity.this;
+    File file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,62 +167,6 @@ public class SignUpActivity extends BaseActivity {
         }
     }
 
-    private void PickImage() {
-        CropImage.activity().start(this);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestStoragePermission() {
-        requestPermissions(new String[]{
-                Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestCameraPermission() {
-        requestPermissions(new String[]{Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-    }
-
-    private boolean checkStoragePermission() {
-        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED;
-        return res2;
-    }
-
-    private boolean checkCameraPermission() {
-        boolean res1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED;
-        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED;
-        return res1 && res2;
-    }
-
-    Uri userImg;
-    File file;
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == RESULT_OK) {
-                Uri userImg = result.getUri();
-                try {
-                    InputStream stream = getContentResolver().openInputStream(userImg);
-                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                    binding.pickImage.setImageBitmap(bitmap);
-                   file= FileUtil.from(context, userImg);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
-            }
-
-        }
-    }
-
     private void sendDeviceToken() {
         String token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
         String deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
@@ -267,4 +213,64 @@ public class SignUpActivity extends BaseActivity {
             return request;
 
     }
+
+    // camera cooooode
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PickImage();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestStoragePermission() {
+        requestPermissions(new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestCameraPermission() {
+        requestPermissions(new String[]{Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+    }
+
+    private boolean checkStoragePermission() {
+        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
+        return res2;
+    }
+
+    private boolean checkCameraPermission() {
+        boolean res1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED;
+        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
+        return res1 && res2;
+    }
+
+    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if (result.getResultCode() == Activity.RESULT_OK) { // There are no request codes
+                Intent data = result.getData();
+                Log.e("data", data.getDataString() + "");
+                File file = null;
+                try {
+                    InputStream stream = getContentResolver().openInputStream(data.getData());
+                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                    binding.pickImage.setImageBitmap(bitmap);
+                    file = FileUtil.from(context, data.getData());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    });
+
+    private void PickImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        someActivityResultLauncher.launch(intent);
+    }
+
 }

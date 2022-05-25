@@ -31,6 +31,7 @@ import com.example.graduationproject.databinding.FragmentAllPostsBinding;
 import com.example.graduationproject.databinding.FragmentPostOrdersBinding;
 import com.example.graduationproject.fragments.BaseFragment;
 import com.example.graduationproject.fragments.FragmentSwitcher;
+import com.example.graduationproject.fragments.MyTitleEventBus;
 import com.example.graduationproject.fragments.PagesFragment;
 import com.example.graduationproject.listener.PostOrderRequestInterface;
 import com.example.graduationproject.model.PostOrdersInfo;
@@ -41,6 +42,8 @@ import com.example.graduationproject.retrofit.request.GetAllOrder;
 import com.example.graduationproject.retrofit.request.Order;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -102,6 +105,10 @@ public class PostOrdersFragment extends BaseFragment {
         binding = FragmentPostOrdersBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         context = getActivity();
+
+        //event bus
+        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ALL_POSTS, "Your Order"));
+
         showDialog();
         getPostsOrdersRequest();
         enableSwipeToContactAndUndo();
