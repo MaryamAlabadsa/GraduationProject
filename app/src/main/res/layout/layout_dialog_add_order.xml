@@ -5,7 +5,7 @@
     android:id="@+id/layoutDialogContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#410F5DAB">
+    android:background="@color/blue_gray">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutDialog"
@@ -46,7 +46,7 @@
                 android:background="@drawable/button_profile2"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:hint="Add comment"
+                android:hint="Add Comment"
                 android:padding="@dimen/_10sdp" />
 
             <LinearLayout

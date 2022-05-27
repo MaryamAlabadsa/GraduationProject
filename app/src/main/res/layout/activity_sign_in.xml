@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SignInActivity">
+    tools:context=".activities.SignInActivity"
+    android:layout_gravity="center">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -20,37 +21,38 @@
 
             <ImageView
                 android:id="@+id/icon_img"
-                android:layout_width="119dp"
-                android:layout_height="140dp"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_130sdp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="100dp"
-                android:layout_marginRight="30dp"
-                android:src="@drawable/logo" />
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_90sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:src="@drawable/ic_logo" />
 
             <TextView
                 android:id="@+id/login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/icon_img"
-                android:layout_marginStart="@dimen/size_14"
-                android:layout_marginTop="@dimen/size_14"
-                android:layout_marginEnd="@dimen/size_14"
-                android:layout_marginBottom="@dimen/size_14"
-                android:fontFamily="@font/din_next_arabic_bold"
+                android:layout_marginStart="@dimen/_14sdp"
+                android:layout_marginTop="@dimen/_14sdp"
+                android:layout_marginEnd="@dimen/_14sdp"
+                android:layout_marginBottom="@dimen/_14sdp"
                 android:text="@string/Login"
-                android:textColor="@color/primary_text"
-                android:textSize="30sp"
-                android:typeface="serif"/>
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_23ssp"
+                android:textStyle="bold"
+                android:typeface="serif" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInput_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/login"
-                android:layout_margin="@dimen/size_14"
-                android:background="@color/white"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_10sdp"                android:background="@color/white"
                 android:hint="Email"
                 android:typeface="serif"
                 app:endIconMode="clear_text"
@@ -60,6 +62,7 @@
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
                     android:background="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,10 +71,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textInput_username"
-                android:layout_margin="@dimen/size_14"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="30dp"
+                 android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
                 android:hint="Write Your Password"
                 android:typeface="serif"
                 app:endIconMode="password_toggle"
@@ -82,9 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:inputType="textPassword"
-
-                    />
+                    android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -93,19 +93,23 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textInput_password"
                 android:layout_alignParentEnd="true"
-                android:layout_margin="@dimen/size_14"
+                android:layout_margin="@dimen/_12sdp"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:layout_marginBottom="@dimen/_12sdp"
                 android:text="Forget Your Password?"
-                android:textColor="#546C8F"
-                android:textSize="15sp"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_12ssp"
                 android:typeface="serif" />
 
             <RelativeLayout
                 android:id="@+id/login_btn"
-                android:layout_width="300dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/_250sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:layout_below="@id/forget_password_btn"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="36dp"
+                android:layout_marginTop="@dimen/_30sdp"
                 android:background="@drawable/button"
                 android:gravity="center">
 
@@ -113,11 +117,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginLeft="@dimen/_8sdp"
                     android:text="Login"
-                    android:textColor="#ffffff"
-                    android:textSize="20sp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_18ssp"
                     android:textStyle="bold"
                     android:typeface="serif" />
 
@@ -129,21 +133,23 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/login_btn"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="36dp"
+                android:layout_marginTop="@dimen/_30sdp"
                 android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="New to logistics? "
-                    android:textColor="@color/secondary_text" />
+                    android:textColor="@color/secondary_text"
+                    android:typeface="serif"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/Register"
                     android:id="@+id/register_btn"
-                    android:textColor="@color/primary_text" />
+                    android:textColor="@color/primary_text"
+                    android:typeface="serif"/>
 
             </LinearLayout>
 

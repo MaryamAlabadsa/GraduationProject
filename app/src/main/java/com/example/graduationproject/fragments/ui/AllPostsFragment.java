@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,10 +17,10 @@ import com.example.graduationproject.R;
 import com.example.graduationproject.adapters.CategoryAdapter;
 import com.example.graduationproject.adapters.PostsAdapter;
 import com.example.graduationproject.databinding.FragmentAllPostsBinding;
-import com.example.graduationproject.dialog.DialogRadiointerface;
+import com.example.graduationproject.dialog.DialogCheckedInterface;
 import com.example.graduationproject.dialog.Dialoginterface;
 import com.example.graduationproject.dialog.MyDialogAddOrder;
-import com.example.graduationproject.dialog.MyDialogٌRadioButton;
+import com.example.graduationproject.dialog.MyDialogChecked;
 import com.example.graduationproject.fragments.BaseFragment;
 import com.example.graduationproject.fragments.FragmentSwitcher;
 import com.example.graduationproject.fragments.MyTitleEventBus;
@@ -66,7 +65,7 @@ public class AllPostsFragment extends BaseFragment {
     FragmentAllPostsBinding binding;
     Context context;
     MyDialogAddOrder myDialogAddOrder;
-    MyDialogٌRadioButton myDialogٌRadioButton;
+    MyDialogChecked myDialogChecked;
     private FragmentSwitcher fragmentSwitcher;
     List<Category> data;
     int readInt;
@@ -126,9 +125,9 @@ public class AllPostsFragment extends BaseFragment {
         binding.filterChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                createFilterDialog();
+                createFilterDialog();
                 Log.e("toasty","toasty");
-                Toasty.error(context, R.string.filed_operation).show();
+//                Toasty.error(context, R.string.filed_operation).show();
 
             }
         });
@@ -476,29 +475,27 @@ public class AllPostsFragment extends BaseFragment {
     }
 
     private void createFilterDialog() {
-        myDialogٌRadioButton = new MyDialogٌRadioButton(context, new DialogRadiointerface() {
+        myDialogChecked = new MyDialogChecked(context, new DialogCheckedInterface() {
             @Override
             public void yes(int isDonation) {
                 isDonation(isDonation);
                 showDialog();
             }
         });
-        myDialogٌRadioButton.show();
+        myDialogChecked.show();
     }
 
     private void isDonation(int isDonation) {
         int post_category = sharedPreferences.readInt(AppSharedPreferences.POST_CATEGORY);
 
         if (isDonation == 0) {
-            binding.filterText.setText("Donation posts");
+            binding.filterText.setText("Donation Posts");
         } else {
-            binding.filterText.setText("Request posts");
+            binding.filterText.setText("Request Posts");
         }
         if (post_category == 0)
             getPostDividedByIsDonation(isDonation, page, limit);
         else
             getPostsByCategory(post_category, page, limit);
     }
-
-
 }

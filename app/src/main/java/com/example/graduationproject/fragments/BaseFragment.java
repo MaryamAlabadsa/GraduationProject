@@ -10,8 +10,8 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.graduationproject.R;
 import com.example.graduationproject.activities.MainActivity;
-import com.example.graduationproject.databinding.ButtonDialogBinding;
 import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.request.Order;
@@ -31,7 +31,6 @@ public abstract class BaseFragment extends Fragment {
     public String token;
     public ServiceApi serviceApi;
     public ProgressDialog progressDialog;
-    public ButtonDialogBinding dialogBinding;
 
 
     @Override
@@ -59,13 +58,11 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public void showDialog() {
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Please Wait");
+        progressDialog = new ProgressDialog(getActivity(),R.style.MyAlertDialogStyle);
+        progressDialog.setMessage("Please Wait...");
         progressDialog.setCancelable(false);
         progressDialog.show();
     }
-
-
 }
 
 

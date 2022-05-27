@@ -1,6 +1,6 @@
 package com.example.graduationproject.dialog;
 
 
-public interface DialogRadiointerface {
+public interface DialogCheckedInterface {
     void yes(int isDonation);
 }

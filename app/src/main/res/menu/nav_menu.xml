@@ -4,19 +4,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/allPosts"
-            android:icon="@drawable/all_posts"
+            android:icon="@drawable/homee"
             android:title="@string/home" />
         <item
             android:id="@+id/add_post"
-            android:icon="@drawable/plus"
+            android:icon="@drawable/addd"
             android:title="@string/add_post" />
         <item
             android:id="@+id/notifcation"
-            android:icon="@drawable/notification"
+            android:icon="@drawable/notifi"
             android:title="@string/notification" />
         <item
             android:id="@+id/profile"
-            android:icon="@drawable/profile"
+            android:icon="@drawable/prof"
             android:title="@string/see_your_profile" />
 
     </group>
@@ -25,11 +25,11 @@
         <menu>
             <item
                 android:id="@+id/nav_change_password"
-                android:icon="@drawable/password"
+                android:icon="@drawable/lockk"
                 android:title="@string/changePassword" />
             <item
                 android:id="@+id/nav_logout"
-                android:icon="@drawable/ic_log_out"
+                android:icon="@drawable/out"
                 android:title="@string/log_out" />
         </menu>
     </item>

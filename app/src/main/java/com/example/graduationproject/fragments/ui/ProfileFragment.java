@@ -22,7 +22,6 @@ import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.adapters.CategoryAdapter;
 import com.example.graduationproject.adapters.ProfilePostsAdapter;
-import com.example.graduationproject.databinding.ButtonDialogBinding;
 import com.example.graduationproject.databinding.FragmentProfileBinding;
 import com.example.graduationproject.dialog.Dialoginterface;
 import com.example.graduationproject.dialog.MyDialogAddOrder;
@@ -108,8 +107,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         serviceApi = Creator.getClient().create(ServiceApi.class);
         sharedPreferences = new AppSharedPreferences(getActivity().getApplicationContext());
         token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
-        dialogBinding = ButtonDialogBinding.inflate(inflater, container, false);
-        getProfileData();
+         getProfileData();
         binding.btnDonationPost.setOnClickListener(this::onClick);
         binding.btnRequestPost.setOnClickListener(this::onClick);
         binding.editUserName.setOnClickListener(this::onClick);

@@ -38,55 +38,47 @@
             android:orientation="vertical"
             app:layout_constraintTop_toBottomOf="@id/close_btn">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_margin="@dimen/_5sdp"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/close_btn">
 
-            <RadioGroup
-                android:id="@+id/radio_group"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_below="@id/spinner_post"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:layout_marginEnd="@dimen/_10sdp"
-                android:checkedButton="@id/all_radio_but"
-                android:gravity="center"
-                android:orientation="horizontal">
+            <CheckBox
+                android:id="@+id/donation_check"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="match_parent"
+                android:text="Donation"
+                android:typeface="serif"
+                android:textStyle="bold"
+                android:textColor="@color/blue"
+                android:buttonTint="@color/blue"
+                android:textSize="@dimen/_14sdp"
+                android:gravity="center|start"
+                android:paddingStart="@dimen/_2sdp"
+                android:scaleX="0.75"
+                android:scaleY="0.75"/>
 
-                <RadioButton
-                    android:id="@+id/all_radio_but"
-                    android:layout_width="@dimen/_50sdp"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/din_next_arabic_light"
-                    android:text="All"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:theme="@style/mySwitch"
-                    android:typeface="serif" />
+            <CheckBox
+                android:id="@+id/request_check"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="match_parent"
+                android:text="Request"
+                android:typeface="serif"
+                android:textStyle="bold"
+                android:textColor="@color/blue"
+                android:buttonTint="@color/blue"
+                android:textSize="@dimen/_14sdp"
+                android:gravity="center|start"
+                android:paddingStart="@dimen/_2sdp"
+                android:scaleX="0.75"
+                android:scaleY="0.75"/>
+        </LinearLayout>
 
-                <RadioButton
-                    android:id="@+id/donation_radio_but"
-                    android:layout_width="@dimen/_80sdp"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/din_next_arabic_light"
-                    android:text="Donation"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:theme="@style/mySwitch"
-                    android:typeface="serif" />
 
-                <RadioButton
-                    android:id="@+id/request_radio_but"
-                    android:layout_width="@dimen/_80sdp"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/din_next_arabic_light"
-                    android:text="Request"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:theme="@style/mySwitch"
-                    android:typeface="serif" />
-
-            </RadioGroup>
 
             <LinearLayout
                 android:layout_width="match_parent"

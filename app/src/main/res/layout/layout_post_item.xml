@@ -11,20 +11,20 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/_180sdp">
+        android:layout_height="@dimen/_200sdp">
 
         <com.smarteist.autoimageslider.SliderView
             android:id="@+id/imageSlider"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_120sdp"
+            android:layout_height="@dimen/_140sdp"
             app:sliderAnimationDuration="600"
             app:sliderAutoCycleEnabled="true"
             app:sliderIndicatorAnimationDuration="600"
             app:sliderIndicatorGravity="center_horizontal|bottom"
-            app:sliderIndicatorMargin="15dp"
+            app:sliderIndicatorMargin="@dimen/_14sdp"
             app:sliderIndicatorOrientation="horizontal"
-            app:sliderIndicatorPadding="3dp"
-            app:sliderIndicatorRadius="2dp"
+            app:sliderIndicatorPadding="@dimen/_2sdp"
+            app:sliderIndicatorRadius="@dimen/_2sdp"
             app:sliderIndicatorSelectedColor="@color/bink"
             app:sliderIndicatorUnselectedColor="@color/light_blue"
             app:sliderScrollTimeInSec="1"
@@ -57,37 +57,39 @@
                 android:id="@+id/tv_post_title_image_slider"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30sdp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/_7sdp"
                 android:layout_marginStart="@dimen/_5sdp"
-                android:padding="6dp"
+                android:padding="@dimen/_5sdp"
                 android:gravity="center|start"
                 android:textColor="@color/white"
-                android:fontFamily="@font/din_next_arabic_bold"
-                android:textSize="18sp" />
+                android:typeface="serif"
+                android:textSize="@dimen/_15ssp" />
+
 
             <TextView
                 android:id="@+id/tv_post_des_image_slider"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_marginBottom="25dp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginBottom="@dimen/_20sdp"
                 android:layout_marginStart="@dimen/_5sdp"
-                android:padding="6dp"
+                android:padding="@dimen/_5sdp"
                 android:textStyle="bold"
+                android:typeface="serif"
                 android:gravity="center|start"
                 android:textColor="@color/light_blue"
-                android:textSize="12sp" />
+                android:textSize="@dimen/_10ssp" />
         </LinearLayout>
 
 
         <ImageView
             android:id="@+id/u_img_post"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
             android:scaleType="fitXY"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars"
-            android:layout_marginTop="@dimen/_130sdp"
+            android:layout_marginTop="@dimen/_150sdp"
             android:layout_marginStart="@dimen/_10sdp" />
 
         <TextView
@@ -97,7 +99,7 @@
             android:layout_marginStart="@dimen/_10sdp"
             android:text="TextView"
             android:textSize="@dimen/_8ssp"
-            android:fontFamily="@font/din_next_arabic_medium"
+            android:typeface="serif"
             android:textColor="@color/black"
             app:layout_constraintStart_toEndOf="@+id/u_img_post"
             app:layout_constraintTop_toTopOf="@+id/u_img_post" />
@@ -116,7 +118,7 @@
 
         <TextView
             android:id="@+id/post_status"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/_50sdp"
             android:layout_height="@dimen/_25sdp"
             android:gravity="center"
             android:text="TextView"
@@ -125,9 +127,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.847"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
             app:layout_constraintStart_toEndOf="@+id/comment_btn"
-            android:layout_marginRight="@dimen/_15sdp"
+            android:layout_marginRight="@dimen/_25sdp"
             app:layout_constraintVertical_bias="0.871" />
 
 
@@ -135,12 +137,12 @@
             android:id="@+id/comment_btn"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_30sdp"
-            android:layout_marginRight="@dimen/_2sdp"
-            android:layout_marginLeft="@dimen/_8sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
             android:background="@drawable/button_profile1"
             android:fontFamily="@font/din_next_arabic_bold"
             android:gravity="center"
             android:text="TextView"
+            android:layout_marginTop="@dimen/_15sdp"
             android:paddingLeft="@dimen/_10sdp"
             android:paddingRight="@dimen/_10sdp"
             android:textColor="@color/white"

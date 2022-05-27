@@ -10,20 +10,19 @@ import android.widget.Toast;
 import androidx.core.content.ContextCompat;
 
 import com.example.graduationproject.R;
-import com.example.graduationproject.databinding.LayoutDialogAddOrderBinding;
 import com.example.graduationproject.databinding.LayoutDialogChangeFullterBinding;
 import com.example.graduationproject.utils.AppSharedPreferences;
 
 
-public class MyDialogٌRadioButton extends Dialog {
+public class MyDialogChecked extends Dialog {
     LayoutDialogChangeFullterBinding binding;
     Context context;
-    DialogRadiointerface dialogRadiointerface;
+    DialogCheckedInterface dialogCheckedInterface;
 
-    public MyDialogٌRadioButton(Context context, DialogRadiointerface dialogRadiointerface) {
+    public MyDialogChecked(Context context, DialogCheckedInterface dialogCheckedInterface) {
         super(context, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
         this.context = context;
-        this.dialogRadiointerface = dialogRadiointerface;
+        this.dialogCheckedInterface = dialogCheckedInterface;
     }
 
     @Override
@@ -38,11 +37,11 @@ public class MyDialogٌRadioButton extends Dialog {
         AppSharedPreferences sharedPreferences = new AppSharedPreferences(context);
         int readInt = sharedPreferences.readInt(AppSharedPreferences.IS_DONATION);
         if (readInt == 0) {
-            binding.donationRadioBut.setChecked(true);
+            binding.donationCheck.setChecked(true);
             Toast.makeText(context, readInt+"", Toast.LENGTH_SHORT).show();
 
         } else{
-            binding.requestRadioBut.setChecked(true);
+            binding.requestCheck.setChecked(true);
 
         }
 
@@ -51,12 +50,12 @@ public class MyDialogٌRadioButton extends Dialog {
             public void onClick(View v) {
 
                 int isDonation = 0;
-                if (binding.requestRadioBut.isChecked()) {
+                if (binding.requestCheck.isChecked()) {
                     isDonation = 1;
                 }
                 sharedPreferences.writeInt(AppSharedPreferences.IS_DONATION, isDonation);
 
-                dialogRadiointerface.yes(isDonation);
+                dialogCheckedInterface.yes(isDonation);
                 dismiss();
 
             }

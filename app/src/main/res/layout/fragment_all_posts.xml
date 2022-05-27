@@ -40,11 +40,13 @@
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:fontFamily="@font/din_next_arabic_bold"
-                android:gravity="left|center"
+                 android:gravity="left|center"
                 android:padding="@dimen/_5sdp"
-                android:text="Donation posts"
-                android:textColor="@color/black"
+                android:text="Donation Posts"
+                android:typeface="serif"
+                android:textStyle="bold"
+                android:textColor="@color/blue"
+                android:layout_marginStart="@dimen/_5sdp"
                 android:textSize="@dimen/_12sdp" />
 
             <Button
@@ -53,7 +55,8 @@
                 android:layout_height="@dimen/_20sdp"
                 android:layout_gravity="center|right"
                 android:background="@null"
-                android:drawableEnd="@drawable/ic_filter" />
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:drawableEnd="@drawable/filter" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -70,7 +73,10 @@
         <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:indeterminateTintMode="src_atop"
+            android:indeterminateTint="@color/blue"/>
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

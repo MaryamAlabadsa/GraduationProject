@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.graduationproject.databinding.ActivitySignInBinding;
+import com.example.graduationproject.fragments.ui.ChangePasswordFragment;
 import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.login.SendLogin;
@@ -62,12 +63,22 @@ public class SignInActivity extends BaseActivity {
             }
         });
 
+
+
         binding.registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(context,SignUpActivity.class ));
             }
         });
+
+
+//        binding.forgetPasswordBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(SignInActivity.this, ChangePasswordFragment.class);
+//                startActivity(intent);            }
+//        });
     }
 
     private void login(SendLogin sendLogin) {

@@ -31,8 +31,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.ActivityMainBinding;
-import com.example.graduationproject.databinding.ButtonDialogBinding;
-import com.example.graduationproject.databinding.LayoutToolbarBinding;
+ import com.example.graduationproject.databinding.LayoutToolbarBinding;
 import com.example.graduationproject.fragments.ui.ChangePasswordFragment;
 import com.example.graduationproject.fragments.MyTitleEventBus;
 import com.example.graduationproject.fragments.ui.AddPostFragment;
@@ -79,8 +78,7 @@ import retrofit2.Response;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentSwitcher {
     ActivityMainBinding binding;
-    ButtonDialogBinding dialogBinding;
-    Context context = MainActivity.this;
+     Context context = MainActivity.this;
     int category_id;
     DrawerLayout drawer;
     boolean isOpen = false; // by default is false

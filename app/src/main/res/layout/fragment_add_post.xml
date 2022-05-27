@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E9EEF5"
+    android:background="@color/light_blue"
     tools:context=".fragments.ui.AddPostFragment">
 
     <ScrollView
@@ -21,15 +21,15 @@
                 android:id="@+id/post_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="680dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_520sdp"
+                android:layout_marginRight="@dimen/_10sdp"
                 android:background="@drawable/button_publish"
-                android:backgroundTint="#005187"
-                android:fontFamily="@font/din_next_arabic_bold"
-                android:text="post"
+                android:backgroundTint="@color/blue"
+                android:typeface="serif"
+                 android:text="post"
                 android:textColor="@color/white"
-                android:textSize="19sp"
+                android:textSize="@dimen/_15ssp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -55,14 +55,14 @@
                 android:layout_height="@dimen/_30sdp"
                 android:layout_below="@id/linear1"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:fontFamily="@font/din_next_arabic_bold"
-                android:paddingLeft="3dp"
-                android:paddingTop="5dp"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:paddingLeft="@dimen/_3sdp"
+                android:paddingTop="@dimen/_5sdp"
                 android:text="Razan S. Abu Shaban"
-                android:textColor="#005187"
-                android:textSize="@dimen/_12ssp"
-                android:textStyle="bold" />
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_15ssp"
+                android:textStyle="bold"
+                android:typeface="serif" />
 
 
             <LinearLayout
@@ -93,15 +93,14 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/image_post2"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/_10sdp"
                     android:layout_weight="1"
                     android:background="@color/white"
-
                     android:clickable="false"
                     android:focusable="false"
+                    android:visibility="gone"
                     app:cardCornerRadius="@dimen/_10sdp">
 
                     <ImageView
@@ -120,10 +119,10 @@
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/_10sdp"
                     android:layout_weight="1"
-                    android:visibility="gone"
                     android:background="@color/white"
                     android:clickable="false"
                     android:focusable="false"
+                    android:visibility="gone"
                     app:cardCornerRadius="@dimen/_10sdp">
 
 
@@ -132,8 +131,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:scaleType="fitXY"
                         android:background="@color/white"
+                        android:scaleType="fitXY"
                         android:src="@drawable/ic_add" />
 
                 </androidx.cardview.widget.CardView>
@@ -150,23 +149,22 @@
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
-                android:background="#FFFFFF"
-                app:cardCornerRadius="@dimen/_35sdp">
+                android:background="@color/white"
+                app:cardCornerRadius="@dimen/_10sdp">
 
                 <EditText
                     android:id="@+id/title_post"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@null"
-                    android:fontFamily="@font/din_next_arabic_light"
-                    android:hint="Title"
-                    android:padding="10dp"
+                     android:hint="Title"
+                    android:padding="@dimen/_5sdp"
                     android:paddingStart="@dimen/_15sdp"
                     android:textAlignment="viewStart"
                     android:textColor="@color/black"
-                    android:textColorHint="#9C9C9C"
-                    android:textSize="@dimen/_12ssp"
-                    android:textStyle="bold" />
+                    android:textColorHint="@color/hint"
+                    android:textSize="@dimen/_13ssp"
+                     android:typeface="serif" />
 
             </androidx.cardview.widget.CardView>
 
@@ -179,22 +177,21 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:minHeight="@dimen/_45sdp"
-                app:cardCornerRadius="@dimen/_32sdp">
+                app:cardCornerRadius="@dimen/_10sdp">
 
                 <EditText
                     android:id="@+id/description_post"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_45sdp"
                     android:background="@null"
-                    android:fontFamily="@font/din_next_arabic_light"
-                    android:hint="Description"
+                     android:hint="Description"
                     android:padding="10dp"
                     android:paddingStart="@dimen/_10sdp"
                     android:textAlignment="viewStart"
                     android:textColor="@color/black"
-                    android:textColorHint="#9C9C9C"
-                    android:textSize="@dimen/_12ssp"
-                    android:textStyle="bold" />
+                    android:textColorHint="@color/hint"
+                    android:textSize="@dimen/_13ssp"
+                    android:typeface="serif"  />
 
             </androidx.cardview.widget.CardView>
 
@@ -207,14 +204,15 @@
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
-                app:cardCornerRadius="@dimen/_32sdp">
+                app:cardCornerRadius="@dimen/_10sdp">
 
 
                 <Spinner
                     android:id="@+id/spinner"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_50sdp"
-                    android:layout_marginLeft="@dimen/_5sdp" />
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:typeface="serif"/>
 
 
             </androidx.cardview.widget.CardView>
@@ -233,25 +231,26 @@
                     android:id="@+id/radio_don"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:fontFamily="@font/din_next_arabic_light"
-                    android:text="Donation"
-                    android:textColor="#000000"
-                    android:textSize="18sp"
+                     android:text="Donation"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/_14ssp"
                     android:textStyle="bold"
                     android:theme="@style/mySwitch"
-                    android:typeface="serif" />
+                    android:typeface="serif"
+                    android:buttonTint="@color/blue" />
 
                 <RadioButton
                     android:id="@+id/radio_req"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:fontFamily="@font/din_next_arabic_light"
-                    android:text="Request"
-                    android:textColor="#000000"
-                    android:textSize="18sp"
+                     android:text="Request"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/_14ssp"
                     android:textStyle="bold"
                     android:theme="@style/mySwitch"
-                    android:typeface="serif" />
+                    android:typeface="serif"
+                    android:buttonTint="@color/blue"
+                    />
             </RadioGroup>
 
         </RelativeLayout>

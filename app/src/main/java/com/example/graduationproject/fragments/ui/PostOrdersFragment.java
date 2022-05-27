@@ -176,7 +176,7 @@ public class PostOrdersFragment extends BaseFragment {
     private void createAcceptOrderDialog(int userId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-        builder.setMessage(R.string.confirmation_message)
+        builder.setMessage("")
                         .setTitle(R.string.confirmation_message);
 
         builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
