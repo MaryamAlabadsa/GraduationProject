@@ -59,22 +59,18 @@ public class UtilMethods {
         if (postDetails.getPost().getIsCompleted()) {
             completeBtn.setBackground(context.getDrawable(R.drawable.button_complete2));
             completeBtn.setTextColor(context.getColor(R.color.white));
-            pendingBtn.setBackground(context.getDrawable(R.drawable.button_pending));
-            pendingBtn.setTextColor(context.getColor(R.color.red));
+            pendingBtn.setVisibility(View.GONE);
         } else {
-            completeBtn.setBackground(context.getDrawable(R.drawable.button_complete));
-            completeBtn.setTextColor(context.getColor(R.color.green));
+            completeBtn.setVisibility(View.GONE);
             pendingBtn.setBackground(context.getDrawable(R.drawable.button_pending2));
             pendingBtn.setTextColor(context.getColor(R.color.white));
         }
         if (postDetails.getPost().getIsDonation()) {
             donationBtn.setBackground(context.getDrawable(R.drawable.button_profile1));
             donationBtn.setTextColor(context.getColor(R.color.white));
-            requestBtn.setBackground(context.getDrawable(R.drawable.button_profile2));
-            requestBtn.setTextColor(context.getColor(R.color.blue));
+            requestBtn.setVisibility(View.GONE);
         } else {
-            donationBtn.setBackground(context.getDrawable(R.drawable.button_profile2));
-            donationBtn.setTextColor(context.getColor(R.color.blue));
+            donationBtn.setVisibility(View.GONE);
             requestBtn.setBackground(context.getDrawable(R.drawable.button_profile1));
             requestBtn.setTextColor(context.getColor(R.color.white));
         }
@@ -121,4 +117,11 @@ public class UtilMethods {
         });
     }
 
+    public static boolean isLogin(Context context) {
+        AppSharedPreferences sharedPreferences = new AppSharedPreferences(context);
+
+        String userToken = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
+
+        return !userToken.equals("");
+    }
 }

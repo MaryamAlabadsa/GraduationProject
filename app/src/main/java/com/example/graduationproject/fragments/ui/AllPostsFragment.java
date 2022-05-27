@@ -45,6 +45,7 @@ import com.google.gson.Gson;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
@@ -70,7 +71,13 @@ public class AllPostsFragment extends BaseFragment {
     List<Category> data;
     int readInt;
     Intent intent;
-    int page = 0, limit = 3;
+    int page = 1, limit = 10;
+
+    boolean isLoading = false;
+    boolean isLastPage = true;
+    int lastVisibleItem;
+    int totalItemCount;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -114,29 +121,34 @@ public class AllPostsFragment extends BaseFragment {
         //event bus
         EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ALL_POSTS, "All post"));
 
-
         isDonation(readInt);
 
         binding.filterChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createFilterDialog();
+//                createFilterDialog();
+                Log.e("toasty","toasty");
+                Toasty.error(context, R.string.filed_operation).show();
+
             }
         });
+
+
+        setPostsRv(new ArrayList<>());
         showDialog();
         getAllCategories();
-        binding.scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
-                    page++;
-//                    binding.progressBar.setVisibility(View.VISIBLE);
-                    showDialog();
-                    getPostDividedByIsDonation(isDonation, page, limit);
-
-                }
-            }
-        });
+//        binding.scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+//            @Override
+//            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
+//                    page++;
+////                    binding.progressBar.setVisibility(View.VISIBLE);
+//                    showDialog();
+//                    getPostDividedByIsDonation(isDonation, page, limit);
+//
+//                }
+//            }
+//        });
         return view;
     }
 
@@ -238,34 +250,6 @@ public class AllPostsFragment extends BaseFragment {
         });
     }
 
-    private void getPostDividedByIsDonation(int id, int page, int limit) {
-
-        Call<AllPosts> call = serviceApi.getPostDividedByIsDonation(
-                "Bearer " + token, id, page, limit);
-        call.enqueue(new Callback<AllPosts>() {
-            @Override
-            public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
-                Log.d("response code", response.code() + "");
-
-                if (response.isSuccessful()) {
-                    Log.d("Success", new Gson().toJson(response.body()));
-                    AllPosts getAllPosts = response.body();
-                    setPostsRv(getAllPosts.getData());
-                    progressDialog.dismiss();
-//                    binding.progressBar.setVisibility(View.GONE);
-                } else {
-                    String errorMessage = parseError(response);
-                    Log.e("errorMessage", errorMessage + "");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AllPosts> call, Throwable t) {
-                Log.d("onFailure2", t.getMessage() + "");
-                call.cancel();
-            }
-        });
-    }
 
     public static String parseError(Response<?> response) {
         //function that parse error from api in case response code!=200
@@ -317,9 +301,72 @@ public class AllPostsFragment extends BaseFragment {
             }
         });
         adapter.setList(postList);
+        binding.rvPost.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                LinearLayoutManager layoutManager = LinearLayoutManager.class.cast(recyclerView.getLayoutManager());
+
+                 totalItemCount = layoutManager.getItemCount();
+                 lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+
+                Log.e("totalItemCount", totalItemCount + "");
+                Log.e("lastVisibleItem", lastVisibleItem + "");
+                if (lastVisibleItem == (totalItemCount - 1) && !isLoading && totalItemCount != 0 && !isLastPage) {
+                    page++;
+                    getPostDividedByIsDonation(1, page, limit);
+                    Log.e("listSize", "done");
+                }
+            }
+        });
         binding.rvPost.setAdapter(adapter);
         Log.e("rv2", postList.size() + "");
     }
+
+
+    private void getPostDividedByIsDonation(int id, int page, int limit) {
+        isLoading = true;
+
+        Call<AllPosts> call = serviceApi.getPostDividedByIsDonation(
+                "Bearer " + token, id, page, limit);
+        call.enqueue(new Callback<AllPosts>() {
+            @Override
+            public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
+                Log.d("response code", response.code() + "");
+                isLoading = false;
+                if (response.isSuccessful()) {
+                    Log.d("Success", new Gson().toJson(response.body()));
+                    AllPosts getAllPosts = response.body();
+//                    setPostsRv(getAllPosts.getData());
+                    if (page == 1) {
+                        adapter.setList(getAllPosts.getData());
+                    } else
+                        adapter.addToList(getAllPosts.getData());
+                    if (response.body().getMeta().getLastPage()==page){
+                        isLastPage=true;
+                        Log.e("lastPage",isLastPage+"");
+                    }
+                    else{
+                        isLastPage=false;
+
+                    }
+
+                        progressDialog.dismiss();
+//                    binding.progressBar.setVisibility(View.GONE);
+                } else {
+                    String errorMessage = parseError(response);
+                    Log.e("errorMessage", errorMessage + "");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AllPosts> call, Throwable t) {
+                Log.d("onFailure2", t.getMessage() + "");
+                call.cancel();
+            }
+        });
+    }
+
 
     private void setCategoryRv(List<Category> data) {
 
@@ -333,7 +380,7 @@ public class AllPostsFragment extends BaseFragment {
                 if (id == 0) {
                     sharedPreferences.writeInt(AppSharedPreferences.IS_DONATION, 0);
                     showDialog();
-                    getPostDividedByIsDonation(0, page, limit);
+                    getPostDividedByIsDonation(1, page, limit);
                 } else {
                     sharedPreferences.writeInt(AppSharedPreferences.IS_DONATION, id);
                     showDialog();

@@ -1,5 +1,7 @@
 package com.example.graduationproject;
 
+import static com.example.graduationproject.activities.BaseActivity.parseError;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -23,7 +25,9 @@ import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.categories.AllCategories;
 import com.example.graduationproject.retrofit.post.AllPosts;
+import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
+import com.example.graduationproject.utils.UtilMethods;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.NotificationParams;
 import com.google.firebase.messaging.RemoteMessage;
@@ -41,12 +45,15 @@ import retrofit2.Response;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     String TAG = "MyFirebaseMessagingService";
+    AppSharedPreferences sharedPreferences = new AppSharedPreferences(getApplicationContext());
 
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
         Log.e("onNewToken", token);
-        AppSharedPreferences sharedPreferences = new AppSharedPreferences(getApplicationContext());
+        if (UtilMethods.isLogin(getApplicationContext())) {
+            sendDeviceToken(token);
+        }
         sharedPreferences.writeString(AppSharedPreferences.DEVICE_TOKEN, token);
     }
 
@@ -64,11 +71,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 if (object.has("post_id")) {
                     int postId = object.getInt("post_id");
                     if (remoteMessage.getNotification() != null)
-                        sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), postId+"",null);
+                        sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), postId + "", null);
                 } else if (object.has("user_id")) {
                     int userId = object.getInt("user_id");
                     if (remoteMessage.getNotification() != null)
-                        sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), null,userId+"");
+                        sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), null, userId + "");
                 }
 
             } catch (JSONException e) {
@@ -86,13 +93,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     //This method is only generating push notification
-    private void sendNotification(String messageTitle, String messageBody, String postId,String userId) {
+    private void sendNotification(String messageTitle, String messageBody, String postId, String userId) {
 
         PendingIntent contentIntent = null;
         Intent intent = null;
 
         intent = new Intent(this, SplashActivity.class);
-        intent.putExtra("post_id", postId );
+        intent.putExtra("post_id", postId);
         intent.putExtra("user_id", userId);
 
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -132,6 +139,33 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //        count++;
     }
 
+    private void sendDeviceToken(String deviceToken) {
+        ServiceApi serviceApi = Creator.getClient().create(ServiceApi.class);
+        String token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
+
+
+        Call<MessageResponse> call = serviceApi.sendDeviceToken(deviceToken, "Bearer " + token);
+        call.enqueue(new Callback<MessageResponse>() {
+            @Override
+            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                Log.d("response1 code", response.code() + "");
+                if (response.isSuccessful()) {
+                    Log.d("SuccessSavedNewToken", new Gson().toJson(response.body()));
+
+
+                } else {
+                    String errorMessage = parseError(response);
+                    Log.e("errorMessage", errorMessage + "");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MessageResponse> call, Throwable t) {
+                Log.d("onFailure2", t.getMessage() + "");
+                call.cancel();
+            }
+        });
+    }
 }
 
 

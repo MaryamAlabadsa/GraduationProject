@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.graduationproject.R;
 import com.example.graduationproject.utils.AppSharedPreferences;
+import com.example.graduationproject.utils.UtilMethods;
 
 public class SplashActivity extends BaseActivity {
     Handler handler = new Handler();
@@ -27,7 +28,6 @@ Context context=SplashActivity.this;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        sharedPreferences = new AppSharedPreferences(getApplicationContext());
 
         Runnable runnable = new Runnable() {
             @Override
@@ -50,7 +50,7 @@ Context context=SplashActivity.this;
                     }
 
                 }
-                else if (isLogin()) {
+                else if (UtilMethods.isLogin(context)) {
                     // new WebService().startRequest(WebService.RequestAPI.PROFILE, SplashScreen.this);
                     startActivity(new Intent(SplashActivity.this,MainActivity.class));
                 } else {

@@ -125,7 +125,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             switchFragment(NOTIFICATION, null);
 
         } else if (user_id_notifaction != null) {
-            Toast.makeText(context, user_id_notifaction + "", Toast.LENGTH_SHORT).show();
             switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(Integer.parseInt(user_id_notifaction)));
         } else
             switchFragment(ALL_POSTS, null);
@@ -209,7 +208,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Subscribe
     public void onEvent(MyTitleEventBus event) {
-        Toast.makeText(context, event.getText() + " event", Toast.LENGTH_SHORT).show();
         Log.e("onEvent Main activity", "onEvent");
         if (event.getType() == ALL_POSTS) {
             toolbarBinding.tvTitle.setText(event.getText());
@@ -222,7 +220,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         } else if (event.getType() == NOTIFICATION) {
             toolbarBinding.getRoot().setVisibility(View.VISIBLE);
             toolbarBinding.tvTitle.setText(event.getText());
-        }else if (event.getType() == CHANGE_PASSWORD) {
+        } else if (event.getType() == CHANGE_PASSWORD) {
             toolbarBinding.getRoot().setVisibility(View.VISIBLE);
             toolbarBinding.tvTitle.setText(event.getText());
         }
@@ -357,7 +355,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             if (result.getResultCode() == Activity.RESULT_OK) { // There are no request codes
                 Intent data = result.getData();
                 Log.e("data", data.getDataString() + "");
-                File file = null;
                 try {
                     InputStream stream = getContentResolver().openInputStream(data.getData());
                     Bitmap bitmap = BitmapFactory.decodeStream(stream);
@@ -376,6 +373,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         someActivityResultLauncher.launch(intent);
+        changeUserImageRequest();
     }
 
     public String parseError2(Response<?> response) {
@@ -393,7 +391,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void requestLogout() {
-
+        showDialog();
         Call<LogOut> call = serviceApi.logout("Bearer " + token);
         call.enqueue(new Callback<LogOut>() {
 
@@ -403,11 +401,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     Log.d("Success", new Gson().toJson(response.body()));
                     sharedPreferences.writeString(AppSharedPreferences.AUTHENTICATION, "");
                     Intent i = new Intent(context, SplashActivity.class);
-                    Toast.makeText(context, R.string.session_was_expired_logout_processing, Toast.LENGTH_SHORT).show();
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(i);
-                    deleteDeviceToken();
+                    Toast.makeText(context, R.string.session_was_expired_logout_processing, Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
 
                 } else {
                     String errorMessage = parseError(response);
@@ -417,34 +415,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             @Override
             public void onFailure(Call<LogOut> call, Throwable t) {
-
+                Toast.makeText(MainActivity.this, t.getMessage() + "", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void deleteDeviceToken() {
-        Call<MessageResponse> call = serviceApi.sendDeviceToken("", "Bearer " + token);
-        call.enqueue(new Callback<MessageResponse>() {
-            @Override
-            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
-                Log.d("response1 code", response.code() + "");
-                if (response.isSuccessful()) {
-                    Log.d("Success", new Gson().toJson(response.body()));
-                } else {
-                    String errorMessage = parseError(response);
-                    Log.e("errorMessage", errorMessage + "");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MessageResponse> call, Throwable t) {
-                Log.d("onFailure2", t.getMessage() + "");
-                call.cancel();
-            }
-        });
-    }
 
     private void changeUserImageRequest() {
+        showDialog();
         MultipartBody.Part body = null;
         if (file != null) {
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
@@ -460,13 +438,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     User user = response.body().getData().getUser();
                     Gson gson = new Gson();
                     String userString = gson.toJson(user);
-
                     sharedPreferences.writeString(AppSharedPreferences.USER, userString);
+                    progressDialog.dismiss();
                     Log.e("image link", user.getImageLink() + "");
                     Toast.makeText(MainActivity.this, response.message() + "", Toast.LENGTH_SHORT).show();
                 } else {
                     String errorMessage = parseError2(response);
                     Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                     Log.e("errorMessage", errorMessage + "");
                 }
             }
@@ -475,6 +454,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             public void onFailure(Call<RegisterResponse> call, Throwable t) {
                 Log.d("onFailure", t.getMessage() + "");
                 call.cancel();
+                progressDialog.dismiss();
             }
         });
     }

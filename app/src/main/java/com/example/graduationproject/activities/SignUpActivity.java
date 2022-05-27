@@ -103,6 +103,8 @@ public class SignUpActivity extends BaseActivity {
     }
 
     private void register(File resourceFile, RegisterRequest request) {
+        String deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
+
         MultipartBody.Part body = null;
         if (resourceFile != null) {
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), resourceFile);
@@ -115,6 +117,7 @@ public class SignUpActivity extends BaseActivity {
         RequestBody address = RequestBody.create(MediaType.parse("multipart/form-data"), request.getLocation());
         RequestBody password = RequestBody.create(MediaType.parse("multipart/form-data"), request.getPassword());
         RequestBody passwordConfirmation = RequestBody.create(MediaType.parse("multipart/form-data"), request.getPassword());
+        RequestBody fcm_token = RequestBody.create(MediaType.parse("multipart/form-data"), deviceToken);
         Call<RegisterResponse> call = serviceApi.register("application/json"
                 , name
                 , email
@@ -122,6 +125,7 @@ public class SignUpActivity extends BaseActivity {
                 , address
                 , password
                 , passwordConfirmation
+                , fcm_token
                 , body);
         call.enqueue(new Callback<RegisterResponse>() {
             @Override
@@ -135,7 +139,8 @@ public class SignUpActivity extends BaseActivity {
 
                     sharedPreferences.writeString(AppSharedPreferences.USER, userString);
                     sharedPreferences.writeString(AppSharedPreferences.AUTHENTICATION, response.body().getData().getToken());
-                    sendDeviceToken();
+                    startActivity(new Intent(context, MainActivity.class));
+                    progressDialog.dismiss();
                 } else {
                     String errorMessage = parseError2(response);
                     Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
@@ -147,6 +152,8 @@ public class SignUpActivity extends BaseActivity {
             @Override
             public void onFailure(Call<RegisterResponse> call, Throwable t) {
                 Log.d("onFailure", t.getMessage() + "");
+                progressDialog.dismiss();
+                Toast.makeText(SignUpActivity.this, t.getMessage() + "", Toast.LENGTH_SHORT).show();
                 call.cancel();
             }
         });
@@ -167,31 +174,6 @@ public class SignUpActivity extends BaseActivity {
         }
     }
 
-    private void sendDeviceToken() {
-        String token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
-        String deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
-        Call<MessageResponse> call = serviceApi.sendDeviceToken(deviceToken, "Bearer " + token);
-        call.enqueue(new Callback<MessageResponse>() {
-            @Override
-            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
-                Log.d("response1 code", response.code() + "");
-                if (response.isSuccessful()) {
-                    Log.d("Success", new Gson().toJson(response.body()));
-                    startActivity(new Intent(context, MainActivity.class));
-                    progressDialog.dismiss();
-                } else {
-//                    String errorMessage = parseError(response);
-//                    Log.e("errorMessage", errorMessage + "");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MessageResponse> call, Throwable t) {
-                Log.d("onFailure2", t.getMessage() + "");
-                call.cancel();
-            }
-        });
-    }
 
     private RegisterRequest validation(RegisterRequest request) {
         if (request.getEmail().trim().isEmpty()) {
@@ -253,7 +235,6 @@ public class SignUpActivity extends BaseActivity {
             if (result.getResultCode() == Activity.RESULT_OK) { // There are no request codes
                 Intent data = result.getData();
                 Log.e("data", data.getDataString() + "");
-                File file = null;
                 try {
                     InputStream stream = getContentResolver().openInputStream(data.getData());
                     Bitmap bitmap = BitmapFactory.decodeStream(stream);

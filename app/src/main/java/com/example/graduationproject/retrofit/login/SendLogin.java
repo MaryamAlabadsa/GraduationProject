@@ -18,6 +18,9 @@ public class SendLogin implements Serializable
     @SerializedName("password")
     @Expose
     private String password;
+    @SerializedName("fcm_token")
+    @Expose
+    private String fcm_token;
     private final static long serialVersionUID = 7097722991732935539L;
 
     public String getEmail() {
@@ -36,4 +39,11 @@ public class SendLogin implements Serializable
         this.password = password;
     }
 
+    public String getFcm_token() {
+        return fcm_token;
+    }
+
+    public void setFcm_token(String fcm_token) {
+        this.fcm_token = fcm_token;
+    }
 }

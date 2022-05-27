@@ -22,7 +22,7 @@ public class BaseActivity extends AppCompatActivity {
     public ProgressDialog progressDialog;
 
 
-//    @Override
+    //    @Override
 //    protected void onStart() {
 //        super.onStart();
 //        serviceApi = Creator.getClient().create(ServiceApi.class);
@@ -30,12 +30,12 @@ public class BaseActivity extends AppCompatActivity {
 //        token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
 //
 //    }
-public void showDialog() {
-    progressDialog = new ProgressDialog(this);
-    progressDialog.setMessage("Please Wait");
-    progressDialog.setCancelable(false);
-    progressDialog.show();
-}
+    public void showDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please Wait");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
@@ -43,11 +43,7 @@ public void showDialog() {
 
     }
 
-    public boolean isLogin() {
-        String userToken = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
 
-        return !userToken.equals("");
-    }
 
     public static String parseError(Response<?> response) {
         String errorMsg = null;

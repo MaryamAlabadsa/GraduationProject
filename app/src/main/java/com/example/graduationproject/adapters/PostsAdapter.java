@@ -63,7 +63,11 @@ PostDetialsInterface postDetialsInterface;
     public void setList(List<Post> list) {
         this.list = list;
         notifyDataSetChanged();
+    }
 
+    public void addToList(List<Post> myList){
+        list.addAll(myList);
+        notifyDataSetChanged();
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {

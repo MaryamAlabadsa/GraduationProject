@@ -49,6 +49,7 @@
                     android:textColor="@color/hint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
                     android:background="@drawable/text_input" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -74,6 +75,7 @@
                     android:id="@+id/username"
                     android:textColor="@color/hint"
                     android:layout_width="match_parent"
+                    android:inputType="textPersonName"
                     android:layout_height="wrap_content"
                     android:background="@drawable/text_input" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -99,6 +101,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/text_input"
                     android:textColor="@color/hint"
+                    android:inputType="textEmailAddress"
 
                     />
             </com.google.android.material.textfield.TextInputLayout>

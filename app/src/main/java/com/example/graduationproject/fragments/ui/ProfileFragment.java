@@ -115,7 +115,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         binding.editUserName.setOnClickListener(this::onClick);
         binding.saveEditUserName.setOnClickListener(this::onClick);
         if (userId == 0)
-            binding.editUserName.setVisibility(View.GONE);
+            binding.editUserName.setVisibility(View.VISIBLE);
 
         return view;
     }

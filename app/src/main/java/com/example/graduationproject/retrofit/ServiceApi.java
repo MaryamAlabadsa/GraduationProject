@@ -107,6 +107,7 @@ public interface ServiceApi {
             , @Part("address") RequestBody address
             , @Part("password") RequestBody password
             , @Part("password_confirmation") RequestBody passwordConfirmation
+            , @Part("fcm_token") RequestBody fcm_token
             , @Part MultipartBody.Part image);
 
 

@@ -48,15 +48,16 @@ public class SignInActivity extends BaseActivity {
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
                 String email = binding.email.getText().toString().trim();
                 String password = binding.password.getText().toString();
                 SendLogin sendLogin = new SendLogin();
                 sendLogin.setEmail(email);
-                sendLogin.setPassword(password); /** GET List Resources **/
+                sendLogin.setPassword(password);
+                sendLogin.setFcm_token(deviceToken);/** GET List Resources **/
                 if (email != null && password != null) {
                     showDialog();
                     login(sendLogin);
-//                    finish();
                 }
             }
         });
@@ -85,7 +86,7 @@ public class SignInActivity extends BaseActivity {
                     String userString = gson.toJson(user);
                     sharedPreferences.writeString(AppSharedPreferences.USER, userString);
                     sharedPreferences.writeString(AppSharedPreferences.AUTHENTICATION, response.body().getData().getToken());
-                    sendDeviceToken();
+                    startActivity(new Intent(context, MainActivity.class));
                 } else {
                     String errorMessage = parseError2(response);
                     Toast.makeText(SignInActivity.this, errorMessage + "", Toast.LENGTH_SHORT).show();
@@ -98,6 +99,8 @@ public class SignInActivity extends BaseActivity {
             @Override
             public void onFailure(@NonNull Call<RegisterResponse> call, @NonNull Throwable t) {
                 Log.e("onFailure", t.getMessage() + "");
+                progressDialog.dismiss();
+                Toast.makeText(SignInActivity.this, t.getMessage() + "", Toast.LENGTH_SHORT).show();
                 call.cancel();
             }
         });
@@ -117,32 +120,5 @@ public class SignInActivity extends BaseActivity {
         }
     }
 
-    private void sendDeviceToken(){
-        String token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
-        String deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
 
-        Call<MessageResponse> call = serviceApi.sendDeviceToken(deviceToken,"Bearer " + token);
-        call.enqueue(new Callback<MessageResponse>() {
-            @Override
-            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
-                Log.d("response1 code", response.code() + "");
-                if (response.isSuccessful()) {
-                    Log.d("Success", new Gson().toJson(response.body()));
-                    startActivity(new Intent(context, MainActivity.class));
-                    progressDialog.dismiss();
-                    finish();
-
-                } else {
-                    String errorMessage = parseError(response);
-                    Toast.makeText(SignInActivity.this, errorMessage+"", Toast.LENGTH_SHORT).show();
-                    Log.e("errorMessage", errorMessage + "");
-                }
-            }
-            @Override
-            public void onFailure(Call<MessageResponse> call, Throwable t) {
-                Log.d("onFailure2", t.getMessage() + "");
-                call.cancel();
-            }
-        });
-    }
 }
