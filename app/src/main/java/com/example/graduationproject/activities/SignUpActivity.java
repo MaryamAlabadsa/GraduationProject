@@ -103,7 +103,7 @@ public class SignUpActivity extends BaseActivity {
     }
 
     private void register(File resourceFile, RegisterRequest request) {
-        String deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
+        String  deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
 
         MultipartBody.Part body = null;
         if (resourceFile != null) {

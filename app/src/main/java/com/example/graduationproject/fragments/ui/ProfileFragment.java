@@ -27,6 +27,7 @@ import com.example.graduationproject.dialog.Dialoginterface;
 import com.example.graduationproject.dialog.MyDialogAddOrder;
 import com.example.graduationproject.fragments.BaseFragment;
 import com.example.graduationproject.fragments.FragmentSwitcher;
+import com.example.graduationproject.fragments.MyTitleEventBus;
 import com.example.graduationproject.fragments.PagesFragment;
 import com.example.graduationproject.listener.CategoryInterface;
 import com.example.graduationproject.listener.PostAddOrderInterface;
@@ -46,6 +47,8 @@ import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -102,6 +105,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         View view = binding.getRoot();
         context = getActivity();
 //        view.setVisibility(View.GONE);
+        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.PROFILE, "profile"));
+
         binding.progressBar.setVisibility(View.VISIBLE);
         binding.progressBar.getProgress();
         serviceApi = Creator.getClient().create(ServiceApi.class);

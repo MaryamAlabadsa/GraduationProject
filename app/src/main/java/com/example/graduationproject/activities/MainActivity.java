@@ -62,6 +62,7 @@ import static com.example.graduationproject.fragments.PagesFragment.ADD_POSTS;
 import static com.example.graduationproject.fragments.PagesFragment.ALL_POSTS;
 import static com.example.graduationproject.fragments.PagesFragment.CHANGE_PASSWORD;
 import static com.example.graduationproject.fragments.PagesFragment.NOTIFICATION;
+import static com.example.graduationproject.fragments.PagesFragment.PROFILE;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -109,14 +110,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         toolbarBinding.toolbar.setTitle("");
         setSupportActionBar(toolbarBinding.toolbar);
 
-        binding.toolbarBack.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-                toolbarBinding.getRoot().setVisibility(View.VISIBLE);
-                binding.toolbarBack.setVisibility(View.INVISIBLE);
-            }
-        });
+//        binding.toolbarBack.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                onBackPressed();
+//                toolbarBinding.getRoot().setVisibility(View.VISIBLE);
+//                binding.toolbarBack.setVisibility(View.INVISIBLE);
+//            }
+//        });
 
 
         Menu menu = navigationView.getMenu();
@@ -223,18 +224,25 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (event.getType() == ALL_POSTS) {
             toolbarBinding.tvTitle.setText(event.getText());
             toolbarBinding.getRoot().setVisibility(View.VISIBLE);
+            binding.marginTop.setVisibility(View.VISIBLE);
 
         } else if (event.getType() == ADD_POSTS) {
             toolbarBinding.tvTitle.setText(event.getText());
             toolbarBinding.getRoot().setVisibility(View.VISIBLE);
+            binding.marginTop.setVisibility(View.VISIBLE);
+
 
         } else if (event.getType() == NOTIFICATION) {
             toolbarBinding.getRoot().setVisibility(View.VISIBLE);
+            binding.marginTop.setVisibility(View.VISIBLE);
             toolbarBinding.tvTitle.setText(event.getText());
         } else if (event.getType() == CHANGE_PASSWORD) {
             toolbarBinding.getRoot().setVisibility(View.VISIBLE);
+            binding.marginTop.setVisibility(View.VISIBLE);
             toolbarBinding.tvTitle.setText(event.getText());
-        }
+        }else if (event.getType()==PROFILE)
+            binding.marginTop.setVisibility(View.GONE);
+
     }
 
     @Override
@@ -254,7 +262,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case PROFILE:
                 toolbarBinding.getRoot().setVisibility(View.GONE);
-//                binding.toolbarBack.setVisibility(View.VISIBLE);
+//                binding.toolbarBack.setVisibility(View.GONE);
                 fragment = ProfileFragment.newInstance(object.getUserId());
                 break;
             case POST_ORDERS:

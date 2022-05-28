@@ -22,26 +22,21 @@
             <include
                 android:id="@+id/main_toolbar"
                 layout="@layout/layout_toolbar"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_back"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/blue"
-            android:visibility="invisible"
-            app:navigationIcon="?attr/homeAsUpIndicator" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <View
+             <View
                 android:id="@+id/margin_top"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="?attr/actionBarSize" />
 
             <FrameLayout
