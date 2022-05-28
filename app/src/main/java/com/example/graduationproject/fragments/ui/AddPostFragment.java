@@ -168,10 +168,10 @@ public class AddPostFragment extends BaseFragment {
                 showDialog();
                 pTitle = binding.titlePost.getText().toString();
                 pDescription = binding.descriptionPost.getText().toString();
-                int radioButtonID = binding.radioGroup.getCheckedRadioButtonId();
-                View radioButton = binding.radioGroup.findViewById(radioButtonID);
-                int idx = binding.radioGroup.indexOfChild(radioButton);
-                RadioButton r = (RadioButton) binding.radioGroup.getChildAt(idx);
+//                int radioButtonID = binding.radioGroup.getCheckedRadioButtonId();
+//                View radioButton = binding.radioGroup.findViewById(radioButtonID);
+//                int idx = binding.radioGroup.indexOfChild(radioButton);
+//                RadioButton r = (RadioButton) binding.radioGroup.getChildAt(idx);
 
 
                 if (ValidationAllFields().equals("")) {
@@ -183,10 +183,7 @@ public class AddPostFragment extends BaseFragment {
                     addPostRequest(imagesList, pTitle, pDescription, category, isDonation);
                 } else {
                     progressDialog.dismiss();
-
                 }
-
-
             }
         });
         return view;
@@ -194,7 +191,7 @@ public class AddPostFragment extends BaseFragment {
 
 
     String pTitle, pDescription;
-    int isDonation = -1;
+    int isDonation ;
     Integer category;
 
     private void spinnerCode(List<Category> categories) {

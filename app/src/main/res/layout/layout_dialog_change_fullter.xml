@@ -61,7 +61,8 @@
                     android:textColor="@color/blue"
                     android:textSize="@dimen/_14sdp"
                     android:textStyle="bold"
-                    android:typeface="serif" />
+                    android:typeface="serif"
+        />
 
                 <CheckBox
                     android:id="@+id/request_check"
@@ -76,7 +77,8 @@
                     android:textColor="@color/blue"
                     android:textSize="@dimen/_14sdp"
                     android:textStyle="bold"
-                    android:typeface="serif" />
+                    android:typeface="serif"
+                    />
             </LinearLayout>
 
 
