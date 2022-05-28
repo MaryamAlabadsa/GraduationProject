@@ -64,8 +64,10 @@
         app:menu="@menu/nav_menu"
         app:itemIconTint="@color/blue"
         app:itemIconPadding="@dimen/_7sdp"
+        app:itemIconSize="@dimen/_23sdp"
         app:itemTextColor="@color/blue"
-        app:itemTextAppearance="@font/din_next_arabic_bold" />
+        android:itemTextAppearance="@style/NavDrawerTextStyle"
+        />
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

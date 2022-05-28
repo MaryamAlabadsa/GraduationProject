@@ -10,7 +10,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.TextAppearanceSpan;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -98,6 +101,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         serviceApi = Creator.getClient().create(ServiceApi.class);
         token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
         EventBus.getDefault().register(this);
+        NavigationView navigationView = binding.navView;
 
         toolbarBinding = binding.mainToolbar;
         drawer = binding.mainDrawer;
@@ -113,6 +117,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 binding.toolbarBack.setVisibility(View.INVISIBLE);
             }
         });
+
+
+        Menu menu = navigationView.getMenu();
+
+        MenuItem title= menu.findItem(R.id.title);
+        SpannableString s = new SpannableString(title.getTitle());
+        s.setSpan(new TextAppearanceSpan(this, R.style.NavDrawerTextStyleTittle), 0, s.length(), 0);
+        title.setTitle(s);
+        navigationView.setNavigationItemSelectedListener(this);
+
 
         String post_id_notifaction = getIntent().getStringExtra("post_id");
         String user_id_notifaction = getIntent().getStringExtra("user_id");
@@ -145,7 +159,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 drawer.openDrawer(GravityCompat.START);
             }
         });
-        NavigationView navigationView = binding.navView;
         navigationView.setNavigationItemSelectedListener(this);
 
         headerView = navigationView.inflateHeaderView(R.layout.nav_header);
@@ -241,7 +254,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case PROFILE:
                 toolbarBinding.getRoot().setVisibility(View.GONE);
-                binding.toolbarBack.setVisibility(View.VISIBLE);
+//                binding.toolbarBack.setVisibility(View.VISIBLE);
                 fragment = ProfileFragment.newInstance(object.getUserId());
                 break;
             case POST_ORDERS:

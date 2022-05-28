@@ -7,15 +7,24 @@
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical"
     android:visibility="visible"
+    style="@style/AppTheme.NoActionBar"
     tools:context=".fragments.ui.ProfileFragment">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_500sdp"
+        android:layout_marginTop="-479dp"
+        android:background="@drawable/profile_shape1"
+        tools:ignore="MissingConstraints">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="@dimen/_70sdp"
+        android:layout_height="@dimen/_70sdp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/_50sdp"
+        android:layout_marginTop="@dimen/_90sdp"
         android:background="@drawable/profile_stroke"
         android:padding="3dp"
         android:src="@drawable/profile_user" />
@@ -26,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/profile_image"
         android:layout_centerHorizontal="true"
-         android:background="@null"
+        android:background="@null"
         android:clickable="false"
         android:enabled="false"
         android:includeFontPadding="false"
@@ -34,7 +43,6 @@
         android:padding="@dimen/_10sdp"
         android:text="Razan S. Abu Shaban"
         android:textColor="@color/blue"
-        android:textColorHighlight="@color/bink"
         android:textSize="@dimen/_15ssp"
         android:textStyle="bold"
         android:typeface="serif" />
@@ -196,14 +204,14 @@
     <ImageButton
         android:id="@+id/edit_user_name"
         android:layout_width="@dimen/_20sdp"
-        android:visibility="gone"
         android:layout_height="@dimen/_20sdp"
         android:layout_alignTop="@id/user_name_text"
         android:layout_alignBottom="@id/user_name_text"
         android:layout_toEndOf="@+id/user_name_text"
-        android:background="@color/colorPrimaryDark"
+        android:background="@null"
         android:gravity="center"
-        android:src="@drawable/ic_edit" />
+        android:src="@drawable/ic_edit"
+        android:visibility="gone" />
 
     <ImageButton
         android:id="@+id/save_edit_user_name"
@@ -213,8 +221,8 @@
         android:layout_alignTop="@id/user_name_text"
         android:layout_alignBottom="@id/user_name_text"
         android:layout_toEndOf="@+id/user_name_text"
-        android:background="@drawable/text_input"
         android:gravity="center"
+        android:background="@null"
         android:src="@android:drawable/checkbox_on_background" />
     <!--set the custom progress bar here in
       the indeterminateDrawable attribute-->

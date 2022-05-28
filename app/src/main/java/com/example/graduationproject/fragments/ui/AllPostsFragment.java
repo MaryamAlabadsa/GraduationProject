@@ -115,6 +115,7 @@ public class AllPostsFragment extends BaseFragment {
 
         binding = FragmentAllPostsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+
         context = getActivity();
         readInt = sharedPreferences.readInt(AppSharedPreferences.IS_DONATION);
         //event bus

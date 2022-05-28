@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.SignInActivity"
+    android:background="@color/back"
     android:layout_gravity="center">
 
     <ScrollView
@@ -22,20 +23,20 @@
             <ImageView
                 android:id="@+id/icon_img"
                 android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_130sdp"
+                android:layout_height="@dimen/_110sdp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_90sdp"
                 android:layout_marginRight="@dimen/_20sdp"
-                android:src="@drawable/ic_logo" />
+                android:src="@drawable/log" />
 
             <TextView
                 android:id="@+id/login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/icon_img"
-                android:layout_marginStart="@dimen/_14sdp"
+                android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_14sdp"
                 android:layout_marginEnd="@dimen/_14sdp"
                 android:layout_marginBottom="@dimen/_14sdp"
@@ -52,18 +53,22 @@
                 android:layout_below="@+id/login"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginEnd="@dimen/_10sdp"                android:background="@color/white"
-                android:hint="Email"
+                android:layout_marginEnd="@dimen/_10sdp"
+                 android:hint="Write Your Email"
                 android:typeface="serif"
-                app:endIconMode="clear_text"
-                app:startIconDrawable="@drawable/ic_baseline_email_24">
+                 app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                 app:endIconMode="clear_text"
+                 >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/email"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/_45sdp"
+                    android:background="@drawable/text_input"
                     android:inputType="textEmailAddress"
-                    android:background="@color/white" />
+                    android:typeface="serif"
+                    android:textColor="@color/black"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -72,19 +77,22 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textInput_username"
                  android:layout_marginStart="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:hint="Write Your Password"
                 android:typeface="serif"
                 app:endIconMode="password_toggle"
-                app:startIconDrawable="@drawable/password">
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:inputType="textPassword" />
+                    android:layout_height="@dimen/_45sdp"
+                    android:background="@drawable/text_input"
+                    android:inputType="textPassword"
+                    android:typeface="serif"
+                    android:textColor="@color/black"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -110,8 +118,7 @@
                 android:layout_below="@id/forget_password_btn"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_30sdp"
-                android:background="@drawable/button"
-                android:gravity="center">
+                android:background="@drawable/button_profile1"                android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"

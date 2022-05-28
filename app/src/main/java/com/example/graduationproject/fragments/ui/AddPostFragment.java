@@ -175,10 +175,10 @@ public class AddPostFragment extends BaseFragment {
 
 
                 if (ValidationAllFields().equals("")) {
-                    String selectedtext = r.getText().toString();
-                    if (selectedtext.equals("Donation"))
+//                    String selectedtext = r.getText().toString();
+                    if (binding.radioDon.isSelected())
                         isDonation = 0;
-                    else if (selectedtext.equals("Request"))
+                    else if (binding.radioReq.isSelected())
                         isDonation = 1;
                     addPostRequest(imagesList, pTitle, pDescription, category, isDonation);
                 } else {

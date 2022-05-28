@@ -7,6 +7,7 @@ import android.os.PersistableBundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.graduationproject.R;
 import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.utils.AppSharedPreferences;
@@ -31,7 +32,7 @@ public class BaseActivity extends AppCompatActivity {
 //
 //    }
     public void showDialog() {
-        progressDialog = new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this, R.style.mySwitch);
         progressDialog.setMessage("Please Wait");
         progressDialog.setCancelable(false);
         progressDialog.show();

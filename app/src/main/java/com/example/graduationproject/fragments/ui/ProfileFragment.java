@@ -101,7 +101,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         context = getActivity();
-//        view.setVisibility(View.INVISIBLE);
+//        view.setVisibility(View.GONE);
         binding.progressBar.setVisibility(View.VISIBLE);
         binding.progressBar.getProgress();
         serviceApi = Creator.getClient().create(ServiceApi.class);
@@ -120,7 +120,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void getProfileData() {
         if (userId == 0) {
-            Toast.makeText(context, "my profie", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "my profie", Toast.LENGTH_SHORT).show();
             setMyProfileInfo();
         } else {
             setUserProfileInfo();
@@ -366,12 +366,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             case R.id.edit_user_name:
                 binding.userNameText.setClickable(true);
                 binding.userNameText.setEnabled(true);
-                binding.userNameText.setBackground(context.getDrawable(R.drawable.button_profile2));
-                binding.editUserName.setVisibility(View.GONE);
+                 binding.editUserName.setVisibility(View.GONE);
                 binding.saveEditUserName.setVisibility(View.VISIBLE);
                 break;
             case R.id.save_edit_user_name:
-                binding.userNameText.setBackground(context.getDrawable(R.drawable.text_input));
                 binding.userNameText.setClickable(false);
                 binding.userNameText.setEnabled(false);
                 binding.editUserName.setVisibility(View.VISIBLE);
