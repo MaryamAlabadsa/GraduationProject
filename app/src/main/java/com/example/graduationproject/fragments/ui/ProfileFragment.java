@@ -3,6 +3,7 @@ package com.example.graduationproject.fragments.ui;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
+import com.example.graduationproject.activities.MainActivity;
 import com.example.graduationproject.adapters.CategoryAdapter;
 import com.example.graduationproject.adapters.ProfilePostsAdapter;
 import com.example.graduationproject.databinding.FragmentProfileBinding;
@@ -117,6 +119,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         binding.btnRequestPost.setOnClickListener(this::onClick);
         binding.editUserName.setOnClickListener(this::onClick);
         binding.saveEditUserName.setOnClickListener(this::onClick);
+        binding.backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, MainActivity.class);
+                startActivity(intent);
+            }
+        });
         if (userId == 0)
             binding.editUserName.setVisibility(View.VISIBLE);
 
