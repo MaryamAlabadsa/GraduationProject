@@ -32,7 +32,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ServiceApi {
-    String ENDPOINT = "http://35.173.249.147/api/";
+    String ENDPOINT = "http://54.209.160.242/api/";
 
     //  get
 

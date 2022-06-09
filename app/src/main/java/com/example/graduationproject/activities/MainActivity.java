@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -72,7 +74,9 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -91,6 +95,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     AppSharedPreferences sharedPreferences;
     View headerView;
     LayoutToolbarBinding toolbarBinding;
+    private boolean connected;
 
 
     @Override
@@ -110,14 +115,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         toolbarBinding.toolbar.setTitle("");
         setSupportActionBar(toolbarBinding.toolbar);
 
-//        binding.toolbarBack.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                onBackPressed();
-//                toolbarBinding.getRoot().setVisibility(View.VISIBLE);
-//                binding.toolbarBack.setVisibility(View.INVISIBLE);
-//            }
-//        });
 
 
         Menu menu = navigationView.getMenu();
@@ -380,6 +377,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     ImageView user_image = headerView.findViewById(R.id.user_image);
                     user_image.setImageBitmap(bitmap);
                     file = FileUtil.from(context, data.getData());
+                    changeUserImageRequest();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -392,7 +390,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         someActivityResultLauncher.launch(intent);
-        changeUserImageRequest();
     }
 
     public String parseError2(Response<?> response) {

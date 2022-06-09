@@ -82,6 +82,8 @@ dependencies {
     implementation 'com.github.GrenderG:Toasty:1.5.2'
     //event bus
     implementation("org.greenrobot:eventbus:3.3.1")
+    // Gradle dependency on Shimmer for Android
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
 
 }

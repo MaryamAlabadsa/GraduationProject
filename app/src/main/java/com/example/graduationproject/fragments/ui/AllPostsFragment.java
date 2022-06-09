@@ -3,19 +3,26 @@ package com.example.graduationproject.fragments.ui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.graduationproject.R;
+import com.example.graduationproject.activities.MainActivity;
 import com.example.graduationproject.adapters.CategoryAdapter;
 import com.example.graduationproject.adapters.PostsAdapter;
+import com.example.graduationproject.database.DatabaseClient;
 import com.example.graduationproject.databinding.FragmentAllPostsBinding;
 import com.example.graduationproject.dialog.DialogCheckedInterface;
 import com.example.graduationproject.dialog.Dialoginterface;
@@ -81,6 +88,7 @@ public class AllPostsFragment extends BaseFragment {
     private String mParam1;
     private String mParam2;
     PostsAdapter adapter;
+    private boolean connected;
 
     public AllPostsFragment() {
         // Required empty public constructor
@@ -116,6 +124,20 @@ public class AllPostsFragment extends BaseFragment {
         binding = FragmentAllPostsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            clearDataFromTable();
+            connected = true;
+        } else {
+            Log.e("read3", "read1");
+
+            connected = false;
+            readFromOrdersTable();
+//            showErrorDialog();
+        }
+
         context = getActivity();
         readInt = sharedPreferences.readInt(AppSharedPreferences.IS_DONATION);
         //event bus
@@ -127,7 +149,7 @@ public class AllPostsFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 createFilterDialog();
-                Log.e("toasty","toasty");
+                Log.e("toasty", "toasty");
 //                Toasty.error(context, R.string.filed_operation).show();
 
             }
@@ -135,20 +157,7 @@ public class AllPostsFragment extends BaseFragment {
 
 
         setPostsRv(new ArrayList<>());
-        showDialog();
-        getAllCategories();
-//        binding.scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
-//                    page++;
-////                    binding.progressBar.setVisibility(View.VISIBLE);
-//                    showDialog();
-//                    getPostDividedByIsDonation(isDonation, page, limit);
-//
-//                }
-//            }
-//        });
+
         return view;
     }
 
@@ -172,7 +181,7 @@ public class AllPostsFragment extends BaseFragment {
                     AllCategories getAllCategories = response.body();
                     data = getAllCategories.getData();
                     setCategoryRv(data);
-                    binding.isDonationLinear.setVisibility(View.VISIBLE);
+//                    binding.isDonationLinear.setVisibility(View.VISIBLE);
                 } else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
@@ -307,8 +316,8 @@ public class AllPostsFragment extends BaseFragment {
                 super.onScrollStateChanged(recyclerView, newState);
                 LinearLayoutManager layoutManager = LinearLayoutManager.class.cast(recyclerView.getLayoutManager());
 
-                 totalItemCount = layoutManager.getItemCount();
-                 lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+                totalItemCount = layoutManager.getItemCount();
+                lastVisibleItem = layoutManager.findLastVisibleItemPosition();
 
                 Log.e("totalItemCount", totalItemCount + "");
                 Log.e("lastVisibleItem", lastVisibleItem + "");
@@ -342,17 +351,17 @@ public class AllPostsFragment extends BaseFragment {
                         adapter.setList(getAllPosts.getData());
                     } else
                         adapter.addToList(getAllPosts.getData());
-                    if (response.body().getMeta().getLastPage()==page){
-                        isLastPage=true;
-                        Log.e("lastPage",isLastPage+"");
-                    }
-                    else{
-                        isLastPage=false;
+                    if (response.body().getMeta().getLastPage() == page) {
+                        isLastPage = true;
+                        Log.e("lastPage", isLastPage + "");
+                    } else {
+                        isLastPage = false;
 
                     }
-
-                        progressDialog.dismiss();
-//                    binding.progressBar.setVisibility(View.GONE);
+                    storeInOrdersTable(getAllPosts.getData());
+                    binding.shimmerView.setVisibility(View.INVISIBLE);
+                    binding.dataLayout.setVisibility(View.VISIBLE);
+                    //                    binding.progressBar.setVisibility(View.GONE);
                 } else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
@@ -498,5 +507,65 @@ public class AllPostsFragment extends BaseFragment {
             getPostDividedByIsDonation(isDonation, page, limit);
         else
             getPostsByCategory(post_category, page, limit);
+    }
+
+    private void storeInOrdersTable(List<Post> posts) {
+        Log.e("read1", "read1");
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("read1", "read1");
+
+
+                long[] i = DatabaseClient.getInstance(context)
+                        .getAppDatabase()
+                        .postDao()
+                        .insertToPostList(posts);
+                Log.e("inserst " + i, "Inserted");
+            }
+        });
+        thread.start();
+    }
+
+    private void clearDataFromTable() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                DatabaseClient.getInstance(context)
+                        .getAppDatabase()
+                        .postDao()
+                        .clearAllData();
+                Log.e("clearAllData ", "Done");
+                getAllCategories();
+
+            }
+        });
+        thread.start();
+    }
+
+    private void readFromOrdersTable() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<Post> ordersList = DatabaseClient
+                        .getInstance(context)
+                        .getAppDatabase()
+                        .postDao()
+                        .readAll();
+                Log.e("read2", ordersList.size() + "");
+                if (ordersList.size() != 0) {
+                    //this code is to run my code in main thread
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.addToList(ordersList);
+                        }
+                    });
+                }
+            }
+        });
+        thread.start();
     }
 }
