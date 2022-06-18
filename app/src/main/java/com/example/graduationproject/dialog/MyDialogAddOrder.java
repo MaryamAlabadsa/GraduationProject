@@ -56,29 +56,29 @@ public class MyDialogAddOrder extends Dialog {
             }
         });
 
-        binding.addOrderBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (validation()!=null) {
-                    SweetAlertDialog pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
-                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
-                    pDialog.setTitleText("Loading ...");
-                    pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                    pDialog.setCancelable(true);
-                    dialoginterface.yes(validation());
-                    pDialog.show();
-
-                }
-            }
-        });
-
 //        binding.addOrderBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
 //            public void onClick(View v) {
 //                if (validation()!=null) {
+//                    SweetAlertDialog pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+//                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
+//                    pDialog.setTitleText("Loading ...");
+//                    pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+//                    pDialog.setCancelable(true);
 //                    dialoginterface.yes(validation());
+//                    pDialog.show();
+//
 //                }
 //            }
 //        });
+
+        binding.addOrderBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (validation()!=null) {
+                    dialoginterface.yes(validation());
+                }
+            }
+        });
         binding.closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -76,8 +77,9 @@ public class AllPostsFragment extends BaseFragment {
     LayoutDialogAddOrderBinding bindingD;
     Context context;
     Dialoginterface dialoginterface;
+    SweetAlertDialog pDialog;
     FragmentAllPostsBinding binding;
-     MyDialogAddOrder myDialogAddOrder;
+    MyDialogAddOrder myDialogAddOrder;
     MyDialogChecked myDialogChecked;
     private FragmentSwitcher fragmentSwitcher;
     List<Category> data;
@@ -437,17 +439,18 @@ public class AllPostsFragment extends BaseFragment {
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
                 Log.d("response5 code", response.code() + "");
+                pDialog.dismiss();
+                pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                 changeAddButton(post, position);
 
 
-                Toasty.success(context, R.string.success_operation);
+//                Toasty.success(context, R.string.success_operation);
             }
 
             @Override
             public void onFailure(Call<Order> call, Throwable t) {
                 t.getMessage();
-                myDialogAddOrder.dismiss();
-                Toasty.error(context, R.string.filed_operation);
+//                Toasty.error(context, R.string.filed_operation);
             }
         });
     }
@@ -472,11 +475,12 @@ public class AllPostsFragment extends BaseFragment {
                                 .setConfirmText("OK")
                                 .setConfirmClickListener(null)
                                 .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                        post.setIsOrdered(false);
+                        adapter.resetItem(post, position);
                     }
                 })
                 .show();
-        post.setIsOrdered(false);
-        adapter.resetItem(post, position);
+
     }
 
 
@@ -509,7 +513,12 @@ public class AllPostsFragment extends BaseFragment {
             @Override
             public void yes(String massage) {
                 AddRequest(id, massage, post, position);
-
+                myDialogAddOrder.dismiss();
+                pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+                pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
+                pDialog.setTitleText("Loading ...");
+                pDialog.setCancelable(true);
+                pDialog.show();
             }
         });
 
