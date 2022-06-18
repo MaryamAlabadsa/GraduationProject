@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:ignore="ExtraText">
+        tools:ignore="ExtraText,MissingClass">
 
        <include layout="@layout/my_home_placeholder"/>
     </com.facebook.shimmer.ShimmerFrameLayout>
@@ -88,6 +88,7 @@
             android:indeterminate="true"
             android:indeterminateTint="@color/blue"
             android:indeterminateTintMode="src_atop" />
+
     </LinearLayout>
 
 </RelativeLayout>

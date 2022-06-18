@@ -84,6 +84,10 @@ dependencies {
     implementation("org.greenrobot:eventbus:3.3.1")
     // Gradle dependency on Shimmer for Android
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    //Loading
+    implementation 'com.github.SiddyDevelops:CustomLottieDialogBox-Android:0.2.0'
+    //Sweet Alert
+    implementation 'com.github.f0ris.sweetalert:library:1.5.6'
 
 
 }

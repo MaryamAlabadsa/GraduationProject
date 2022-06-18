@@ -113,6 +113,7 @@ public class AddPostFragment extends BaseFragment {
         context = getActivity();
         categories = new ArrayList<>();
         imagesList = new HashMap<String, File>();
+
         showDialog();
         getAllCategories();
 
@@ -165,6 +166,7 @@ public class AddPostFragment extends BaseFragment {
         binding.postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 showDialog();
                 pTitle = binding.titlePost.getText().toString();
                 pDescription = binding.descriptionPost.getText().toString();
@@ -183,6 +185,7 @@ public class AddPostFragment extends BaseFragment {
                     addPostRequest(imagesList, pTitle, pDescription, category, isDonation);
                 } else {
                     progressDialog.dismiss();
+
                 }
             }
         });
@@ -285,6 +288,7 @@ public class AddPostFragment extends BaseFragment {
                     fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null);
                     Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
+
                 } else {
                     String errorMessage = parseError(response);
                     Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();

@@ -1,6 +1,7 @@
 package com.example.graduationproject.fragments.ui;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -24,6 +25,7 @@ import com.example.graduationproject.adapters.CategoryAdapter;
 import com.example.graduationproject.adapters.PostsAdapter;
 import com.example.graduationproject.database.DatabaseClient;
 import com.example.graduationproject.databinding.FragmentAllPostsBinding;
+import com.example.graduationproject.databinding.LayoutDialogAddOrderBinding;
 import com.example.graduationproject.dialog.DialogCheckedInterface;
 import com.example.graduationproject.dialog.Dialoginterface;
 import com.example.graduationproject.dialog.MyDialogAddOrder;
@@ -47,6 +49,7 @@ import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
 import com.example.graduationproject.utils.UtilMethods;
 import com.google.gson.Gson;
+import com.siddydevelops.customlottiedialogbox.CustomLottieDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
@@ -54,6 +57,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import es.dmoral.toasty.Toasty;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -69,9 +73,11 @@ public class AllPostsFragment extends BaseFragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     public static final String TAG = "ALL_POSTS";
-    FragmentAllPostsBinding binding;
+    LayoutDialogAddOrderBinding bindingD;
     Context context;
-    MyDialogAddOrder myDialogAddOrder;
+    Dialoginterface dialoginterface;
+    FragmentAllPostsBinding binding;
+     MyDialogAddOrder myDialogAddOrder;
     MyDialogChecked myDialogChecked;
     private FragmentSwitcher fragmentSwitcher;
     List<Category> data;
@@ -192,8 +198,8 @@ public class AllPostsFragment extends BaseFragment {
             public void onFailure(Call<AllCategories> call, Throwable t) {
                 Log.d("onFailure", t.getMessage() + "");
                 call.cancel();
-                progressDialog.dismiss();
 
+                progressDialog.dismiss();
             }
         });
     }
@@ -211,12 +217,17 @@ public class AllPostsFragment extends BaseFragment {
                     assert response.body() != null;
                     setPostsRv(response.body().getData());
                     Log.e("maryam", getAllPosts.getData().size() + "");
+
                     progressDialog.dismiss();
+
                 } else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
                     progressDialog.dismiss();
+
+
                 }
+
             }
 
             @Override
@@ -224,6 +235,8 @@ public class AllPostsFragment extends BaseFragment {
                 Log.d("onFailure2", t.getMessage() + "");
                 call.cancel();
                 progressDialog.dismiss();
+
+
 
             }
         });
@@ -245,6 +258,7 @@ public class AllPostsFragment extends BaseFragment {
                     AllPosts getAllPosts = response.body();
                     setPostsRv(getAllPosts.getData());
                     progressDialog.dismiss();
+
                 } else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
@@ -424,7 +438,8 @@ public class AllPostsFragment extends BaseFragment {
             public void onResponse(Call<Order> call, Response<Order> response) {
                 Log.d("response5 code", response.code() + "");
                 changeAddButton(post, position);
-                myDialogAddOrder.dismiss();
+
+
                 Toasty.success(context, R.string.success_operation);
             }
 
@@ -438,11 +453,28 @@ public class AllPostsFragment extends BaseFragment {
     }
 
     private void changeAddButton(Post post, int position) {
+
         post.setIsOrdered(true);
         adapter.resetItem(post, position);
     }
 
     private void changeRemoveButton(Post post, int position) {
+        new SweetAlertDialog(context , SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Are you sure?")
+                .setContentText("Won't be able to recover this file!")
+                .setConfirmText("Yes,delete it!")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog
+                                .setTitleText("Deleted!")
+                                .setContentText("Your imaginary file has been deleted!")
+                                .setConfirmText("OK")
+                                .setConfirmClickListener(null)
+                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                    }
+                })
+                .show();
         post.setIsOrdered(false);
         adapter.resetItem(post, position);
     }
@@ -460,7 +492,6 @@ public class AllPostsFragment extends BaseFragment {
             public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
                 Log.d("response5 code", response.code() + "");
                 changeRemoveButton(post, position);
-                progressDialog.dismiss();
                 Toasty.success(context, R.string.success_operation);
 
             }
@@ -567,5 +598,16 @@ public class AllPostsFragment extends BaseFragment {
             }
         });
         thread.start();
+    }
+
+
+    private String validation() {
+        if (bindingD.addOrderEt.getText().toString().trim().isEmpty()) {
+            bindingD.addOrderEt.requestFocus();
+            bindingD.addOrderEt.setError("THIS FIELD CANNOT BE EMPTY");
+            return null;
+        } else {
+            return bindingD.addOrderEt.getText().toString();
+        }
     }
 }

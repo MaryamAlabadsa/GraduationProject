@@ -119,8 +119,11 @@ public class NotificationFragment extends BaseFragment {
                     setNotificationRv(response.body().getData());
                     progressDialog.dismiss();
 
+
                 } else {
                     progressDialog.dismiss();
+
+
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
                     Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
@@ -160,6 +163,7 @@ public class NotificationFragment extends BaseFragment {
             @Override
             public void layout(String postId, String userId) {
                 if (postId != null) {
+
                     showDialog();
                     getPostDetails(postId);
                 } else if (userId != null) {
@@ -242,6 +246,8 @@ public class NotificationFragment extends BaseFragment {
 
         }
         progressDialog.dismiss();
+
+
         bottomSheetDialog.show();
     }
 

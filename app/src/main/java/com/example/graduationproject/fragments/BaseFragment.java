@@ -3,11 +3,14 @@ package com.example.graduationproject.fragments;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.graduationproject.R;
@@ -17,7 +20,9 @@ import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.request.Order;
 import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
+ import com.google.android.material.bottomsheet.BottomSheetDialog;
+
+import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -31,6 +36,7 @@ public abstract class BaseFragment extends Fragment {
     public String token;
     public ServiceApi serviceApi;
     public ProgressDialog progressDialog;
+
 
 
     @Override
@@ -58,11 +64,22 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public void showDialog() {
+
+
+
+
         progressDialog = new ProgressDialog(getActivity(),R.style.MyAlertDialogStyle);
         progressDialog.setMessage("Please Wait...");
         progressDialog.setCancelable(false);
         progressDialog.show();
+
+
+
     }
+
+
+
+
 }
 
 
