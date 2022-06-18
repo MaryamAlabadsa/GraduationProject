@@ -45,12 +45,13 @@ import retrofit2.Response;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     String TAG = "MyFirebaseMessagingService";
-    AppSharedPreferences sharedPreferences = new AppSharedPreferences(getApplicationContext());
 
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
         Log.e("onNewToken", token);
+        AppSharedPreferences sharedPreferences = new AppSharedPreferences(getApplicationContext());
+
         if (UtilMethods.isLogin(getApplicationContext())) {
             sendDeviceToken(token);
         }
@@ -140,6 +141,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void sendDeviceToken(String deviceToken) {
+        AppSharedPreferences sharedPreferences = new AppSharedPreferences(getApplicationContext());
+
         ServiceApi serviceApi = Creator.getClient().create(ServiceApi.class);
         String token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
 

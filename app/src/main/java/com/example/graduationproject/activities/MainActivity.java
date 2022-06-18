@@ -280,9 +280,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, tag).commit();
         }
     }
-
     @Override
     public void onBackPressed() {
+        Log.e("isAllPost", isAllPost + "");
         switch (fragmentSelcted) {
             case ADD_POSTS:
                 binding.navView.getMenu().getItem(1).setChecked(true);
@@ -301,12 +301,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (!isAllPost) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,
-                    new AllPostsFragment(),
-                    tag).commit();
-            isAllPost = true;
-        } else {
+        }
+//        else if (!isAllPost) {
+//            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,
+//                    new AllPostsFragment(),
+//                    tag).commit();
+//            isAllPost = true;
+//        }
+        else {
             super.onBackPressed();
         }
     }
