@@ -1,5 +1,9 @@
 package com.example.graduationproject.fragments.ui;
 
+import static com.example.graduationproject.fragments.PagesFragment.EDIT;
+import static com.example.graduationproject.fragments.PagesFragment.SEARCH;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -9,11 +13,16 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -31,13 +40,16 @@ import com.example.graduationproject.fragments.PagesFragment;
 import com.example.graduationproject.retrofit.categories.AllCategories;
 import com.example.graduationproject.retrofit.categories.Category;
 import com.example.graduationproject.retrofit.post.AllPosts;
+import com.example.graduationproject.retrofit.post.Post;
 import com.example.graduationproject.retrofit.post.PostDetails;
 import com.example.graduationproject.retrofit.register.User;
 import com.example.graduationproject.utils.AppSharedPreferences;
 import com.example.graduationproject.utils.FileUtil;
+import com.example.graduationproject.utils.UtilMethods;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -54,7 +66,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddPostFragment extends BaseFragment {
+public class
+AddPostFragment extends BaseFragment {
+    private static Post post;
+    private static boolean isEdit = false;
     FragmentAddPostBinding binding;
     public static final String TAG = "ADD_POSTS";
     private static final String ARG_PARAM1 = "param1";
@@ -67,13 +82,15 @@ public class AddPostFragment extends BaseFragment {
     HashMap<String, File> imagesList;
     //    ArrayList<File> imagesList;
     int imageNum = 0;
+    String pTitle, pDescription;
+    int isDonation = 2;
+    Integer category;
     private FragmentSwitcher fragmentSwitcher;
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    public  AddPostFragment() {
+    public AddPostFragment() {
         // Required empty public constructor
     }
 
@@ -85,6 +102,15 @@ public class AddPostFragment extends BaseFragment {
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+        if (!param1.equals("")) {
+            isEdit = true;
+            Gson gson = new Gson();
+            post = gson.fromJson(param1, Post.class);
+        } else {
+            post = new Post();
+            isEdit=false;
+        }
+
         return fragment;
     }
 
@@ -98,10 +124,18 @@ public class AddPostFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
     }
 
 
@@ -110,15 +144,15 @@ public class AddPostFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         binding = FragmentAddPostBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+
         context = getActivity();
         categories = new ArrayList<>();
         imagesList = new HashMap<String, File>();
-
-        showDialog();
+//        post = new Post();
         getAllCategories();
+        if (isEdit)
+            setFields();
 
-
-        //event bus
         EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ADD_POSTS, "Add Post"));
 
         binding.imagePost1.setOnClickListener(new View.OnClickListener() {
@@ -167,35 +201,34 @@ public class AddPostFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
 
-                showDialog();
+                //showDialog();
                 pTitle = binding.titlePost.getText().toString();
                 pDescription = binding.descriptionPost.getText().toString();
-//                int radioButtonID = binding.radioGroup.getCheckedRadioButtonId();
-//                View radioButton = binding.radioGroup.findViewById(radioButtonID);
-//                int idx = binding.radioGroup.indexOfChild(radioButton);
-//                RadioButton r = (RadioButton) binding.radioGroup.getChildAt(idx);
 
-
-                if (ValidationAllFields().equals("")) {
-//                    String selectedtext = r.getText().toString();
-                    if (binding.radioDon.isSelected())
-                        isDonation = 0;
-                    else if (binding.radioReq.isSelected())
+                if (validationAllFields().equals("")) {
+                    if (binding.radioDon.isChecked())
                         isDonation = 1;
-                    addPostRequest(imagesList, pTitle, pDescription, category, isDonation);
-                } else {
-                    progressDialog.dismiss();
-
+                    else if (binding.radioReq.isChecked())
+                        isDonation = 0;
+                    if (isDonation != 2) {
+                        UtilMethods.launchLoadingLottieDialog(context);
+                        addPostRequest(imagesList, pTitle, pDescription, category, isDonation);
+                    } else {
+                        Toast.makeText(context, "What is the post status?", Toast.LENGTH_SHORT).show();
+                    }
                 }
+            }
+        });
+
+        binding.clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearAllFields();
             }
         });
         return view;
     }
 
-
-    String pTitle, pDescription;
-    int isDonation ;
-    Integer category;
 
     private void spinnerCode(List<Category> categories) {
         ArrayAdapter<Category> adapter =
@@ -210,10 +243,7 @@ public class AddPostFragment extends BaseFragment {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 category = categories.get(position).getId();
-                Toast.makeText(context, category + "", Toast.LENGTH_SHORT).show();
-
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // TODO Auto-generated method stub
@@ -222,7 +252,7 @@ public class AddPostFragment extends BaseFragment {
         });
     }
 
-    public String ValidationAllFields() {
+    public String validationAllFields() {
 
         if (binding.spinner.getSelectedItem().toString().trim().equals("Pick one")) {
             Toasty.error(context, "Error Spinner", Toast.LENGTH_SHORT).show();
@@ -253,18 +283,36 @@ public class AddPostFragment extends BaseFragment {
 
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public void clearAllFields() {
+        binding.image1.setImageDrawable(context.getDrawable(R.drawable.add));
+        binding.image2.setImageDrawable(context.getDrawable(R.drawable.add));
+        binding.image3.setImageDrawable(context.getDrawable(R.drawable.add));
+
+        binding.imagePost2.setVisibility(View.GONE);
+        binding.imagePost3.setVisibility(View.GONE);
+        imageNum = 0;
+        imagesList.clear();
+        binding.titlePost.setText(null);
+        binding.descriptionPost.setText(null);
+        if (binding.radioDon.isChecked())
+            binding.radioDon.setChecked(false);
+        else if (binding.radioReq.isChecked())
+            binding.radioReq.setChecked(false);
+    }
+
 
     private void addPostRequest(HashMap<String, File> imagesList, String uTitle, String uDescription, int pCategory, int pIsDonation) {
 
         List<MultipartBody.Part> resourceBody = new ArrayList<>();
         for (int i = 0; i < imagesList.size(); i++) {
-            int num=i+1;
+            int num = i + 1;
             MultipartBody.Part body = null;
             RequestBody requestFile =
                     RequestBody.create(MediaType.parse("multipart/form-data")
-                            ,imagesList.get("image"+num));
+                            , imagesList.get("image" + num));
             body = MultipartBody.Part.createFormData(
-                    "assets[" + i + "]", imagesList.get("image"+num).getName(), requestFile);
+                    "assets[" + i + "]", imagesList.get("image" + num).getName(), requestFile);
             resourceBody.add(body);
 
         }
@@ -285,14 +333,13 @@ public class AddPostFragment extends BaseFragment {
                 Log.d("response code", response.code() + "");
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
-                    fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null);
-                    Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                    fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null, null);
+                    UtilMethods.launchLoadingLottieDialogDismiss(context);
 
                 } else {
                     String errorMessage = parseError(response);
                     Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                    UtilMethods.launchLoadingLottieDialogDismiss(context);
 
                     Log.e("errorMessage", errorMessage + "");
                 }
@@ -301,6 +348,8 @@ public class AddPostFragment extends BaseFragment {
             @Override
             public void onFailure(Call<AllPosts> call, Throwable t) {
                 Log.d("onFailure", t.getMessage() + "");
+                UtilMethods.launchLoadingLottieDialogDismiss(context);
+
                 call.cancel();
             }
         });
@@ -319,7 +368,6 @@ public class AddPostFragment extends BaseFragment {
         return errorMsg;
     }
 
-
     ActivityResultLauncher<Intent> someActivityResultLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                     new ActivityResultCallback<ActivityResult>() {
@@ -328,21 +376,21 @@ public class AddPostFragment extends BaseFragment {
                             if (result.getResultCode() == Activity.RESULT_OK) { // There are no request codes
                                 Intent data = result.getData();
                                 Log.e("data", data.getDataString() + "");
-                                File file = null;
+                                File file_posts = null;
                                 try {
-                                    file = FileUtil.from(context, data.getData());
+                                    file_posts = FileUtil.from(context, data.getData());
 
                                     if (imageNum == 1) {
                                         binding.image1.setImageURI(data.getData());
 //                                        binding.image2.setColorFilter(ContextCompat.getColor(context, R.color.bink), android.graphics.PorterDuff.Mode.MULTIPLY);
                                         binding.imagePost2.setVisibility(View.VISIBLE);
-                                        imagesList.put(IMAGE1, file);
+                                        imagesList.put(IMAGE1, file_posts);
                                     } else if (imageNum == 2) {
-                                        imagesList.put(IMAGE2, file);
+                                        imagesList.put(IMAGE2, file_posts);
                                         binding.imagePost3.setVisibility(View.VISIBLE);
                                         binding.image2.setImageURI(data.getData());
                                     } else if (imageNum == 3) {
-                                        imagesList.put(IMAGE3, file);
+                                        imagesList.put(IMAGE3, file_posts);
                                         binding.image3.setImageURI(data.getData());
                                     }
                                 } catch (IOException e) {
@@ -371,7 +419,7 @@ public class AddPostFragment extends BaseFragment {
                     assert getAllCategories != null;
                     categories = getAllCategories.getData();
                     spinnerCode(categories);
-                    progressDialog.dismiss();
+                    //progressDialog.dismiss();
 
                 } else {
                     String errorMessage = parseError(response);
@@ -388,4 +436,37 @@ public class AddPostFragment extends BaseFragment {
     }
 
 
+    private void setFields() {
+        binding.descriptionPost.setText(post.getDescription());
+        binding.titlePost.setText(post.getTitle());
+        if (post.getIsDonation())
+            binding.radioDon.setChecked(true);
+        else
+            binding.radioDon.setChecked(true);
+        Toast.makeText(context, post.getPostMedia().size() + "", Toast.LENGTH_SHORT).show();
+
+        switch (post.getPostMedia().size()) {
+            case 3:
+                Glide.with(context).load(post.getPostMedia().get(0)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
+                Glide.with(context).load(post.getPostMedia().get(1)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image2);
+                Glide.with(context).load(post.getPostMedia().get(2)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image3);
+                binding.image3.setVisibility(View.VISIBLE);
+                binding.image2.setVisibility(View.VISIBLE);
+                break;
+            case 2:
+                Glide.with(context).load(post.getPostMedia().get(0)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
+                Glide.with(context).load(post.getPostMedia().get(1)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image2);
+                binding.image3.setVisibility(View.VISIBLE);
+                binding.image2.setVisibility(View.VISIBLE);
+                break;
+            case 1:
+                Glide.with(context).load(post.getPostMedia().get(0)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
+                binding.image2.setVisibility(View.VISIBLE);
+                binding.image3.setVisibility(View.GONE);
+                break;
+
+
+        }
+
+    }
 }

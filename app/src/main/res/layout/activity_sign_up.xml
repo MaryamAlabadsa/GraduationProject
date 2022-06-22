@@ -17,17 +17,44 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <RelativeLayout
                 android:id="@+id/pick_image"
-                android:layout_width="@dimen/_110sdp"
-                android:layout_height="@dimen/_100sdp"
-                android:layout_alignParentTop="true"
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_90sdp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginLeft="@dimen/_20sdp"
-                android:layout_marginTop="@dimen/_40sdp"
-                android:layout_marginRight="@dimen/_20sdp"
-                android:src="@drawable/add_imagee" />
+                android:layout_marginTop="@dimen/_50sdp">
 
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="@dimen/_80sdp"
+                    android:layout_height="@dimen/_80sdp"
+                    android:visibility="invisible"
+                    android:src="@drawable/usericon" />
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/lottie_img"
+                    android:layout_width="@dimen/_80sdp"
+                    android:layout_height="@dimen/_80sdp"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.4"
+                    app:lottie_loop="true"
+                    app:lottie_speed="1"
+                    tools:ignore="ContentDescription"/>
+
+                <ImageView
+                    android:id="@+id/change_profile_image_btn"
+                    android:layout_width="@dimen/_24sdp"
+                    android:layout_height="@dimen/_24sdp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:background="@drawable/shape_blue_circle"
+                    android:src="@drawable/camera" />
+
+            </RelativeLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInput_email"

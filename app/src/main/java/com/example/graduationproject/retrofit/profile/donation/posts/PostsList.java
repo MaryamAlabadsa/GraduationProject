@@ -100,6 +100,9 @@ public class PostsList implements Serializable {
     @Expose
     private Post post;
     private final static long serialVersionUID = -7964658604594063691L;
+    @SerializedName("the_owner_is_login")
+    @Expose
+    private Boolean the_owner_is_login;
 
     /**
      * No args constructor for use in serialization
@@ -136,6 +139,46 @@ public class PostsList implements Serializable {
         this.userPhoneNumber = userPhoneNumber;
         this.publishedAt = publishedAt;
         this.post = post;
+    }
+
+    public Boolean getDonation() {
+        return isDonation;
+    }
+
+    public void setDonation(Boolean donation) {
+        isDonation = donation;
+    }
+
+    public Boolean getOrdered() {
+        return isOrdered;
+    }
+
+    public void setOrdered(Boolean ordered) {
+        isOrdered = ordered;
+    }
+
+    public Boolean getHeTheOwnerOfThePost() {
+        return isHeTheOwnerOfThePost;
+    }
+
+    public void setHeTheOwnerOfThePost(Boolean heTheOwnerOfThePost) {
+        isHeTheOwnerOfThePost = heTheOwnerOfThePost;
+    }
+
+    public Boolean getCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(Boolean completed) {
+        isCompleted = completed;
+    }
+
+    public Boolean getThe_owner_is_login() {
+        return the_owner_is_login;
+    }
+
+    public void setThe_owner_is_login(Boolean the_owner_is_login) {
+        this.the_owner_is_login = the_owner_is_login;
     }
 
     /**

@@ -31,12 +31,12 @@ public class BaseActivity extends AppCompatActivity {
 //        token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
 //
 //    }
-    public void showDialog() {
-        progressDialog = new ProgressDialog(this, R.style.mySwitch);
-        progressDialog.setMessage("Please Wait");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-    }
+//    public void //showDialog() {
+//        progressDialog = new ProgressDialog(this, R.style.mySwitch);
+//        progressDialog.setMessage("Please Wait");
+//        progressDialog.setCancelable(false);
+//        progressDialog.show();
+//    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {

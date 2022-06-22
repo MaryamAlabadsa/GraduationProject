@@ -4,17 +4,24 @@ import static com.example.graduationproject.activities.BaseActivity.parseError;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amrdeveloper.lottiedialog.LottieDialog;
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.adapters.PostOrdersAdapter;
@@ -29,6 +36,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UtilMethods {
+    private static LottieDialog dialog;
+//    LottieDialog dialog;
     @SuppressLint({"SetTextI18n", "ResourceAsColor"})
     public static   void showBottomSheetDialog(PostDetails postDetails, Context context) {
 
@@ -124,4 +133,54 @@ public class UtilMethods {
 
         return !userToken.equals("");
     }
+    public static void launchLoadingLottieDialog(Context context) {
+         dialog = new LottieDialog(context)
+                .setAnimation(R.raw.heart_loading).setAnimationViewHeight(1000).setAnimationViewWidth(1000)
+                .setAutoPlayAnimation(true)
+                .setDialogHeight(500)
+                .setAnimationRepeatCount(LottieDialog.INFINITE)
+                .setMessage("Loading...").setCancelable(false);
+        dialog.show();
+    }
+    public static void launchLoadingLottieDialogDismiss(Context context) {
+        dialog.dismiss();
+    }
+    public static void launchInternetLottieDialog(Context context) {
+        Button button = new Button(context);
+        button.setText("Retry");
+        button.setTextColor(Color.WHITE);
+        button.setAllCaps(false);
+        int purpleColor = ContextCompat.getColor(context, R.color.green);
+        button.setBackgroundTintList(ColorStateList.valueOf(purpleColor));
+
+        LottieDialog dialog = new LottieDialog(context)
+                .setAnimation(R.raw.no_internet)
+                .setAutoPlayAnimation(true)
+                .setAnimationRepeatCount(LottieDialog.INFINITE)
+                .setMessage("You have no internet connection")
+                .addActionButton(button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                checkNetwork(context);
+            }
+        });
+
+        dialog.show();
+    }
+    public static void checkNetwork(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+//            Toast.makeText(context, "connected", Toast.LENGTH_SHORT).show();
+//            connected = true;
+        } else {
+//            Toast.makeText(context, "connected", Toast.LENGTH_SHORT).show();
+            launchInternetLottieDialog(context);
+//            connected = false;
+
+        }
+    }
+
 }

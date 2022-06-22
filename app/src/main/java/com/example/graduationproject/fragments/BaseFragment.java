@@ -63,19 +63,19 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    public void showDialog() {
-
-
-
-
-        progressDialog = new ProgressDialog(getActivity(),R.style.MyAlertDialogStyle);
-        progressDialog.setMessage("Please Wait...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-
-
-
-    }
+//    public void //showDialog() {
+//
+//
+//
+//
+//        progressDialog = new ProgressDialog(getActivity(),R.style.MyAlertDialogStyle);
+//        progressDialog.setMessage("Please Wait...");
+//        progressDialog.setCancelable(false);
+//        progressDialog.show();
+//
+//
+//
+//    }
 
 
 

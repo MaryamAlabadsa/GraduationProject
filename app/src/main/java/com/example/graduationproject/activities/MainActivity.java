@@ -6,18 +6,24 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.LayerDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,11 +38,16 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.amrdeveloper.lottiedialog.LottieDialog;
 import com.bumptech.glide.Glide;
+import com.claudiodegio.msv.OnSearchViewListener;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.ActivityMainBinding;
- import com.example.graduationproject.databinding.LayoutToolbarBinding;
+import com.example.graduationproject.databinding.LayoutToolbarBinding;
+import com.example.graduationproject.fragments.SearchFragment;
 import com.example.graduationproject.fragments.ui.ChangePasswordFragment;
 import com.example.graduationproject.fragments.MyTitleEventBus;
 import com.example.graduationproject.fragments.ui.AddPostFragment;
@@ -51,32 +62,42 @@ import com.example.graduationproject.model.PostOrdersInfo;
 import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.logout.LogOut;
+import com.example.graduationproject.retrofit.post.Post;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
 import com.example.graduationproject.retrofit.register.User;
 import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
 import com.example.graduationproject.utils.FileUtil;
 import com.example.graduationproject.utils.UtilMethods;
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import static com.example.graduationproject.fragments.PagesFragment.ADD_POSTS;
 import static com.example.graduationproject.fragments.PagesFragment.ALL_POSTS;
 import static com.example.graduationproject.fragments.PagesFragment.CHANGE_PASSWORD;
+import static com.example.graduationproject.fragments.PagesFragment.EDIT;
 import static com.example.graduationproject.fragments.PagesFragment.NOTIFICATION;
 import static com.example.graduationproject.fragments.PagesFragment.PROFILE;
+import static com.example.graduationproject.fragments.PagesFragment.SEARCH;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import es.dmoral.toasty.Toasty;
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -85,8 +106,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentSwitcher {
+    private static final String TAG = "MainActivity";
     ActivityMainBinding binding;
-     Context context = MainActivity.this;
+    Context context = MainActivity.this;
     int category_id;
     DrawerLayout drawer;
     boolean isOpen = false; // by default is false
@@ -96,6 +118,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     View headerView;
     LayoutToolbarBinding toolbarBinding;
     private boolean connected;
+    Bitmap bitmap;
 
 
     @Override
@@ -108,18 +131,18 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
         EventBus.getDefault().register(this);
         NavigationView navigationView = binding.navView;
+        UtilMethods.checkNetwork(context);
 
         toolbarBinding = binding.mainToolbar;
         drawer = binding.mainDrawer;
 
         toolbarBinding.toolbar.setTitle("");
         setSupportActionBar(toolbarBinding.toolbar);
-
-
+        Log.e("onCreate", "onCreate");
 
         Menu menu = navigationView.getMenu();
 
-        MenuItem title= menu.findItem(R.id.title);
+        MenuItem title = menu.findItem(R.id.title);
         SpannableString s = new SpannableString(title.getTitle());
         s.setSpan(new TextAppearanceSpan(this, R.style.NavDrawerTextStyleTittle), 0, s.length(), 0);
         title.setTitle(s);
@@ -129,15 +152,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         String post_id_notifaction = getIntent().getStringExtra("post_id");
         String user_id_notifaction = getIntent().getStringExtra("user_id");
         if (post_id_notifaction != null) {
-            Toast.makeText(context, post_id_notifaction + "", Toast.LENGTH_SHORT).show();
-            showDialog();
+//            //showDialog();
             UtilMethods.getPostDetails(Integer.parseInt(post_id_notifaction), context, serviceApi, token);
-            switchFragment(NOTIFICATION, null);
+            switchFragment(NOTIFICATION, null,"");
 
         } else if (user_id_notifaction != null) {
-            switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(Integer.parseInt(user_id_notifaction)));
+            switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(Integer.parseInt(user_id_notifaction)),"");
         } else
-            switchFragment(ALL_POSTS, null);
+            switchFragment(ALL_POSTS, null,"");
 
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -171,39 +193,69 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     .placeholder(R.drawable.ic_launcher_foreground).into(userImage);
             username.setText(user1.getName());
         }
-        changeUserImage();
+        binding.sv.setOnSearchViewListener(new OnSearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                EventBus.getDefault().post(new MyTitleEventBus(SEARCH, s));
+                return false;
+            }
+
+            @Override
+            public void onQueryTextChange(String s) {
+//                Toast.makeText(MainActivity.this, s+"", Toast.LENGTH_SHORT).show();
+
+            }
+        }); // this class implements OnSearchViewListener
 
     }
+
 
     @SuppressLint("ResourceAsColor")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         isAllPost = false;
+        Log.e("onNavigationItemSelected", item.getItemId() + "");
         switch (id) {
             case R.id.profile:
-                switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(0));
+                UtilMethods.checkNetwork(context);
+                switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(0),"");
                 break;
 
             case R.id.notifcation:
-                switchFragment(PagesFragment.NOTIFICATION, null);
+                UtilMethods.checkNetwork(context);
+                switchFragment(PagesFragment.NOTIFICATION, null,"");
                 break;
 
             case R.id.allPosts:
-                switchFragment(ALL_POSTS, null);
+//                UtilMethods.checkNetwork(context);
+                switchFragment(ALL_POSTS, null,"");
                 isAllPost = true;
                 break;
 
             case R.id.add_post:
-                switchFragment(PagesFragment.ADD_POSTS, null);
+                UtilMethods.checkNetwork(context);
+                switchFragment(PagesFragment.ADD_POSTS, null,"");
                 break;
 
             case R.id.nav_logout:
+                UtilMethods.launchLoadingLottieDialog(context);
+                UtilMethods.checkNetwork(context);
                 requestLogout();
                 break;
 
             case R.id.nav_change_password:
-                switchFragment(PagesFragment.CHANGE_PASSWORD, null);
+                switchFragment(PagesFragment.CHANGE_PASSWORD, null,"");
                 break;
 
 
@@ -223,11 +275,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             toolbarBinding.getRoot().setVisibility(View.VISIBLE);
             binding.marginTop.setVisibility(View.VISIBLE);
 
-        } else if (event.getType() == ADD_POSTS) {
+        } else if (event.getType() == SEARCH) {
             toolbarBinding.tvTitle.setText(event.getText());
             toolbarBinding.getRoot().setVisibility(View.VISIBLE);
             binding.marginTop.setVisibility(View.VISIBLE);
 
+        } else if (event.getType() == ADD_POSTS) {
+            toolbarBinding.tvTitle.setText(event.getText());
+            toolbarBinding.getRoot().setVisibility(View.VISIBLE);
+            binding.marginTop.setVisibility(View.VISIBLE);
 
         } else if (event.getType() == NOTIFICATION) {
             toolbarBinding.getRoot().setVisibility(View.VISIBLE);
@@ -237,17 +293,20 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             toolbarBinding.getRoot().setVisibility(View.VISIBLE);
             binding.marginTop.setVisibility(View.VISIBLE);
             toolbarBinding.tvTitle.setText(event.getText());
-        }else if (event.getType()==PROFILE)
+        } else if (event.getType() == PROFILE)
             binding.marginTop.setVisibility(View.GONE);
+        else if (event.getType() == EDIT) {
+            switchFragment(ADD_POSTS, null,event.getText());
 
+        }
     }
 
     @Override
-    public void switchFragment(PagesFragment pagesFragment, PostOrdersInfo object) {
+    public void switchFragment(PagesFragment pagesFragment, PostOrdersInfo object, String post) {
         switch (pagesFragment) {
             case ADD_POSTS:
                 toolbarBinding.getRoot().setVisibility(View.VISIBLE);
-                fragment = new AddPostFragment();
+                fragment =  AddPostFragment.newInstance(post,"");
                 break;
             case ALL_POSTS:
                 toolbarBinding.getRoot().setVisibility(View.VISIBLE);
@@ -257,9 +316,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 toolbarBinding.getRoot().setVisibility(View.VISIBLE);
                 fragment = new NotificationFragment();
                 break;
+            case SEARCH:
+//                toolbarBinding.getRoot().setVisibility(View.VISIBLE);
+                fragment = new SearchFragment();
+                break;
             case PROFILE:
                 toolbarBinding.getRoot().setVisibility(View.GONE);
-//                binding.toolbarBack.setVisibility(View.GONE);
                 fragment = ProfileFragment.newInstance(object.getUserId());
                 break;
             case POST_ORDERS:
@@ -270,16 +332,46 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 toolbarBinding.getRoot().setVisibility(View.VISIBLE);
                 fragment = new ChangePasswordFragment();
                 break;
+            default:
         }
-//        setText(fragment.getFragmentTitle());
-
 
         if (ALL_POSTS == pagesFragment) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, tag).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, null).commit();
         } else {
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, tag).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, null).commit();
         }
     }
+
+    //------------------------------ menu ---------------------------------
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (fragmentSelcted == ALL_POSTS) {
+            getMenuInflater().inflate(R.menu.search_menu, menu);
+            MenuItem item = menu.findItem(R.id.nav_search);
+            binding.sv.setMenuItem(item);
+        }
+
+
+        return true;
+    }
+
+    //----------------------------------search-------------------------
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Log.d("TAG", "onOptionsItemSelected: Menu");
+                if (drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                } else {
+                    drawer.openDrawer(GravityCompat.START);
+                }
+                break;
+        }
+        return true;
+    }
+
+    //--------------------------------------------------
     @Override
     public void onBackPressed() {
         Log.e("isAllPost", isAllPost + "");
@@ -301,98 +393,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
-//        else if (!isAllPost) {
-//            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,
-//                    new AllPostsFragment(),
-//                    tag).commit();
-//            isAllPost = true;
-//        }
-        else {
+        } else if (!isAllPost) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,
+                    new AllPostsFragment(),
+                    tag).commit();
+            isAllPost = true;
+        } else {
             super.onBackPressed();
         }
     }
 
-    // change user image
-    File file;
-
-    private void changeUserImage() {
-        headerView.findViewById(R.id.edit_user_image).setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onClick(View view) {
-                boolean pick = true;
-                if (pick == true) {
-                    if (!checkCameraPermission()) {
-                        requestCameraPermission();
-                    } else PickImage();
-                } else {
-                    if (!checkStoragePermission()) {
-                        requestStoragePermission();
-                    } else PickImage();
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PickImage();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestStoragePermission() {
-        requestPermissions(new String[]{
-                Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestCameraPermission() {
-        requestPermissions(new String[]{Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-    }
-
-    private boolean checkStoragePermission() {
-        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED;
-        return res2;
-    }
-
-    private boolean checkCameraPermission() {
-        boolean res1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED;
-        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED;
-        return res1 && res2;
-    }
-
-    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-            if (result.getResultCode() == Activity.RESULT_OK) { // There are no request codes
-                Intent data = result.getData();
-                Log.e("data", data.getDataString() + "");
-                try {
-                    InputStream stream = getContentResolver().openInputStream(data.getData());
-                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                    ImageView user_image = headerView.findViewById(R.id.user_image);
-                    user_image.setImageBitmap(bitmap);
-                    file = FileUtil.from(context, data.getData());
-                    changeUserImageRequest();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    });
-
-    private void PickImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        someActivityResultLauncher.launch(intent);
-    }
 
     public String parseError2(Response<?> response) {
         String errorMsg = null;
@@ -409,7 +419,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void requestLogout() {
-        showDialog();
+        //showDialog();
         Call<LogOut> call = serviceApi.logout("Bearer " + token);
         call.enqueue(new Callback<LogOut>() {
 
@@ -423,7 +433,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(i);
                     Toast.makeText(context, R.string.session_was_expired_logout_processing, Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                    UtilMethods.launchLoadingLottieDialogDismiss(context);
+                    //progressDialog.dismiss();
 
                 } else {
                     String errorMessage = parseError(response);
@@ -439,42 +450,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
 
-    private void changeUserImageRequest() {
-        showDialog();
-        MultipartBody.Part body = null;
-        if (file != null) {
-            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-            body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-        }
-        Call<RegisterResponse> call = serviceApi.updateUserImage("application/json", body, "Bearer " + token);
-        call.enqueue(new Callback<RegisterResponse>() {
-            @Override
-            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
-                Log.d("response code", response.code() + "");
-                if (response.isSuccessful() || response.code() == 200) {
-                    assert response.body() != null;
-                    User user = response.body().getData().getUser();
-                    Gson gson = new Gson();
-                    String userString = gson.toJson(user);
-                    sharedPreferences.writeString(AppSharedPreferences.USER, userString);
-                    progressDialog.dismiss();
-                    Log.e("image link", user.getImageLink() + "");
-                    Toast.makeText(MainActivity.this, response.message() + "", Toast.LENGTH_SHORT).show();
-                } else {
-                    String errorMessage = parseError2(response);
-                    Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
-                    Log.e("errorMessage", errorMessage + "");
-                }
-            }
+    private void launchRippleLottieDialog() {
+        int orangeColor = ContextCompat.getColor(context, R.color.bink);
 
-            @Override
-            public void onFailure(Call<RegisterResponse> call, Throwable t) {
-                Log.d("onFailure", t.getMessage() + "");
-                call.cancel();
-                progressDialog.dismiss();
-            }
-        });
+        LottieDialog dialog = new LottieDialog(context)
+                .setAnimation(R.raw.ripple)
+                .setAutoPlayAnimation(true)
+                .setDialogHeightPercentage(.2f)
+                .setDialogBackground(Color.BLACK)
+                .setAnimationRepeatCount(LottieDialog.INFINITE)
+                .setMessage("Loading...")
+                .setMessageColor(orangeColor);
+
+        dialog.show();
     }
 
 }

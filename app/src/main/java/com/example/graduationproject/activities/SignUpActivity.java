@@ -19,10 +19,14 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.ActivitySignUpBinding;
 import com.example.graduationproject.model.RegisterRequest;
 import com.example.graduationproject.retrofit.Creator;
@@ -32,8 +36,11 @@ import com.example.graduationproject.retrofit.register.User;
 import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
 import com.example.graduationproject.utils.FileUtil;
+import com.example.graduationproject.utils.UtilMethods;
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.gson.Gson;
 import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -51,12 +58,14 @@ import retrofit2.Response;
 
 public class SignUpActivity extends BaseActivity {
 
+    private static final String TAG = "SignUpActivity";
     AppSharedPreferences sharedPreferences;
     String token;
     ServiceApi serviceApi;
     ActivitySignUpBinding binding;
     Context context = SignUpActivity.this;
     File file;
+    Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,23 +75,12 @@ public class SignUpActivity extends BaseActivity {
 //        getSupportActionBar().hide();
         serviceApi = Creator.getClient().create(ServiceApi.class);
         sharedPreferences = new AppSharedPreferences(getApplicationContext());
+        changeUserImage();
 
-        binding.pickImage.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onClick(View view) {
-                boolean pick = true;
-                if (pick == true) {
-                    if (!checkCameraPermission()) {
-                        requestCameraPermission();
-                    } else PickImage();
-                } else {
-                    if (!checkStoragePermission()) {
-                        requestStoragePermission();
-                    } else PickImage();
-                }
-            }
-        });
+        binding.lottieImg.setAnimation(R.raw.add_user_image);
+        binding.lottieImg.loop(true);
+        binding.lottieImg.playAnimation();
+
 
         binding.register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,8 +92,9 @@ public class SignUpActivity extends BaseActivity {
                 String userName = binding.username.getText().toString();
                 RegisterRequest request = new RegisterRequest(email, password, location, phone, userName);
                 if (validation(request) != null) {
+                    UtilMethods.launchLoadingLottieDialog(context);
                     register(file, validation(request));
-                    showDialog();
+                    //showDialog();
                 }
 
             }
@@ -103,7 +102,7 @@ public class SignUpActivity extends BaseActivity {
     }
 
     private void register(File resourceFile, RegisterRequest request) {
-        String  deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
+        String deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
 
         MultipartBody.Part body = null;
         if (resourceFile != null) {
@@ -140,19 +139,19 @@ public class SignUpActivity extends BaseActivity {
                     sharedPreferences.writeString(AppSharedPreferences.USER, userString);
                     sharedPreferences.writeString(AppSharedPreferences.AUTHENTICATION, response.body().getData().getToken());
                     startActivity(new Intent(context, MainActivity.class));
-                    progressDialog.dismiss();
+//                    finish();
+                    finishAffinity();
                 } else {
-                    String errorMessage = parseError2(response);
-                    Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
-                    Log.e("errorMessage", errorMessage + "");
+                   parseError2(response);
+//                    Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
+                    UtilMethods.launchLoadingLottieDialogDismiss(context);
                 }
             }
 
             @Override
             public void onFailure(Call<RegisterResponse> call, Throwable t) {
                 Log.d("onFailure", t.getMessage() + "");
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
                 Toast.makeText(SignUpActivity.this, t.getMessage() + "", Toast.LENGTH_SHORT).show();
                 call.cancel();
             }
@@ -160,17 +159,33 @@ public class SignUpActivity extends BaseActivity {
 //
     }
 
-    public String parseError2(Response<?> response) {
+    public void parseError2(Response<?> response) {
         String errorMsg = null;
         try {
             assert response.errorBody() != null;
             JSONObject jsonObject = new JSONObject(response.errorBody().string());
             JSONObject jsonObject2 = jsonObject.getJSONObject("errors");
-            JSONArray jsonArray = jsonObject2.getJSONArray("email");
-            return jsonArray.getString(0);
+            JSONArray jsonArrayEmail = jsonObject2.getJSONArray("email");
+            JSONArray jsonArrayName = jsonObject2.getJSONArray("name");
+            JSONArray jsonArrayPhone = jsonObject2.getJSONArray("phone_number");
+            JSONArray jsonArrayAddress = jsonObject2.getJSONArray("address");
+            if (jsonArrayName.getString(0) != null)
+                binding.username.setError(jsonArrayName.getString(0));
+
+            if (jsonArrayEmail.getString(0) != null)
+                binding.email.setError(jsonArrayEmail.getString(0));
+
+            if (jsonArrayAddress.getString(0) != null)
+                binding.location.setError(jsonArrayAddress.getString(0));
+            if (jsonArrayPhone.getString(0) != null)
+                binding.phone.setError(jsonArrayPhone.getString(0));
+            Log.e("errorMessage", jsonObject + "");
+
+//            return jsonArrayEmail.getString(0);
         } catch (Exception ignored) {
             Log.e(errorMsg, ignored.getMessage() + "");
-            return ignored.getMessage();
+            Toast.makeText(context, ignored.getMessage() + "", Toast.LENGTH_SHORT).show();
+//            return ignored.getMessage();
         }
     }
 
@@ -197,10 +212,47 @@ public class SignUpActivity extends BaseActivity {
     }
 
     // camera cooooode
+    // change user image
+
+    private void changeUserImage() {
+        binding.pickImage.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                boolean pick = true;
+                if (pick == true) {
+                    if (!checkCameraPermission()) {
+                        requestCameraPermission();
+                    } else
+                        new ImagePicker.Builder(SignUpActivity.this)
+                                .crop(83, 100)                    //Crop image(Optional), Check Customization for more option
+                                .compress(1024)            //Final image size will be less than 1 MB(Optional)
+                                .maxResultSize(233, 280)    //Final image resolution will be less than 1080 x 1080(Optional)
+                                .start();
+
+                } else {
+                    if (!checkStoragePermission()) {
+                        requestStoragePermission();
+                    } else new ImagePicker.Builder(SignUpActivity.this)
+                            .crop(83, 100)                    //Crop image(Optional), Check Customization for more option
+                            .compress(1024)            //Final image size will be less than 1 MB(Optional)
+                            .maxResultSize(233, 280)    //Final image resolution will be less than 1080 x 1080(Optional)
+                            .start();
+
+                }
+            }
+        });
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PickImage();
+        new ImagePicker.Builder(this)
+                .crop(83, 100)                    //Crop image(Optional), Check Customization for more option
+                .compress(1024)            //Final image size will be less than 1 MB(Optional)
+                .maxResultSize(233, 280)    //Final image resolution will be less than 1080 x 1080(Optional)
+                .start();
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -229,29 +281,56 @@ public class SignUpActivity extends BaseActivity {
         return res1 && res2;
     }
 
-    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-            if (result.getResultCode() == Activity.RESULT_OK) { // There are no request codes
-                Intent data = result.getData();
-                Log.e("data", data.getDataString() + "");
+    private void uploadImage() {
+        binding.profileImage.setVisibility(View.VISIBLE);
+        binding.lottieImg.setVisibility(View.INVISIBLE);
+        binding.profileImage.setImageBitmap(bitmap);
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            //Image Uri will not be null for RESULT_OK
+            Uri uri = data.getData();
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
+                file = FileUtil.from(context, uri);
+                uploadImage();
+            } catch (IOException e) {
+                Log.w(TAG, "onActivityResult: CROP_IMAGE_ACTIVITY_REQUEST_CODE => ", e);
+            }
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+            Toast.makeText(context, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Task Cancelled", Toast.LENGTH_SHORT).show();
+        }
+
+
+        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE) {
+            Uri uri = data.getData();
+            //this is written from a fragment.
+            CropImage.activity(uri).setAspectRatio(83, 100)
+                    .setRequestedSize(233, 280)
+                    .setGuidelines(CropImageView.Guidelines.ON).start(this);
+        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == Activity.RESULT_OK) {
+                Uri resultUri = result.getUri();
                 try {
-                    InputStream stream = getContentResolver().openInputStream(data.getData());
-                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                    binding.pickImage.setImageBitmap(bitmap);
-                    file = FileUtil.from(context, data.getData());
+                    bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), resultUri);
+                    uploadImage();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.w(TAG, "onActivityResult: CROP_IMAGE_ACTIVITY_REQUEST_CODE => ", e);
                 }
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                Log.w(TAG, "onActivityResult: ", error);
             }
         }
-    });
-
-    private void PickImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        someActivityResultLauncher.launch(intent);
     }
+
 
 }

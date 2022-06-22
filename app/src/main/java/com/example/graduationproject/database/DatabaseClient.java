@@ -12,7 +12,7 @@ public class DatabaseClient {
     public DatabaseClient(Context mCtx) {
         this.mCtx = mCtx;
         appDatabase = Room.databaseBuilder(mCtx, AppDatabase.class, "MyDatabase")
-                .fallbackToDestructiveMigration().build();
+                .fallbackToDestructiveMigration(). build();
     }
 
     public static synchronized DatabaseClient getInstance(Context mCtx) {

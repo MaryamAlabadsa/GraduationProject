@@ -7,21 +7,25 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
-
-import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.LayoutDialogChangeFullterBinding;
-import com.example.graduationproject.utils.AppSharedPreferences;
+import com.example.graduationproject.utils.Constant;
+
+import es.dmoral.toasty.Toasty;
 
 
 public class MyDialogChecked extends Dialog {
     LayoutDialogChangeFullterBinding binding;
     Context context;
     DialogCheckedInterface dialogCheckedInterface;
+    Constant checkedNum = Constant.EMPTY_CHOICE;//2==all , 1==donation , 0==request
+    Constant postStatus = Constant.EMPTY_CHOICE;//2==all , 1==donation , 0==request
 
-    public MyDialogChecked(Context context, DialogCheckedInterface dialogCheckedInterface) {
-        super(context, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+    public MyDialogChecked(Context context, Constant checkedNum, Constant postStatus, DialogCheckedInterface dialogCheckedInterface) {
+        super(context);
+//        super(context, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
         this.context = context;
+        this.checkedNum = checkedNum;
+        this.postStatus = postStatus;
         this.dialogCheckedInterface = dialogCheckedInterface;
     }
 
@@ -32,31 +36,63 @@ public class MyDialogChecked extends Dialog {
         setCancelable(false);
         binding = LayoutDialogChangeFullterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        this.getWindow().setStatusBarColor(ContextCompat.getColor(context, R.color.coustom_blue)); //change status bar background
 
-        AppSharedPreferences sharedPreferences = new AppSharedPreferences(context);
-        int readInt = sharedPreferences.readInt(AppSharedPreferences.IS_DONATION);
-        if (readInt == 0) {
+
+        if (checkedNum == Constant.DONATION_CHECKED) {
             binding.donationCheck.setChecked(true);
-            Toast.makeText(context, readInt+"", Toast.LENGTH_SHORT).show();
-
-        } else{
+        } else if (checkedNum == Constant.REQUEST_CHECKED) {
             binding.requestCheck.setChecked(true);
-
+        } else {
+            binding.donationCheck.setChecked(true);
+            binding.requestCheck.setChecked(true);
         }
+
+        if (postStatus == Constant.COMPLETE_POST)
+            binding.completeCheck.setChecked(true);
+        else if (postStatus == Constant.PENDING_POST)
+            binding.pendingCheck.setChecked(true);
+        else{
+            binding.completeCheck.setChecked(true);
+            binding.pendingCheck.setChecked(true);
+        }
+
+
+
 
         binding.okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                int isDonation = 0;
-                if (binding.requestCheck.isChecked()) {
-                    isDonation = 1;
+                // all btn checked
+                if (binding.requestCheck.isChecked() && binding.donationCheck.isChecked() &&
+                        binding.completeCheck.isChecked() && binding.requestCheck.isChecked()) {
+                    checkedNum = Constant.ALL_CHECKED;
+                    postStatus = Constant.ALL_CHECKED;
                 }
-                sharedPreferences.writeInt(AppSharedPreferences.IS_DONATION, isDonation);
+                // check donation & request btns
+                if (binding.requestCheck.isChecked() && binding.donationCheck.isChecked()) {
+                    checkedNum = Constant.ALL_CHECKED;
+                    postStatus = Constant.ALL_CHECKED;
+                } else if (binding.requestCheck.isChecked()) {
+                    checkedNum = Constant.REQUEST_CHECKED;
+                } else if (binding.donationCheck.isChecked()) {
+                    checkedNum = Constant.DONATION_CHECKED;
+                }
+                // check donation & request btns
+                if (binding.completeCheck.isChecked() && binding.pendingCheck.isChecked()) {
+//                    checkedNum = Constant.ALL_CHECKED;
+                    postStatus = Constant.ALL_CHECKED;
+                } else if (binding.completeCheck.isChecked()) {
+                    postStatus = Constant.COMPLETE_POST;
+                } else if (binding.pendingCheck.isChecked()) {
+                    postStatus = Constant.PENDING_POST;
+                }
+                if (postStatus == Constant.EMPTY_CHOICE || postStatus == Constant.EMPTY_CHOICE) {
+                    Toast.makeText(context, "you must chose a section", Toast.LENGTH_SHORT).show();
+                } else {
+                    dialogCheckedInterface.yes(checkedNum, postStatus);
+                    dismiss();
+                }
 
-                dialogCheckedInterface.yes(isDonation);
-                dismiss();
 
             }
         });

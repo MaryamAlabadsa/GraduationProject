@@ -42,7 +42,7 @@ public interface ServiceApi {
 
     @GET("post")
     Call<AllPosts> getAllPosts(
-            @Header("AuthorizatioFn") String token);
+            @Header("Authorization") String token);
 
 //    @GET("donationPosts")
 //    Call<AllDonationsPosts> getDonationPosts(
@@ -63,8 +63,9 @@ public interface ServiceApi {
     @POST("PostByCategory/{id}")
     Call<AllPosts> getPostByCategory(
             @Header("Authorization") String token
-            , @Part("category_id") RequestBody category_id,
-            @Path("id") int id
+            , @Part("category_id") RequestBody category_id
+            , @Path("id") int checkedId
+            , @Part("postStatus") RequestBody postStatus
             , @Query("page") int page
             , @Query("limit") int limit
     );
@@ -73,6 +74,7 @@ public interface ServiceApi {
     Call<AllPosts> getPostDividedByIsDonation(
             @Header("Authorization") String token,
             @Path("id") int id
+            , @Query("postStatus") int postStatus
             , @Query("page") int page
             , @Query("limit") int limit);
 
@@ -171,7 +173,30 @@ public interface ServiceApi {
 
     @DELETE("order/{id}")
     Call<MessageResponse> deleteOrder(@Path("id") int id, @Header("Authorization") String token);
-   @POST("UpdateUserName")
-    Call<RegisterResponse> updateUserName( @Header("Authorization") String token , @Query("name") String name);
 
+    @POST("UpdateUserName")
+    Call<RegisterResponse> updateUserName(@Header("Authorization") String token, @Query("name") String name);
+
+    @DELETE("post/{id}")
+    Call<MessageResponse> deletePost(@Path("id") int id, @Header("Authorization") String token);
+
+    @POST("restorePost/{id}")
+    Call<MessageResponse> restorePost(@Path("id") int id, @Header("Authorization") String token);
+
+    @POST("restoreOrder/{id}")
+    Call<MessageResponse> restoreOrder(@Path("id") int id, @Header("Authorization") String token);
+
+    @PUT("order/{id}")
+    Call<MessageResponse> editOrder(@Path("id") int id
+            , @Header("Authorization") String token
+            , @Part("post_id") RequestBody post_id
+            , @Part("massage") RequestBody massage);
+
+    @Multipart
+    @POST("searchPost")
+    Call<AllPosts> searchPost(@Part("is_donation") RequestBody postDonation,
+                              @Part("category") RequestBody postCategory,
+                              @Part("AllPosts") RequestBody postStatus,
+                              @Part("data") RequestBody postData,
+                              @Header("Authorization") String token);
 }

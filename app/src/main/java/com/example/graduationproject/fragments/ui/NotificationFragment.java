@@ -8,6 +8,8 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -76,10 +79,17 @@ public class NotificationFragment extends BaseFragment {
         fragment.setArguments(args);
         return fragment;
     }
-
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(true);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -96,7 +106,7 @@ public class NotificationFragment extends BaseFragment {
         //event bus
         EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ALL_POSTS, TAG));
 
-        showDialog();
+        //showDialog();
         getNotification();
         return view;
     }
@@ -117,11 +127,11 @@ public class NotificationFragment extends BaseFragment {
                     binding.tv.setVisibility(View.GONE);
                     binding.rvNotification.setVisibility(View.VISIBLE);
                     setNotificationRv(response.body().getData());
-                    progressDialog.dismiss();
+                    //progressDialog.dismiss();
 
 
                 } else {
-                    progressDialog.dismiss();
+                    //progressDialog.dismiss();
 
 
                     String errorMessage = parseError(response);
@@ -164,7 +174,7 @@ public class NotificationFragment extends BaseFragment {
             public void layout(String postId, String userId) {
                 if (postId != null) {
 
-                    showDialog();
+                    //showDialog();
                     getPostDetails(postId);
                 } else if (userId != null) {
 //                    switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(Integer.parseInt(user_id_notifaction)));
@@ -245,7 +255,7 @@ public class NotificationFragment extends BaseFragment {
             orderText.setVisibility(View.GONE);
 
         }
-        progressDialog.dismiss();
+        //progressDialog.dismiss();
 
 
         bottomSheetDialog.show();

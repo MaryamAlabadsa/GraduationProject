@@ -11,6 +11,7 @@ import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.ImageSliderLayoutItemBinding;
 import com.example.graduationproject.databinding.ImagesPostItemBinding;
 import com.example.graduationproject.databinding.LayoutPostItemBinding;
+import com.example.graduationproject.listener.SliderInterface;
 import com.example.graduationproject.model.SliderItem;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 
@@ -22,9 +23,11 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
 
     private Context context;
     private List<String> mSliderItems = new ArrayList<>();
+    SliderInterface sliderInterface;
 
-    public SliderAdapter(Context context) {
+    public SliderAdapter(Context context,SliderInterface sliderInterface) {
         this.context = context;
+        this.sliderInterface=sliderInterface;
     }
 
     public void renewItems(List<String> sliderItems) {
@@ -69,6 +72,8 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sliderInterface.layout();
+//                Toast.makeText(context, "jjjjuj", Toast.LENGTH_SHORT).show();
             }
         });
     }

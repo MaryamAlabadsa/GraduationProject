@@ -17,7 +17,10 @@ import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.LayoutPostItemBinding;
 import com.example.graduationproject.listener.PostAddOrderInterface;
 import com.example.graduationproject.listener.PostDetialsInterface;
+import com.example.graduationproject.listener.PostImageShowInterface;
+import com.example.graduationproject.listener.PostMenuInterface;
 import com.example.graduationproject.listener.PostRemoveOrderInterface;
+import com.example.graduationproject.listener.SliderInterface;
 import com.example.graduationproject.listener.UserIdtRequestInterface;
 import com.example.graduationproject.model.SliderItem;
 import com.example.graduationproject.retrofit.post.Post;
@@ -37,24 +40,35 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     PostAddOrderInterface addOrderInterface;
     PostRemoveOrderInterface removeOrderInterface;
     UserIdtRequestInterface userIdtRequestInterface;
-PostDetialsInterface postDetialsInterface;
+    PostDetialsInterface postDetialsInterface;
+    PostImageShowInterface postImageShowInterface;
+    PostMenuInterface postMenuInterface;
 
     public PostsAdapter(Context context,
                         PostDetialsInterface postDetialsInterface,
                         PostAddOrderInterface addOrderInterface,
                         PostRemoveOrderInterface removeOrderInterface,
-                        UserIdtRequestInterface userIdtRequestInterface) {
+                        UserIdtRequestInterface userIdtRequestInterface,
+                        PostImageShowInterface postImageShowInterface,
+                        PostMenuInterface postMenuInterface) {
         list = new ArrayList<>();
         this.context = context;
         this.postDetialsInterface = postDetialsInterface;
         this.addOrderInterface = addOrderInterface;
         this.removeOrderInterface = removeOrderInterface;
         this.userIdtRequestInterface = userIdtRequestInterface;
+        this.postImageShowInterface = postImageShowInterface;
+        this.postMenuInterface = postMenuInterface;
     }
 
 
-    public void resetItem(Post item, int position) {
-        list.add(position,item);
+    public void restoreItem(Post item, int position) {
+        list.add(position, item);
+        notifyDataSetChanged();
+    }
+    public void modifyBtn(Post item, int position) {
+        list.remove(position);
+        list.add(position, item);
         notifyDataSetChanged();
 
     }
@@ -65,8 +79,13 @@ PostDetialsInterface postDetialsInterface;
         notifyDataSetChanged();
     }
 
-    public void addToList(List<Post> myList){
+    public void addToList(List<Post> myList) {
         list.addAll(myList);
+        notifyDataSetChanged();
+    }
+
+    public void removeItem(int position) {
+        list.remove(position);
         notifyDataSetChanged();
     }
 
@@ -94,7 +113,7 @@ PostDetialsInterface postDetialsInterface;
     @Override
     public void onBindViewHolder(@NonNull PostsAdapter.MyViewHolder holder,
                                  @SuppressLint("RecyclerView") final int position) {
-        holder.binding.numberRequestsPost.setText(list.get(position).getNumberOfRequests() + " request   ");
+//        holder.binding.numberRequestsPost.setText(list.get(position).getNumberOfRequests() + " request   ");
         holder.binding.uDatePost.setText(list.get(position).getPublishedAt());
         holder.binding.uNamePost.setText("" + list.get(position).getFirstUserName());
         holder.binding.tvPostTitleImageSlider.setText("" + list.get(position).getTitle());
@@ -109,7 +128,20 @@ PostDetialsInterface postDetialsInterface;
         holder.binding.uNamePost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                userIdtRequestInterface.layout(list.get(position).getFirstUserId());
+                int user_Id;
+                if (list.get(position).getThe_owner_is_login())
+                    user_Id = 0;
+                else
+                    user_Id = list.get(position).getFirstUserId();
+
+                userIdtRequestInterface.layout(user_Id);
+            }
+        });
+        holder.binding.sliderLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "nnnn", Toast.LENGTH_SHORT).show();
+                postImageShowInterface.layout(list.get(position).getPostMedia());
             }
         });
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
@@ -118,13 +150,27 @@ PostDetialsInterface postDetialsInterface;
                 postDetialsInterface.layout(list.get(position).getId());
             }
         });
+        holder.binding.postMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                postMenuInterface.layout(list.get(position), position, holder.binding.postMenu);
+            }
+        });
 
+        if (!list.get(position).getIsHeTheOwnerOfThePost())
+            holder.binding.postMenu.setVisibility(View.INVISIBLE);
 
     }
 
+
     private void setPostImages(MyViewHolder holder, int position) {
         SliderView sliderView = holder.binding.imageSlider;
-        SliderAdapter adapter = new SliderAdapter(context);
+        SliderAdapter adapter = new SliderAdapter(context, new SliderInterface() {
+            @Override
+            public void layout() {
+                postImageShowInterface.layout(list.get(position).getPostMedia());
+            }
+        });
 
         sliderView.setSliderAdapter(adapter);
 
@@ -137,6 +183,7 @@ PostDetialsInterface postDetialsInterface;
         sliderView.setIndicatorUnselectedColor(context.getColor(R.color.colorPrimaryDark));
         sliderView.setScrollTimeInSec(4); //set scroll delay in seconds :
         sliderView.startAutoCycle();
+
     }
 
     private void setOrderButton(MyViewHolder holder, int position) {
@@ -144,7 +191,7 @@ PostDetialsInterface postDetialsInterface;
             holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    addOrderInterface.layout(list.get(position),position);
+                    addOrderInterface.layout(list.get(position), position);
                     notifyDataSetChanged();
                 }
             });
@@ -157,7 +204,7 @@ PostDetialsInterface postDetialsInterface;
                 holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        removeOrderInterface.layout(list.get(position),position);
+                        removeOrderInterface.layout(list.get(position), position);
                         notifyDataSetChanged();
                     }
                 });
@@ -165,7 +212,7 @@ PostDetialsInterface postDetialsInterface;
                 holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        addOrderInterface.layout(list.get(position),position);
+                        addOrderInterface.layout(list.get(position), position);
                         notifyDataSetChanged();
 
                     }
@@ -177,11 +224,11 @@ PostDetialsInterface postDetialsInterface;
 
     private void setPostStatus(MyViewHolder holder, int position) {
         if (list.get(position).getSecondUserName().equals("not found")) {
-            holder.binding.postStatus.setBackgroundColor(Color.WHITE);
+//            holder.binding.postStatus.setBackgroundColor(Color.WHITE);
             holder.binding.postStatus.setTextColor(Color.RED);
             holder.binding.postStatus.setText("Pending");
         } else {
-            holder.binding.postStatus.setBackgroundColor(Color.red(0));
+//            holder.binding.postStatus.setBackgroundColor(Color.red(0));
             holder.binding.postStatus.setTextColor(context.getColor(R.color.colorAccent));
             holder.binding.postStatus.setText("completed");
         }

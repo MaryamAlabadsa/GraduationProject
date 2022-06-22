@@ -18,6 +18,7 @@ import com.example.graduationproject.retrofit.register.RegisterResponse;
 import com.example.graduationproject.retrofit.register.User;
 import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
+import com.example.graduationproject.utils.UtilMethods;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -45,10 +46,17 @@ public class SignInActivity extends BaseActivity {
 //        Objects.requireNonNull(getSupportActionBar()).hide();
         serviceApi = Creator.getClient().create(ServiceApi.class);
         sharedPreferences = new AppSharedPreferences(getApplicationContext());
-
+//        binding.loginBtn.setShouldStartLoadingOnClick(true);
+//        LottieProgressDialog lottieProgressDialog=new LottieProgressDialog(context,true
+//                ,null,null
+//                ,null,null
+//                ,LottieProgressDialog.SAMPLE_2,"loading...",1);
+//        lottieProgressDialog.show();
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                binding.loginBtn.setReverseEffectEnabled(true);
+
                 String deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
                 String email = binding.email.getText().toString().trim();
                 String password = binding.password.getText().toString();
@@ -57,7 +65,9 @@ public class SignInActivity extends BaseActivity {
                 sendLogin.setPassword(password);
                 sendLogin.setFcm_token(deviceToken);/** GET List Resources **/
                 if (email != null && password != null) {
-                    showDialog();
+                    //showDialog();
+                    UtilMethods.launchLoadingLottieDialog(context);
+
                     login(sendLogin);
                 }
             }
@@ -72,13 +82,6 @@ public class SignInActivity extends BaseActivity {
             }
         });
 
-
-//        binding.forgetPasswordBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(SignInActivity.this, ChangePasswordFragment.class);
-//                startActivity(intent);            }
-//        });
     }
 
     private void login(SendLogin sendLogin) {
@@ -98,19 +101,23 @@ public class SignInActivity extends BaseActivity {
                     sharedPreferences.writeString(AppSharedPreferences.USER, userString);
                     sharedPreferences.writeString(AppSharedPreferences.AUTHENTICATION, response.body().getData().getToken());
                     startActivity(new Intent(context, MainActivity.class));
+                    finish();
                 } else {
                     String errorMessage = parseError2(response);
                     Toast.makeText(SignInActivity.this, errorMessage + "", Toast.LENGTH_SHORT).show();
                     binding.email.setError(errorMessage);
-                    progressDialog.dismiss();
+//                    binding.loginBtn.setReverseEffectEnabled(false);
+                    //progressDialog.dismiss();
                     Log.e("errorMessage", errorMessage + "");
+                    UtilMethods.launchLoadingLottieDialogDismiss(context);
+
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<RegisterResponse> call, @NonNull Throwable t) {
                 Log.e("onFailure", t.getMessage() + "");
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
                 Toast.makeText(SignInActivity.this, t.getMessage() + "", Toast.LENGTH_SHORT).show();
                 call.cancel();
             }
@@ -119,11 +126,13 @@ public class SignInActivity extends BaseActivity {
 
     public String parseError2(Response<?> response) {
         String errorMsg = null;
+        JSONArray jsonArray;
         try {
             assert response.errorBody() != null;
             JSONObject jsonObject = new JSONObject(response.errorBody().string());
             JSONObject jsonObject2 = jsonObject.getJSONObject("errors");
-            JSONArray jsonArray = jsonObject2.getJSONArray("email");
+             jsonArray = jsonObject2.getJSONArray("email");
+//             jsonArray = jsonObject2.getJSONArray("password");
             return jsonArray.getString(0);
         } catch (Exception ignored) {
             Log.e(errorMsg, ignored.getMessage() + "");

@@ -1,29 +1,48 @@
 package com.example.graduationproject.fragments.ui;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.activities.MainActivity;
 import com.example.graduationproject.adapters.CategoryAdapter;
+import com.example.graduationproject.adapters.PostsAdapter;
 import com.example.graduationproject.adapters.ProfilePostsAdapter;
+import com.example.graduationproject.database.DatabaseClient;
 import com.example.graduationproject.databinding.FragmentProfileBinding;
 import com.example.graduationproject.dialog.Dialoginterface;
 import com.example.graduationproject.dialog.MyDialogAddOrder;
@@ -33,6 +52,10 @@ import com.example.graduationproject.fragments.MyTitleEventBus;
 import com.example.graduationproject.fragments.PagesFragment;
 import com.example.graduationproject.listener.CategoryInterface;
 import com.example.graduationproject.listener.PostAddOrderInterface;
+import com.example.graduationproject.listener.PostDetialsInterface;
+import com.example.graduationproject.listener.PostImageShowInterface;
+import com.example.graduationproject.listener.PostMenuInterface;
+import com.example.graduationproject.listener.PostProfileMenuInterface;
 import com.example.graduationproject.listener.PostRemoveOrderInterface;
 import com.example.graduationproject.listener.UserIdtRequestInterface;
 import com.example.graduationproject.model.PostOrdersInfo;
@@ -47,15 +70,26 @@ import com.example.graduationproject.retrofit.register.User;
 import com.example.graduationproject.retrofit.request.Order;
 import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
+import com.example.graduationproject.utils.FileUtil;
+import com.example.graduationproject.utils.UtilMethods;
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+import com.kodmap.app.library.PopopDialogBuilder;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import es.dmoral.toasty.Toasty;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,15 +101,18 @@ import retrofit2.Response;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends BaseFragment implements View.OnClickListener {
+    private static final String TAG = "ProfileFragment";
     Context context;
     FragmentProfileBinding binding;
     private static final String ARG_PARAM1 = "param1";
     private FragmentSwitcher fragmentSwitcher;
     MyDialogAddOrder myDialogAddOrder;
     ProfilePostsAdapter adapter;
-
+    Dialog imageDialog;
+    Bitmap bitmap;
     // TODO: Rename and change types of parameters
     private int userId;
+    private SweetAlertDialog pDialog;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -106,15 +143,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         context = getActivity();
-//        view.setVisibility(View.GONE);
         EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.PROFILE, "profile"));
-
-        binding.progressBar.setVisibility(View.VISIBLE);
-        binding.progressBar.getProgress();
         serviceApi = Creator.getClient().create(ServiceApi.class);
         sharedPreferences = new AppSharedPreferences(getActivity().getApplicationContext());
         token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
-         getProfileData();
+        getProfileData();
         binding.btnDonationPost.setOnClickListener(this::onClick);
         binding.btnRequestPost.setOnClickListener(this::onClick);
         binding.editUserName.setOnClickListener(this::onClick);
@@ -134,18 +167,19 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void getProfileData() {
         if (userId == 0) {
-//            Toast.makeText(context, "my profie", Toast.LENGTH_SHORT).show();
+            changeUserImage();
             setMyProfileInfo();
         } else {
+            binding.changeProfileImageBtn.setVisibility(View.INVISIBLE);
             setUserProfileInfo();
         }
     }
-
 
     private void setMyProfileInfo() {
 
         Call<UserProfileInfo> call = serviceApi.getMyProfileInfo("Bearer " + token);
         call.enqueue(new Callback<UserProfileInfo>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(Call<UserProfileInfo> call, Response<UserProfileInfo> response) {
                 Log.d("response1 code", response.code() + "");
@@ -154,7 +188,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     Toast.makeText(context, "mu info", Toast.LENGTH_SHORT).show();
                     Log.d("Success", new Gson().toJson(response.body()));
                     Glide.with(context).load(response.body().getData().getUserImage()).circleCrop()
-                            .placeholder(R.drawable.ic_launcher_foreground).into(binding.profileImage);
+                            .placeholder(R.drawable.usericon).into(binding.profileImage);
                     binding.userNameText.setText(response.body().getData().getUserName());
                     binding.tvDonationPostsNum.setText(response.body().getData().getNumDonationPost() + "");
                     binding.tvRequestPostsNum.setText(response.body().getData().getNumRequestPost() + "");
@@ -186,7 +220,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     Glide.with(context).load(response.body().getData().getUserImage()).circleCrop()
-                            .placeholder(R.drawable.ic_launcher_foreground).into(binding.profileImage);
+                            .placeholder(R.drawable.usericon).into(binding.profileImage);
                     binding.userNameText.setText(response.body().getData().getUserName());
                     binding.tvDonationPostsNum.setText(response.body().getData().getNumDonationPost() + "");
                     binding.tvRequestPostsNum.setText(response.body().getData().getNumRequestPost() + "");
@@ -216,8 +250,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     setRvData(response.body().getData().getPostsList());
-                    binding.getRoot().setVisibility(View.VISIBLE);
-                    binding.progressBar.setVisibility(View.GONE);
+                    binding.containerAll.setVisibility(View.VISIBLE);
+                    binding.shimmerView.setVisibility(View.GONE);
                 } else {
 //                    String errorMessage
 //                    = parseError(response);
@@ -243,8 +277,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     setRvData(response.body().getData().getPostsList());
-                    binding.progressBar.setVisibility(View.GONE);
-                    binding.getRoot().setVisibility(View.VISIBLE);
 
                 } else {
 //                    String errorMessage
@@ -271,9 +303,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     setRvData(response.body().getData().getPostsList());
-                    binding.progressBar.setVisibility(View.GONE);
-                    binding.getRoot().setVisibility(View.VISIBLE);
-
+                    binding.containerAll.setVisibility(View.VISIBLE);
+                    binding.shimmerView.setVisibility(View.GONE);
                 } else {
 //                    String errorMessage
 //                    = parseError(response);
@@ -299,8 +330,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     setRvData(response.body().getData().getPostsList());
-                    binding.progressBar.setVisibility(View.GONE);
-                    binding.getRoot().setVisibility(View.VISIBLE);
+//                    binding.progressBar.setVisibility(View.GONE);
+//                    binding.getRoot().setVisibility(View.VISIBLE);
 
                 } else {
 //                    String errorMessage
@@ -321,15 +352,21 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 context, RecyclerView.VERTICAL, false);
         binding.rvPosts.setLayoutManager(layoutManager);
-        adapter = new ProfilePostsAdapter(context, new PostAddOrderInterface() {
+
+        adapter = new ProfilePostsAdapter(context, new PostDetialsInterface() {
+            @SuppressLint("CheckResult")
+            @Override
+            public void layout(int id) {
+
+                UtilMethods.getPostDetails(id, context, serviceApi, token);
+
+            }
+        }, new PostAddOrderInterface() {
             @Override
             public void layout(Post post, int position) {
                 if (post.getIsHeTheOwnerOfThePost()) {
-                    PostOrdersInfo info = new PostOrdersInfo(post.getId(),
-                            post.getIsCompleted(),
-                            post.getIsDonation(),
-                            post.getSecondUserId());
-                    fragmentSwitcher.switchFragment(PagesFragment.POST_ORDERS, info);
+                    PostOrdersInfo info = new PostOrdersInfo(post.getId(), post.getIsCompleted(), post.getIsDonation(), post.getSecondUserId());
+                    fragmentSwitcher.switchFragment(PagesFragment.POST_ORDERS, info, null);
                 } else {
                     createDialog(post.getId(), post, position);
                     myDialogAddOrder.show();
@@ -339,14 +376,35 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         }, new PostRemoveOrderInterface() {
             @Override
             public void layout(Post post, int position) {
+                //showDialog();
                 RemoveRequest(post.getOrderId(), post, position);
             }
         }, new UserIdtRequestInterface() {
             @Override
             public void layout(int userId) {
-                fragmentSwitcher.switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(userId));
+                fragmentSwitcher.switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(userId), null);
+            }
+        }, new PostImageShowInterface() {
+            @Override
+            public void layout(List<String> images) {
+                postImageDialog(images);
+                imageDialog.show();
+
+
+            }
+        }, new PostProfileMenuInterface() {
+            @Override
+            public void layoutPost(PostsList post, int position, View v) {
+                showPopupMenuForPost(v, post, post.getId(), position);
+            }
+
+            @Override
+            public void layoutOrder(PostsList post, int position, View v) {
+//                Toast.makeText(context, post.getId() + "", Toast.LENGTH_SHORT).show();
+                showPopupMenuForOrder(v, post, post.getId(), position);
             }
         });
+
         adapter.setList(data);
         binding.rvPosts.setAdapter(adapter);
     }
@@ -365,6 +423,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     getMyDonationPosts();
                 else
                     getUserDonationPosts(userId);
+                adapter.clearItems();
                 Animation anim2 = AnimationUtils.loadAnimation(context, R.anim.anim2);
                 binding.lineView.startAnimation(anim2);
                 break;
@@ -374,13 +433,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     getMyRequestPosts();
                 else
                     getUserRequestPosts(userId);
+                adapter.clearItems();
                 Animation anim = AnimationUtils.loadAnimation(context, R.anim.anim);
                 binding.lineView.startAnimation(anim);
                 break;
             case R.id.edit_user_name:
                 binding.userNameText.setClickable(true);
                 binding.userNameText.setEnabled(true);
-                 binding.editUserName.setVisibility(View.GONE);
+                binding.editUserName.setVisibility(View.GONE);
                 binding.saveEditUserName.setVisibility(View.VISIBLE);
                 break;
             case R.id.save_edit_user_name:
@@ -388,7 +448,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 binding.userNameText.setEnabled(false);
                 binding.editUserName.setVisibility(View.VISIBLE);
                 binding.saveEditUserName.setVisibility(View.GONE);
-                binding.progressBar.setVisibility(View.VISIBLE);
+//                binding.progressBar.setVisibility(View.VISIBLE);
                 String newName = binding.userNameText.getText().toString();
                 updateUserName(newName);
                 break;
@@ -397,7 +457,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void updateUserName(String newName) {
         Call<RegisterResponse> call = serviceApi.updateUserName(
-                "Bearer " + token,newName
+                "Bearer " + token, newName
         );
 
         call.enqueue(new Callback<RegisterResponse>() {
@@ -406,7 +466,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
                 Log.d("response5 code", response.code() + "");
 
-                binding.progressBar.setVisibility(View.GONE);
+//                binding.progressBar.setVisibility(View.GONE);
                 Toasty.success(context, R.string.success_operation);
                 User user = response.body().getData().getUser();
                 Gson gson = new Gson();
@@ -461,12 +521,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void changeAddButton(Post post, int position) {
         post.setIsOrdered(true);
-        adapter.resetItem(post, position);
+        adapter.restoreItem(post, position);
     }
 
     private void changeRemoveButton(Post post, int position) {
         post.setIsOrdered(false);
-        adapter.resetItem(post, position);
+        adapter.restoreItem(post, position);
     }
 
     private void RemoveRequest(int order_id, Post post, int position) {
@@ -481,7 +541,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
                 Log.d("response5 code", response.code() + "");
                 changeRemoveButton(post, position);
-                binding.progressBar.setVisibility(View.GONE);
+//                binding.progressBar.setVisibility(View.GONE);
                 Toasty.success(context, R.string.success_operation);
 
             }
@@ -495,7 +555,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void createDialog(int id, Post post, int position) {
-        myDialogAddOrder = new MyDialogAddOrder(context, new Dialoginterface() {
+        myDialogAddOrder = new MyDialogAddOrder(context, "", new Dialoginterface() {
             @Override
             public void yes(String massage) {
                 AddRequest(id, massage, post, position);
@@ -504,5 +564,511 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         });
 
     }
+
+    private void postImageDialog(List<String> url_list) {
+        imageDialog = new PopopDialogBuilder(context)
+                // Set list like as option1 or option2 or option3
+                .setList(url_list, 0)
+                // or setList with initial position that like .setList(list,position)
+                // Set dialog header color
+                .setHeaderBackgroundColor(android.R.color.holo_blue_light)
+                // Set dialog background color
+                .setDialogBackgroundColor(R.color.color_dialog_bg)
+                // Set close icon drawable
+                .setCloseDrawable(R.drawable.ic_close_white_24dp)
+                // Set loading view for pager image and preview image
+//            .setLoadingView(R.layout.loading_view)
+                // Set dialog style
+//            .setDialogStyle(R.style.DialogStyle)
+                // Choose selector type, indicator or thumbnail
+                .showThumbSlider(true)
+                // Set image scale type for slider image
+                .setSliderImageScaleType(ImageView.ScaleType.FIT_XY)
+                // Set indicator drawable
+//            .setSelectorIndicator(R.drawable.sample_indicator_selector)
+                // Enable or disable zoomable
+                .setIsZoomable(true)
+                // Build Km Slider Popup Dialog
+                .build();
+    }
+
+
+    // change user image
+    File file;
+
+    private void changeUserImage() {
+        binding.editUserImage.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                boolean pick = true;
+                if (pick == true) {
+                    if (!checkCameraPermission()) {
+                        requestCameraPermission();
+                    } else
+                        new ImagePicker.Builder(getActivity())
+                                .crop(83, 100)                    //Crop image(Optional), Check Customization for more option
+                                .compress(1024)            //Final image size will be less than 1 MB(Optional)
+                                .maxResultSize(233, 280)    //Final image resolution will be less than 1080 x 1080(Optional)
+                                .start();
+
+                } else {
+                    if (!checkStoragePermission()) {
+                        requestStoragePermission();
+                    } else new ImagePicker.Builder(getActivity())
+                            .crop(83, 100)                    //Crop image(Optional), Check Customization for more option
+                            .compress(1024)            //Final image size will be less than 1 MB(Optional)
+                            .maxResultSize(233, 280)    //Final image resolution will be less than 1080 x 1080(Optional)
+                            .start();
+
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        new ImagePicker.Builder(this)
+                .crop(83, 100)                    //Crop image(Optional), Check Customization for more option
+                .compress(1024)            //Final image size will be less than 1 MB(Optional)
+                .maxResultSize(233, 280)    //Final image resolution will be less than 1080 x 1080(Optional)
+                .start();
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestStoragePermission() {
+        requestPermissions(new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestCameraPermission() {
+        requestPermissions(new String[]{Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+    }
+
+    private boolean checkStoragePermission() {
+        boolean res2 = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
+        return res2;
+    }
+
+    private boolean checkCameraPermission() {
+        boolean res1 = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED;
+        boolean res2 = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
+        return res1 && res2;
+    }
+
+
+    private void changeUserImageRequest() {
+        //showDialog();
+        MultipartBody.Part body = null;
+        if (file != null) {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+        }
+        Call<RegisterResponse> call = serviceApi.updateUserImage("application/json", body, "Bearer " + token);
+        call.enqueue(new Callback<RegisterResponse>() {
+            @Override
+            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                Log.d("response code", response.code() + "");
+                if (response.isSuccessful() || response.code() == 200) {
+                    assert response.body() != null;
+                    User user = response.body().getData().getUser();
+                    Gson gson = new Gson();
+                    String userString = gson.toJson(user);
+                    sharedPreferences.writeString(AppSharedPreferences.USER, userString);
+                    //progressDialog.dismiss();
+                    Log.e("image link", user.getImageLink() + "");
+                    Toast.makeText(context, response.message() + "", Toast.LENGTH_SHORT).show();
+                } else {
+//                    String errorMessage = parseError2(response);
+//                    Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
+//                    //progressDialog.dismiss();
+//                    Log.e("errorMessage", errorMessage + "");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                Log.d("onFailure", t.getMessage() + "");
+                call.cancel();
+                //progressDialog.dismiss();
+            }
+        });
+    }
+
+    private void uploadImage() {
+        ImageView user_image = binding.profileImage;
+        user_image.setImageBitmap(bitmap);
+        changeUserImageRequest();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            //Image Uri will not be null for RESULT_OK
+            Uri uri = data.getData();
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
+                file = FileUtil.from(context, uri);
+                uploadImage();
+            } catch (IOException e) {
+                Log.w(TAG, "onActivityResult: CROP_IMAGE_ACTIVITY_REQUEST_CODE => ", e);
+            }
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+            Toast.makeText(context, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Task Cancelled", Toast.LENGTH_SHORT).show();
+        }
+
+
+        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE) {
+            Uri uri = data.getData();
+            //this is written from a fragment.
+            CropImage.activity(uri).setAspectRatio(83, 100)
+                    .setRequestedSize(233, 280)
+                    .setGuidelines(CropImageView.Guidelines.ON).start(getActivity());
+        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == Activity.RESULT_OK) {
+                Uri resultUri = result.getUri();
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), resultUri);
+                    uploadImage();
+                } catch (IOException e) {
+                    Log.w(TAG, "onActivityResult: CROP_IMAGE_ACTIVITY_REQUEST_CODE => ", e);
+                }
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                Log.w(TAG, "onActivityResult: ", error);
+            }
+        }
+    }
+
+    //-------------------------------------delete post and undo-----------------------------------------
+    private void deletePostAndUndo(PostsList post, int id, int position) {
+        createDeletePostDialog(post, id, position);
+    }
+
+    private void createDeletePostDialog(PostsList post, int id, int position) {
+        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Are you sure you ?")
+//                .setContentText("you Won't be able to recover this file!")
+                .setConfirmText("Yes,delete it!")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        UtilMethods.launchLoadingLottieDialog(context);
+                        deletePostRequest(post, id, position);
+                        sDialog.dismissWithAnimation();
+                    }
+                })
+                .show();
+    }
+
+    private void deletePostRequest(PostsList post, int id, int position) {
+        Call<MessageResponse> call = serviceApi.deletePost(id,
+                "Bearer " + token
+        );
+
+        call.enqueue(new Callback<MessageResponse>() {
+            @SuppressLint("CheckResult")
+            @Override
+            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                Log.d("response5 code", response.code() + "");
+                UtilMethods.launchLoadingLottieDialogDismiss(context);
+                removePostFromRv(post, id, position);
+            }
+
+            @SuppressLint("CheckResult")
+            @Override
+            public void onFailure(Call<MessageResponse> call, Throwable t) {
+            }
+        });
+    }
+
+    private void removePostFromRv(PostsList post, int id, int position) {
+        adapter.removeItem(position);
+        showSnakBarToUndoPost(post, id, position);
+//        UtilMethods.launchLoadingLottieDialogDismiss(context);
+    }
+
+    private void showSnakBarToUndoPost(PostsList post, int id, int position) {
+        Snackbar snackbar = Snackbar
+                .make(binding.getRoot(), "Item was removed from the list.", Snackbar.LENGTH_LONG);
+        snackbar.setAction("UNDO", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adapter.restorePost(post, position);
+                restorePostRequest(id, position);
+                UtilMethods.launchLoadingLottieDialog(context);
+            }
+        });
+
+        snackbar.setActionTextColor(Color.YELLOW);
+        snackbar.show();
+    }
+
+    private void restorePostRequest(int id, int position) {
+        Call<MessageResponse> call = serviceApi.restorePost(id,
+                "Bearer " + token
+        );
+
+        call.enqueue(new Callback<MessageResponse>() {
+            @SuppressLint("CheckResult")
+            @Override
+            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                Log.d("response5 code", response.code() + "");
+                UtilMethods.launchLoadingLottieDialogDismiss(context);
+                binding.rvPosts.scrollToPosition(position);
+            }
+
+            @SuppressLint("CheckResult")
+            @Override
+            public void onFailure(Call<MessageResponse> call, Throwable t) {
+            }
+        });
+
+    }
+
+    //-------------------------------------delete order and undo-----------------------------------------
+    private void deleteOrderAndUndo(PostsList post, int id, int position) {
+        createDeleteOrderDialog(post, id, position);
+    }
+
+    private void createDeleteOrderDialog(PostsList post, int id, int position) {
+        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Are you sure you wanna delete this order ?")
+//                .setContentText("you Won't be able to recover this file!")
+                .setConfirmText("Yes,delete it!")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        UtilMethods.launchLoadingLottieDialog(context);
+                        deleteOrderRequest(post, id, position);
+                        sDialog.dismissWithAnimation();
+                    }
+                })
+                .show();
+    }
+
+    private void deleteOrderRequest(PostsList post, int id, int position) {
+        Call<MessageResponse> call = serviceApi.deleteOrder(id,
+                "Bearer " + token
+        );
+
+        call.enqueue(new Callback<MessageResponse>() {
+            @SuppressLint("CheckResult")
+            @Override
+            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                Log.d("response5 code", response.code() + "");
+                UtilMethods.launchLoadingLottieDialogDismiss(context);
+                removeOrderFromRv(post, id, position);
+            }
+
+            @SuppressLint("CheckResult")
+            @Override
+            public void onFailure(Call<MessageResponse> call, Throwable t) {
+            }
+        });
+    }
+
+    private void removeOrderFromRv(PostsList post, int id, int position) {
+        adapter.removeItem(position);
+        showSnakBarToUndoOrder(post, id, position);
+    }
+
+    private void showSnakBarToUndoOrder(PostsList post, int id, int position) {
+        Snackbar snackbar = Snackbar
+                .make(binding.getRoot(), "Item was removed from the list.", Snackbar.LENGTH_LONG);
+        snackbar.setAction("UNDO", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adapter.restorePost(post, position);
+                restoreOrderRequest(id, position);
+                UtilMethods.launchLoadingLottieDialog(context);
+            }
+        });
+
+        snackbar.setActionTextColor(Color.YELLOW);
+        snackbar.show();
+    }
+
+    private void restoreOrderRequest(int id, int position) {
+        Call<MessageResponse> call = serviceApi.restoreOrder(id,
+                "Bearer " + token
+        );
+
+        call.enqueue(new Callback<MessageResponse>() {
+            @SuppressLint("CheckResult")
+            @Override
+            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                Log.d("response5 code", response.code() + "");
+                UtilMethods.launchLoadingLottieDialogDismiss(context);
+                binding.rvPosts.scrollToPosition(position);
+            }
+
+            @SuppressLint("CheckResult")
+            @Override
+            public void onFailure(Call<MessageResponse> call, Throwable t) {
+            }
+        });
+    }
+    //----------------------------------show pop up menu ------------------------------
+
+    @SuppressLint("RestrictedApi")
+    public void showPopupMenuForPost(View v, PostsList post, int id, int position) {
+        PopupMenu menu = new PopupMenu(context, v);
+        menu.inflate(R.menu.post_menu);
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.delete_post) {
+                    deletePostAndUndo(post, id, position);
+                } else if (item.getItemId() == R.id.edit_post) {
+                    Gson gson = new Gson();
+                    String postString = gson.toJson(post);
+                    EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.EDIT, postString));
+
+                }
+                return true;
+            }
+        });
+
+        MenuPopupHelper menuHelper = new MenuPopupHelper(context, (MenuBuilder) menu.getMenu(), v);
+        menuHelper.setForceShowIcon(true);
+        menuHelper.show();
+    }
+
+    @SuppressLint("RestrictedApi")
+    public void showPopupMenuForOrder(View v, PostsList post, int id, int position) {
+        PopupMenu menu = new PopupMenu(context, v);
+        menu.inflate(R.menu.post_menu);
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.delete_post) {
+                    deleteOrderAndUndo(post, id, position);
+                } else if (item.getItemId() == R.id.edit_post) {
+                    createEditOrderDialog(id, post, position);
+                }
+                return true;
+            }
+        });
+
+        MenuPopupHelper menuHelper = new MenuPopupHelper(context, (MenuBuilder) menu.getMenu(), v);
+        menuHelper.setForceShowIcon(true);
+        menuHelper.show();
+    }
+
+    //------------------------------edit order ------------------------------------------------------
+    private void createEditOrderDialog(int id, PostsList post, int position) {
+        myDialogAddOrder = new MyDialogAddOrder(context, post.getMassage(), new Dialoginterface() {
+            @Override
+            public void yes(String massage) {
+                EditRequest(id, post.getPost().getId(), massage, post, position);
+                myDialogAddOrder.dismiss();
+                pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+                pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
+                pDialog.setTitleText("Loading ...");
+                pDialog.setCancelable(true);
+                pDialog.show();
+            }
+        });
+    }
+
+    private void EditRequest(int id_order, int id_post, String massage, PostsList post, int position) {
+
+        RequestBody post_id = RequestBody.create(MediaType.parse("multipart/form-data"), id_post + "");
+        RequestBody mPost = RequestBody.create(MediaType.parse("multipart/form-data"), massage);
+
+        Call<MessageResponse> call = serviceApi.editOrder(id_order,
+                "Bearer " + token
+                , post_id
+                , mPost);
+
+        call.enqueue(new Callback<MessageResponse>() {
+            @Override
+            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                Log.d("response5 code", response.code() + "");
+//                changeAddButton(post, position);
+                myDialogAddOrder.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<MessageResponse> call, Throwable t) {
+                t.getMessage();
+                myDialogAddOrder.dismiss();
+            }
+        });
+    }
+
+
+//    private void storeInOrdersTable(List<Post> posts) {
+//        Log.e("read1", "read1");
+//
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.e("read1", "read1");
+//
+//
+//                long[] i = DatabaseClient.getInstance(context)
+//                        .getAppDatabase()
+//                        .postDao()
+//                        .insertToPostList(posts);
+//                Log.e("inserst " + i, "Inserted");
+//            }
+//        });
+//        thread.start();
+//    }
+//
+//    private void clearDataFromTable() {
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                DatabaseClient.getInstance(context)
+//                        .getAppDatabase()
+//                        .postDao()
+//                        .clearAllData();
+//                Log.e("clearAllData ", "Done");
+//
+//            }
+//        });
+//        thread.start();
+//    }
+//
+//    private void readFromOrdersTable() {
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                List<Post> ordersList = DatabaseClient
+//                        .getInstance(context)
+//                        .getAppDatabase()
+//                        .postDao()
+//                        .readAll();
+//                Log.e("read2", ordersList.size() + "");
+//                if (ordersList.size() != 0) {
+//                    //this code is to run my code in main thread
+//                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            adapter.addToList(ordersList);
+//                        }
+//                    });
+//                }
+//            }
+//        });
+//        thread.start();
+//    }
+
 
 }

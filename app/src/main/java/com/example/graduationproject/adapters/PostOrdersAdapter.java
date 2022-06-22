@@ -54,6 +54,10 @@ public class PostOrdersAdapter extends RecyclerView.Adapter<PostOrdersAdapter.My
         list.add(position, item);
         notifyDataSetChanged();
     }
+    public void clearData() {
+        list.clear();
+        notifyDataSetChanged();
+    }
 
     public void removeItem(int position) {
         list.remove(position);

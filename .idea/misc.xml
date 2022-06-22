@@ -105,18 +105,23 @@
         <entry key="..\:/Users/ucas/Desktop/GraduationProject/app/src/main/res/layout/spinner_dropdown.xml" value="0.1796875" />
         <entry key="..\:/Users/ucas/Desktop/GraduationProject/app/src/main/res/menu/nav_menu.xml" value="0.1796875" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/drawable-v24/toollbar_background_shape.xml" value="0.1645" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/drawable/add.xml" value="0.1425" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/drawable/btn_shape.xml" value="0.1645" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/drawable/button.xml" value="0.144" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/drawable/button_complete.xml" value="0.1415" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/drawable/button_profile1.xml" value="0.144" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/drawable/button_profile2.xml" value="0.22" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/drawable/cardradius.xml" value="0.1425" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/drawable/ic_edit.xml" value="0.1395" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/drawable/notification_view_shape.xml" value="0.1645" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/drawable/notification_view_shape_red.xml" value="0.128" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/drawable/profile_shape1.xml" value="0.189" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/drawable/profile_shape1_placeholder.xml" value="0.1425" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/drawable/progress_bg.xml" value="0.1395" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/drawable/shape_blue_circle.xml" value="0.1645" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/activity_change_password.xml" value="0.1503623188405797" />
-        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/activity_search.xml" value="0.17481884057971014" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/activity_sign_in.xml" value="0.2" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/activity_sign_up.xml" value="0.2" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/activity_splash.xml" value="0.22447916666666667" />
@@ -129,6 +134,7 @@
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/fragment_notification.xml" value="0.22447916666666667" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/fragment_post_orders.xml" value="0.1" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/fragment_profile.xml" value="0.22" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/fragment_search.xml" value="0.17481884057971014" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/image_slider_layout_item.xml" value="0.14673913043478262" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/images_post_item.xml" value="0.14673913043478262" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/layout_dialog_add_order.xml" value="0.22447916666666667" />
@@ -139,11 +145,16 @@
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/layout_post_order.xml" value="0.19610507246376813" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/layout_profile_post_item.xml" value="0.22447916666666667" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/layout_toolbar.xml" value="0.22" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/my_home_placeholder.xml" value="0.10916919959473151" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/my_post_placeholder.xml" value="0.182518115942029" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/my_profile_placeholder.xml" value="0.182518115942029" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/nav_haede.xml" value="0.19610507246376813" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/nav_header.xml" value="0.19610507246376813" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/nav_layout.xml" value="0.19610507246376813" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/post_item.xml" value="0.14175724637681159" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/menu/nav_menu.xml" value="0.22447916666666667" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/menu/post_menu.xml" value="0.2203125" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/menu/search_menu.xml" value="0.1" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1045" />
       </map>
     </option>

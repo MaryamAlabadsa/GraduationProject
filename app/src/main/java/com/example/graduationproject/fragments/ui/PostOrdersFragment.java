@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -47,6 +49,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -63,15 +66,19 @@ public class PostOrdersFragment extends BaseFragment {
     FragmentPostOrdersBinding binding;
     PostOrdersAdapter adapter;
     private FragmentSwitcher fragmentSwitcher;
-
+    SweetAlertDialog pDialog;
     // TODO: Rename and change types of parameters
-    private int postId,secondUser;
-    private Boolean isCompleted,isDonation;
+    private int postId, secondUser;
+    private Boolean isCompleted, isDonation;
 
     public PostOrdersFragment() {
         // Required empty public constructor
     }
-
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+    }
     public static PostOrdersFragment newInstance(PostOrdersInfo param1) {
         PostOrdersFragment fragment = new PostOrdersFragment();
         Bundle args = new Bundle();
@@ -86,6 +93,8 @@ public class PostOrdersFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
         if (getArguments() != null) {
             postId = getArguments().getInt(ARG_PARAM1);
             secondUser = getArguments().getInt(ARG_PARAM3);
@@ -109,9 +118,9 @@ public class PostOrdersFragment extends BaseFragment {
         //event bus
         EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ALL_POSTS, "Your Order"));
 
-        showDialog();
+        //showDialog();
         getPostsOrdersRequest();
-        enableSwipeToContactAndUndo();
+        enableSwipeToContact();
         return view;
     }
 
@@ -129,7 +138,7 @@ public class PostOrdersFragment extends BaseFragment {
                     Log.d("Success", new Gson().toJson(response.body()));
                     GetAllOrder getPostOrders = response.body();
                     setOrdersRv(getPostOrders);
-                    progressDialog.dismiss();
+                    //progressDialog.dismiss();
 
 
                 } else {
@@ -157,7 +166,10 @@ public class PostOrdersFragment extends BaseFragment {
 
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
-                    fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null);
+                    fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null,null);
+                    pDialog.dismiss();
+                    adapter.clearData();
+                    getPostsOrdersRequest();
 
                 } else {
                     String errorMessage = parseError(response);
@@ -172,25 +184,24 @@ public class PostOrdersFragment extends BaseFragment {
             }
         });
     }
+
     AlertDialog.Builder builder;
 
     private void createAcceptOrderDialog(int userId) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-        builder.setMessage("")
-                        .setTitle(R.string.confirmation_message);
+        pDialog = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
+        pDialog.setTitleText("Are you sure you wanna accept this order?");
+        pDialog.changeAlertType(SweetAlertDialog.WARNING_TYPE);
+        pDialog.setCancelable(true);
 
-        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
+        pDialog.setConfirmButton("sure", new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
                 changePostStatusRequest(userId);
             }
         });
-        builder.setNegativeButton(R.string.finish, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
-        builder.show();
+        pDialog.show();
     }
 
     private void setOrdersRv(GetAllOrder order) {
@@ -203,14 +214,14 @@ public class PostOrdersFragment extends BaseFragment {
             public void layout(int userId) {
                 createAcceptOrderDialog(userId);
             }
-        },isCompleted,isDonation,secondUser);
+        }, isCompleted, isDonation, secondUser);
         adapter.setList(order.getData());
         binding.postOrdersRecycle.setAdapter(adapter);
         Log.e("rv2", order.getData().size() + "");
 
     }
 
-    private void enableSwipeToContactAndUndo() {
+    private void enableSwipeToContact() {
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(context) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {

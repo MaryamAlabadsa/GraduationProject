@@ -6,11 +6,16 @@
     android:orientation="vertical"
     android:visibility="visible">
 
-    <com.github.chrisbanes.photoview.PhotoView
+    <ImageView
         android:id="@+id/iv_auto_image_slider"
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+<!--    <com.github.chrisbanes.photoview.PhotoView-->
+<!--        android:id="@+id/iv_auto_image_slider"-->
+
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"/>-->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"

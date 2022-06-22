@@ -34,7 +34,7 @@
     <string name="orders">My Orders</string>
     <string name="finish">finish</string>
     <string name="confirm">Confirm</string>
-    <string name="confirmation_message">confirmation message</string>
+    <string name="confirmation_message">accept this order</string>
     <string name="beneficiary">beneficiary</string>
     <string name="donor">Donor</string>
     <string name="filed_operation">Failed operation</string>

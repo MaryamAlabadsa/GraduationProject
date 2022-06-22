@@ -116,6 +116,12 @@ public class Post {
     @SerializedName("published_at")
     @Expose
     private String publishedAt;
+
+    @ColumnInfo(name = "the_owner_is_login")
+    @SerializedName("the_owner_is_login")
+    @Expose
+    private Boolean the_owner_is_login;
+
     private final static long serialVersionUID = -9076844435418703799L;
 
     /**
@@ -147,27 +153,13 @@ public class Post {
         this.publishedAt = publishedAt;
     }
 
-    /**
-     * @param secondUserId
-     * @param secondUserName
-     * @param orderId
-     * @param postSecondUserEmail
-     * @param description
-     * @param title
-     * @param categoryName
-     * @param postFirstUserEmail
-     * @param firstUserId
-     * @param isHeTheOwnerOfThePost
-     * @param numberOfRequests
-     * @param firstUserName
-     * @param postMedia
-     * @param id
-     * @param isOrdered
-     * @param categoryId
-     * @param isDonation
-     * @param firstUserImageLink
-     * @param isCompleted
-     */
+    public Boolean getThe_owner_is_login() {
+        return the_owner_is_login;
+    }
+
+    public void setThe_owner_is_login(Boolean the_owner_is_login) {
+        this.the_owner_is_login = the_owner_is_login;
+    }
 
     public Integer getId() {
         return id;

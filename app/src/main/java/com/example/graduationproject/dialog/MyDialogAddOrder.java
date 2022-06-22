@@ -8,6 +8,7 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+
 import android.graphics.Color;
 
 import androidx.core.content.ContextCompat;
@@ -24,10 +25,12 @@ public class MyDialogAddOrder extends Dialog {
     LayoutDialogAddOrderBinding binding;
     Context context;
     Dialoginterface dialoginterface;
+    String massage;
 
-    public MyDialogAddOrder(Context context, Dialoginterface dialoginterface) {
+    public MyDialogAddOrder(Context context, String massage, Dialoginterface dialoginterface) {
         super(context, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
         this.context = context;
+        this.massage = massage;
         this.dialoginterface = dialoginterface;
     }
 
@@ -40,41 +43,18 @@ public class MyDialogAddOrder extends Dialog {
         setContentView(binding.getRoot());
 
         this.getWindow().setStatusBarColor(ContextCompat.getColor(context, R.color.coustom_blue)); //change status bar background
-
+        binding.addOrderEt.setText(massage);
 
         binding.cancelButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Are you sure to cancel it ?")
-                        .setCancelButton("Cancel", new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sDialog) {
-                                sDialog.dismissWithAnimation();
-                            }
-                        })
-                        .show();
+                dismiss();
             }
         });
 
-//        binding.addOrderBtn.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                if (validation()!=null) {
-//                    SweetAlertDialog pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
-//                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
-//                    pDialog.setTitleText("Loading ...");
-//                    pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-//                    pDialog.setCancelable(true);
-//                    dialoginterface.yes(validation());
-//                    pDialog.show();
-//
-//                }
-//            }
-//        });
-
-        binding.addOrderBtn.setOnClickListener(new View.OnClickListener() {
+        binding.sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validation()!=null) {
+                if (validation() != null) {
                     dialoginterface.yes(validation());
                 }
             }

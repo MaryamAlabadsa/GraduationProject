@@ -16,21 +16,42 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
-            <Button
-                android:id="@+id/post_button"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_520sdp"
-                android:layout_marginRight="@dimen/_10sdp"
-                android:background="@drawable/button_publish"
-                android:backgroundTint="@color/blue"
-                android:typeface="serif"
-                 android:text="post"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_15ssp"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/post_button"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_520sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:background="@drawable/button_publish"
+                    android:backgroundTint="@color/blue"
+                    android:text="post"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_15ssp"
+                    android:textStyle="bold"
+                    android:typeface="serif" />
+
+                <Button
+                    android:id="@+id/clear_button"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_520sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:background="@drawable/button_profile2"
+                    android:text="clear"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/_15ssp"
+                    android:textStyle="bold"
+                    android:typeface="serif" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linear1"
@@ -157,14 +178,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@null"
-                     android:hint="Title"
+                    android:hint="Title"
                     android:padding="@dimen/_5sdp"
                     android:paddingStart="@dimen/_15sdp"
                     android:textAlignment="viewStart"
                     android:textColor="@color/black"
                     android:textColorHint="@color/hint"
                     android:textSize="@dimen/_13ssp"
-                     android:typeface="serif" />
+                    android:typeface="serif" />
 
             </androidx.cardview.widget.CardView>
 
@@ -184,14 +205,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_45sdp"
                     android:background="@null"
-                     android:hint="Description"
+                    android:hint="Description"
                     android:padding="10dp"
                     android:paddingStart="@dimen/_10sdp"
                     android:textAlignment="viewStart"
                     android:textColor="@color/black"
                     android:textColorHint="@color/hint"
                     android:textSize="@dimen/_13ssp"
-                    android:typeface="serif"  />
+                    android:typeface="serif" />
 
             </androidx.cardview.widget.CardView>
 
@@ -212,7 +233,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_50sdp"
                     android:layout_marginLeft="@dimen/_5sdp"
-                    android:typeface="serif"/>
+                    android:typeface="serif" />
 
 
             </androidx.cardview.widget.CardView>
@@ -231,26 +252,25 @@
                     android:id="@+id/radio_don"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                     android:text="Donation"
+                    android:buttonTint="@color/blue"
+                    android:text="Donation"
                     android:textColor="@color/blue"
                     android:textSize="@dimen/_14ssp"
                     android:textStyle="bold"
                     android:theme="@style/mySwitch"
-                    android:typeface="serif"
-                    android:buttonTint="@color/blue" />
+                    android:typeface="serif" />
 
                 <RadioButton
                     android:id="@+id/radio_req"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                     android:text="Request"
+                    android:buttonTint="@color/blue"
+                    android:text="Request"
                     android:textColor="@color/blue"
                     android:textSize="@dimen/_14ssp"
                     android:textStyle="bold"
                     android:theme="@style/mySwitch"
-                    android:typeface="serif"
-                    android:buttonTint="@color/blue"
-                    />
+                    android:typeface="serif" />
             </RadioGroup>
 
         </RelativeLayout>

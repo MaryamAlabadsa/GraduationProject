@@ -5,13 +5,13 @@
     android:id="@+id/layoutDialogContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue_gray">
+   >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutDialog"
         android:layout_width="@dimen/_250sdp"
         android:layout_height="@dimen/_130sdp"
-        android:background="@drawable/bottom_coment"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -25,10 +25,10 @@
             android:layout_height="@dimen/_20sdp"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_6sdp"
-            android:background="@drawable/bottom_coment"
+            android:background="@drawable/bottom_felter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/delete"
+            app:srcCompat="@drawable/ic_delete"
             tools:ignore="VectorDrawableCompat" />
 
         <LinearLayout
@@ -63,14 +63,14 @@
 
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/add_order_btn"
+                    android:id="@+id/send_button"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_28sdp"
-                    android:layout_marginRight="@dimen/_10sdp"
                     android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
                     android:layout_weight="1"
                     android:background="@drawable/button_profile1"
-                    android:text="Add"
+                    android:text="Send"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_10ssp"
@@ -83,7 +83,7 @@
                     android:layout_marginLeft="@dimen/_10sdp"
                     android:layout_marginRight="@dimen/_10sdp"
                     android:layout_weight="1"
-                    android:background="@drawable/button_profile2"
+                    android:background="@drawable/button_style"
                     android:text="Cancel"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/blue"

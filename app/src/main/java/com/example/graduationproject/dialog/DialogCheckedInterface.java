@@ -1,6 +1,8 @@
 package com.example.graduationproject.dialog;
 
 
+import com.example.graduationproject.utils.Constant;
+
 public interface DialogCheckedInterface {
-    void yes(int isDonation);
+    void yes(Constant isDonation,Constant postStatus);
 }
