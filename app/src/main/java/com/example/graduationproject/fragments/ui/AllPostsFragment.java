@@ -768,7 +768,8 @@ public class AllPostsFragment extends BaseFragment {
                 } else if (item.getItemId() == R.id.edit_post) {
                     Gson gson = new Gson();
                     String postString = gson.toJson(post);
-                    EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.EDIT, postString));
+//                    EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.EDIT, postString));
+                    fragmentSwitcher.switchFragment(ADD_POSTS,null, postString);
 
 //                    openFragment(fragmentA);
 //                    fragmentSwitcher.switchFragment(ADD_POSTS,null);
@@ -911,6 +912,7 @@ public class AllPostsFragment extends BaseFragment {
         binding.lottieImg.setVisibility(View.GONE);
         binding.rvPost.setVisibility(View.VISIBLE);
     }
+
 
 
 }

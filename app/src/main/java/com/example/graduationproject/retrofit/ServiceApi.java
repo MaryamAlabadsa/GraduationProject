@@ -119,7 +119,18 @@ public interface ServiceApi {
             @Header("Authorization") String token
             , @Part("id") RequestBody id);
 
+    @Multipart
     @PUT("post/{id}")
+    Call<MessageResponse> updatePost(
+                @Path("id") int id
+            , @Header("Authorization") String token
+            , @Query("title") String title
+            , @Query("description") String description
+            , @Query("is_donation") String is_donation
+            , @Query("category_id") String category_id
+            , @Part List<MultipartBody.Part> resources);
+
+    @PUT("changePostStatus/{id}")
     Call<Post> changePostStatus(@Path("id") int id,
                                 @Header("Authorization") String token
             , @Query("second_user") int second_user);
@@ -186,11 +197,14 @@ public interface ServiceApi {
     @POST("restoreOrder/{id}")
     Call<MessageResponse> restoreOrder(@Path("id") int id, @Header("Authorization") String token);
 
+    @DELETE("deleteImage")
+    Call<MessageResponse> deleteImage(@Query("imageName") String imageName, @Header("Authorization") String token);
+
+    //    @Multipart
     @PUT("order/{id}")
     Call<MessageResponse> editOrder(@Path("id") int id
             , @Header("Authorization") String token
-            , @Part("post_id") RequestBody post_id
-            , @Part("massage") RequestBody massage);
+            , @Query("massage") String massage);
 
     @Multipart
     @POST("searchPost")

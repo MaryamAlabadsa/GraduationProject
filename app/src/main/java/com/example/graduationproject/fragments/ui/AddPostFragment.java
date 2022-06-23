@@ -7,6 +7,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
@@ -43,6 +45,8 @@ import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.post.Post;
 import com.example.graduationproject.retrofit.post.PostDetails;
 import com.example.graduationproject.retrofit.register.User;
+import com.example.graduationproject.retrofit.request.Order;
+import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
 import com.example.graduationproject.utils.FileUtil;
 import com.example.graduationproject.utils.UtilMethods;
@@ -58,6 +62,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import es.dmoral.toasty.Toasty;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -79,7 +84,7 @@ AddPostFragment extends BaseFragment {
     private static final String IMAGE3 = "image3";
     Context context;
     List<Category> categories;
-    HashMap<String, File> imagesList;
+    HashMap<String, Uri> imagesList;
     //    ArrayList<File> imagesList;
     int imageNum = 0;
     String pTitle, pDescription;
@@ -89,6 +94,7 @@ AddPostFragment extends BaseFragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private SweetAlertDialog pDialog;
 
     public AddPostFragment() {
         // Required empty public constructor
@@ -108,7 +114,7 @@ AddPostFragment extends BaseFragment {
             post = gson.fromJson(param1, Post.class);
         } else {
             post = new Post();
-            isEdit=false;
+            isEdit = false;
         }
 
         return fragment;
@@ -147,45 +153,15 @@ AddPostFragment extends BaseFragment {
 
         context = getActivity();
         categories = new ArrayList<>();
-        imagesList = new HashMap<String, File>();
+        imagesList = new HashMap<String, Uri>();
 //        post = new Post();
         getAllCategories();
         if (isEdit)
             setFields();
+        else
+            setAddImagesAction();
 
         EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ADD_POSTS, "Add Post"));
-
-        binding.imagePost1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                someActivityResultLauncher.launch(intent);
-                imageNum = 1;
-
-            }
-        });
-        binding.imagePost2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                someActivityResultLauncher.launch(intent);
-                imageNum = 2;
-            }
-        });
-        binding.imagePost3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                someActivityResultLauncher.launch(intent);
-                imageNum = 3;
-            }
-        });
 
 
         String user = sharedPreferences.readUser(AppSharedPreferences.USER);
@@ -196,6 +172,7 @@ AddPostFragment extends BaseFragment {
                     .placeholder(R.drawable.ic_launcher_foreground).into(binding.imageProfile);
             binding.userName.setText(user1.getName());
         }
+
 
         binding.postButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,7 +189,9 @@ AddPostFragment extends BaseFragment {
                         isDonation = 0;
                     if (isDonation != 2) {
                         UtilMethods.launchLoadingLottieDialog(context);
-                        addPostRequest(imagesList, pTitle, pDescription, category, isDonation);
+                        if (isEdit)
+                            editPostRequest(imagesList, pTitle, pDescription, category, isDonation);
+                        else addPostRequest(imagesList, pTitle, pDescription, category, isDonation);
                     } else {
                         Toast.makeText(context, "What is the post status?", Toast.LENGTH_SHORT).show();
                     }
@@ -227,6 +206,174 @@ AddPostFragment extends BaseFragment {
             }
         });
         return view;
+    }
+
+    private void editPostRequest(HashMap<String, Uri> imagesList, String pTitle, String pDescription, Integer category, int isDonation) {
+        List<MultipartBody.Part> resourceBody = new ArrayList<>();
+        if (imagesList.size() > 0) {
+            if (imagesList.size() == 1) {
+                if (editImages.size() == 2) {
+                    MultipartBody.Part body = null;
+                    Uri uri = imagesList.get("image" + 3);
+                    File file = null;
+                    try {
+                        file = FileUtil.from(context, uri);
+                        RequestBody requestFile =
+                                RequestBody.create(MediaType.parse("multipart/form-data")
+                                        , file);
+                        body = MultipartBody.Part.createFormData(
+                                "assets[" + 3 + "]", file.getName(), requestFile);
+                        resourceBody.add(body);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (editImages.size() == 1) {
+                    MultipartBody.Part body = null;
+                    Uri uri = imagesList.get("image" + 2);
+                    File file = null;
+                    try {
+                        file = FileUtil.from(context, uri);
+                        RequestBody requestFile =
+                                RequestBody.create(MediaType.parse("multipart/form-data")
+                                        , file);
+                        body = MultipartBody.Part.createFormData(
+                                "assets[" + 3 + "]", file.getName(), requestFile);
+                        resourceBody.add(body);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (editImages.size() == 0) {
+                    MultipartBody.Part body = null;
+                    Uri uri = imagesList.get("image" + 1);
+                    File file = null;
+                    try {
+                        file = FileUtil.from(context, uri);
+                        RequestBody requestFile =
+                                RequestBody.create(MediaType.parse("multipart/form-data")
+                                        , file);
+                        body = MultipartBody.Part.createFormData(
+                                "assets[" + 3 + "]", file.getName(), requestFile);
+                        resourceBody.add(body);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            } else if (imagesList.size() == 2) {
+                if (editImages.size() == 1) {
+                    MultipartBody.Part body = null;
+                    Uri uri = imagesList.get("image" + 2);
+                    File file = null;
+                    try {
+                        file = FileUtil.from(context, uri);
+                        RequestBody requestFile =
+                                RequestBody.create(MediaType.parse("multipart/form-data")
+                                        , file);
+                        body = MultipartBody.Part.createFormData(
+                                "assets[" + 2 + "]", file.getName(), requestFile);
+                        resourceBody.add(body);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Uri uri2 = imagesList.get("image" + 3);
+                    try {
+                        file = FileUtil.from(context, uri2);
+                        RequestBody requestFile =
+                                RequestBody.create(MediaType.parse("multipart/form-data")
+                                        , file);
+                        body = MultipartBody.Part.createFormData(
+                                "assets[" + 3 + "]", file.getName(), requestFile);
+                        resourceBody.add(body);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (editImages.size() == 0) {
+                    MultipartBody.Part body = null;
+                    Uri uri = imagesList.get("image" + 1);
+                    File file = null;
+                    try {
+                        file = FileUtil.from(context, uri);
+                        RequestBody requestFile =
+                                RequestBody.create(MediaType.parse("multipart/form-data")
+                                        , file);
+                        body = MultipartBody.Part.createFormData(
+                                "assets[" + 1 + "]", file.getName(), requestFile);
+                        resourceBody.add(body);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Uri uri2 = imagesList.get("image" + 2);
+                    try {
+                        file = FileUtil.from(context, uri2);
+                        RequestBody requestFile =
+                                RequestBody.create(MediaType.parse("multipart/form-data")
+                                        , file);
+                        body = MultipartBody.Part.createFormData(
+                                "assets[" + 2 + "]", file.getName(), requestFile);
+                        resourceBody.add(body);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            } else if (imagesList.size() == 3) {
+                for (int i = 0; i < imagesList.size(); i++) {
+                    int num = i + 1;
+                    MultipartBody.Part body = null;
+                    Uri uri = imagesList.get("image" + num);
+                    File file = null;
+                    try {
+                        file = FileUtil.from(context, uri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    RequestBody requestFile =
+                            RequestBody.create(MediaType.parse("multipart/form-data")
+                                    , file);
+                    body = MultipartBody.Part.createFormData(
+                            "assets[" + i + "]", file.getName(), requestFile);
+                    resourceBody.add(body);
+                }
+            }
+        }
+
+
+//        RequestBody title = RequestBody.create(MediaType.parse("multipart/form-data"), pTitle);
+//        RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), pDescription);
+//        RequestBody is_donation = RequestBody.create(MediaType.parse("multipart/form-data"), isDonation + "");
+//        RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), category + "");
+        Call<MessageResponse> call = serviceApi.updatePost(post.getId(), "Bearer " + token
+                , pTitle
+                , pDescription
+                , isDonation + ""
+                , category + ""
+                , resourceBody);
+        call.enqueue(new Callback<MessageResponse>() {
+            @Override
+            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                Log.d("response code", response.code() + "");
+                if (response.isSuccessful()) {
+                    Log.d("Success", new Gson().toJson(response.body()));
+                    fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null, null);
+                    UtilMethods.launchLoadingLottieDialogDismiss(context);
+
+                } else {
+                    String errorMessage = parseError(response);
+                    Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
+                    UtilMethods.launchLoadingLottieDialogDismiss(context);
+
+                    Log.e("errorMessage", errorMessage + "");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MessageResponse> call, Throwable t) {
+                Log.d("onFailure", t.getMessage() + "");
+                UtilMethods.launchLoadingLottieDialogDismiss(context);
+
+                call.cancel();
+            }
+        });
     }
 
 
@@ -244,6 +391,7 @@ AddPostFragment extends BaseFragment {
                                        int position, long id) {
                 category = categories.get(position).getId();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // TODO Auto-generated method stub
@@ -266,7 +414,7 @@ AddPostFragment extends BaseFragment {
             binding.descriptionPost.requestFocus();
             binding.descriptionPost.setError("FIELD CANNOT BE EMPTY IN DESCRIPTION");
             return "error2";
-        } else if (imagesList.isEmpty()) {
+        } else if (imagesList.isEmpty() && !isEdit) {
             AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
             alert.setTitle("ALERT");
             alert.setMessage("PLEASE UPLOAD PHOTO");
@@ -302,17 +450,24 @@ AddPostFragment extends BaseFragment {
     }
 
 
-    private void addPostRequest(HashMap<String, File> imagesList, String uTitle, String uDescription, int pCategory, int pIsDonation) {
+    private void addPostRequest(HashMap<String, Uri> imagesList, String uTitle, String uDescription, int pCategory, int pIsDonation) {
 
         List<MultipartBody.Part> resourceBody = new ArrayList<>();
         for (int i = 0; i < imagesList.size(); i++) {
             int num = i + 1;
             MultipartBody.Part body = null;
+            Uri uri = imagesList.get("image" + num);
+            File file = null;
+            try {
+                file = FileUtil.from(context, uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             RequestBody requestFile =
                     RequestBody.create(MediaType.parse("multipart/form-data")
-                            , imagesList.get("image" + num));
+                            , file);
             body = MultipartBody.Part.createFormData(
-                    "assets[" + i + "]", imagesList.get("image" + num).getName(), requestFile);
+                    "assets[" + i + "]", file.getName(), requestFile);
             resourceBody.add(body);
 
         }
@@ -384,13 +539,13 @@ AddPostFragment extends BaseFragment {
                                         binding.image1.setImageURI(data.getData());
 //                                        binding.image2.setColorFilter(ContextCompat.getColor(context, R.color.bink), android.graphics.PorterDuff.Mode.MULTIPLY);
                                         binding.imagePost2.setVisibility(View.VISIBLE);
-                                        imagesList.put(IMAGE1, file_posts);
+                                        imagesList.put(IMAGE1, data.getData());
                                     } else if (imageNum == 2) {
-                                        imagesList.put(IMAGE2, file_posts);
+                                        imagesList.put(IMAGE2, data.getData());
                                         binding.imagePost3.setVisibility(View.VISIBLE);
                                         binding.image2.setImageURI(data.getData());
                                     } else if (imageNum == 3) {
-                                        imagesList.put(IMAGE3, file_posts);
+                                        imagesList.put(IMAGE3, data.getData());
                                         binding.image3.setImageURI(data.getData());
                                     }
                                 } catch (IOException e) {
@@ -435,6 +590,8 @@ AddPostFragment extends BaseFragment {
         });
     }
 
+    //-------------------------------edit images-----------------------------------------------
+    List<String> editImages;
 
     private void setFields() {
         binding.descriptionPost.setText(post.getDescription());
@@ -443,30 +600,202 @@ AddPostFragment extends BaseFragment {
             binding.radioDon.setChecked(true);
         else
             binding.radioDon.setChecked(true);
+        editImages = post.getPostMedia();
         Toast.makeText(context, post.getPostMedia().size() + "", Toast.LENGTH_SHORT).show();
+        setEditImage();
+        setEditImagesAction(editImages);
+    }
 
-        switch (post.getPostMedia().size()) {
+    private void setEditImage() {
+        switch (editImages.size()) {
+
             case 3:
-                Glide.with(context).load(post.getPostMedia().get(0)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
-                Glide.with(context).load(post.getPostMedia().get(1)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image2);
-                Glide.with(context).load(post.getPostMedia().get(2)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image3);
-                binding.image3.setVisibility(View.VISIBLE);
-                binding.image2.setVisibility(View.VISIBLE);
+                Toast.makeText(context, "3", Toast.LENGTH_SHORT).show();
+                Glide.with(context).load(editImages.get(0)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
+                Glide.with(context).load(editImages.get(1)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image2);
+                Glide.with(context).load(editImages.get(2)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image3);
+                binding.imagePost2.setVisibility(View.VISIBLE);
+                binding.imagePost3.setVisibility(View.VISIBLE);
+                binding.delete1.setVisibility(View.VISIBLE);
+                binding.delete2.setVisibility(View.VISIBLE);
+                binding.delete3.setVisibility(View.VISIBLE);
                 break;
             case 2:
-                Glide.with(context).load(post.getPostMedia().get(0)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
-                Glide.with(context).load(post.getPostMedia().get(1)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image2);
-                binding.image3.setVisibility(View.VISIBLE);
-                binding.image2.setVisibility(View.VISIBLE);
+                Toast.makeText(context, "2", Toast.LENGTH_SHORT).show();
+                Glide.with(context).load(editImages.get(0)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
+                Glide.with(context).load(editImages.get(1)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image2);
+                Glide.with(context).load(R.drawable.add).into(binding.image3);
+                binding.imagePost3.setVisibility(View.VISIBLE);
+                binding.imagePost2.setVisibility(View.VISIBLE);
+                binding.delete1.setVisibility(View.VISIBLE);
+                binding.delete2.setVisibility(View.VISIBLE);
                 break;
             case 1:
-                Glide.with(context).load(post.getPostMedia().get(0)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
-                binding.image2.setVisibility(View.VISIBLE);
-                binding.image3.setVisibility(View.GONE);
+                Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
+                Glide.with(context).load(editImages.get(0)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
+                binding.imagePost2.setVisibility(View.VISIBLE);
+                binding.delete1.setVisibility(View.VISIBLE);
+                if (imagesList.size() == 0) {
+                    Glide.with(context).load(R.drawable.add).into(binding.image2);
+                    Glide.with(context).load(R.drawable.add).into(binding.image3);
+                    binding.imagePost3.setVisibility(View.GONE);
+                } else if (imagesList.size() == 1) {
+                    Glide.with(context).load(imagesList.get(IMAGE3)).into(binding.image2);
+                    Glide.with(context).load(R.drawable.add).into(binding.image3);
+                    imagesList.put(IMAGE2, imagesList.get(IMAGE3));
+                    imagesList.put(IMAGE3, null);
+                }
+
                 break;
+            case 0:
+                if (imagesList.size() == 1) {
+                    Glide.with(context).load(imagesList.get(IMAGE2)).into(binding.image1);
+                    Glide.with(context).load(R.drawable.add).into(binding.image2);
+                    binding.imagePost3.setVisibility(View.GONE);
+                    imagesList.put(IMAGE1, imagesList.get(IMAGE2));
+                    imagesList.put(IMAGE2, null);
+                } else if (imagesList.size() == 2) {
+                    Glide.with(context).load(imagesList.get(IMAGE2)).into(binding.image1);
+                    Glide.with(context).load(imagesList.get(IMAGE3)).into(binding.image2);
+                    binding.imagePost3.setVisibility(View.VISIBLE);
+                    Glide.with(context).load(R.drawable.add).into(binding.image3);
+                    imagesList.put(IMAGE1, imagesList.get(IMAGE2));
+                    imagesList.put(IMAGE2, imagesList.get(IMAGE3));
+                    imagesList.put(IMAGE3, null);
+
+                } else {
+                    Glide.with(context).load(imagesList.get(IMAGE1)).into(binding.image1);
+                    Glide.with(context).load(imagesList.get(IMAGE2)).into(binding.image2);
+                    Glide.with(context).load(imagesList.get(IMAGE3)).into(binding.image3);
+
+                }
+                break;
+        }
+    }
+
+    private void setEditImagesAction(List<String> imageName) {
+        binding.imagePost1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (editImages.size() == 0) {
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    someActivityResultLauncher.launch(intent);
+                    imageNum = 1;
+                } else
+                    createDialogConfirmDelete(0);
+            }
+        });
+        binding.imagePost2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (editImages.size() < 2) {
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    someActivityResultLauncher.launch(intent);
+                    imageNum = 2;
+                } else
+                    createDialogConfirmDelete(1);
+            }
+        });
+        binding.imagePost3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (editImages.size() < 3) {
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    someActivityResultLauncher.launch(intent);
+                    imageNum = 3;
+                } else
+                    createDialogConfirmDelete(2);
+            }
+        });
+
+    }
+
+    private void createDialogConfirmDelete(int position) {
 
 
+        if (editImages.size() == 1 && imagesList.size() == 0) {
+            pDialog = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
+            pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
+            pDialog.setTitleText("you cannot do this!");
+            pDialog.setCancelable(true);
+            pDialog.show();
+        } else {
+            pDialog = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE);
+            pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
+            pDialog.setTitleText("you will lose this image if you continue ");
+            pDialog.setCancelable(true);
+            pDialog.setConfirmButton("sure", new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    String finalImageName = editImages.get(position).replace("http://54.209.160.242/storage/", "");
+                    deleteImageRequest(finalImageName, position);
+
+                    setEditImage();
+                }
+            });
+            pDialog.show();
         }
 
+    }
+
+    private void deleteImageRequest(String imageName, int position) {
+        Call<MessageResponse> call = serviceApi.deleteImage(imageName, "Bearer " + token);
+
+        call.enqueue(new Callback<MessageResponse>() {
+            @Override
+            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                Log.d("response5 code", response.code() + "");
+//                resetEditImages();
+                pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                pDialog.dismiss();
+                editImages.remove(position);
+                setEditImage();
+            }
+
+            @Override
+            public void onFailure(Call<MessageResponse> call, Throwable t) {
+                t.getMessage();
+            }
+        });
+    }
+
+    private void setAddImagesAction() {
+        binding.imagePost1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                someActivityResultLauncher.launch(intent);
+                imageNum = 1;
+
+            }
+        });
+        binding.imagePost2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                someActivityResultLauncher.launch(intent);
+                imageNum = 2;
+            }
+        });
+        binding.imagePost3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                someActivityResultLauncher.launch(intent);
+                imageNum = 3;
+            }
+        });
     }
 }

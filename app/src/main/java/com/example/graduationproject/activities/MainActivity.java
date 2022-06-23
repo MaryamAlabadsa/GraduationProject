@@ -305,6 +305,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void switchFragment(PagesFragment pagesFragment, PostOrdersInfo object, String post) {
         switch (pagesFragment) {
             case ADD_POSTS:
+                isAllPost=false;
                 toolbarBinding.getRoot().setVisibility(View.VISIBLE);
                 fragment =  AddPostFragment.newInstance(post,"");
                 break;
@@ -313,22 +314,22 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 fragment = new AllPostsFragment();
                 break;
             case NOTIFICATION:
+                isAllPost=false;
                 toolbarBinding.getRoot().setVisibility(View.VISIBLE);
                 fragment = new NotificationFragment();
                 break;
-            case SEARCH:
-//                toolbarBinding.getRoot().setVisibility(View.VISIBLE);
-                fragment = new SearchFragment();
-                break;
             case PROFILE:
+                isAllPost=false;
                 toolbarBinding.getRoot().setVisibility(View.GONE);
                 fragment = ProfileFragment.newInstance(object.getUserId());
                 break;
             case POST_ORDERS:
+                isAllPost=false;
                 toolbarBinding.getRoot().setVisibility(View.VISIBLE);
                 fragment = PostOrdersFragment.newInstance(object);
                 break;
             case CHANGE_PASSWORD:
+                isAllPost=false;
                 toolbarBinding.getRoot().setVisibility(View.VISIBLE);
                 fragment = new ChangePasswordFragment();
                 break;
@@ -370,7 +371,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
         return true;
     }
-
     //--------------------------------------------------
     @Override
     public void onBackPressed() {

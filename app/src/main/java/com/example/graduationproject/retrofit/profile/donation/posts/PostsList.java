@@ -14,13 +14,39 @@ import com.google.gson.annotations.SerializedName;
 @Generated("jsonschema2pojo")
 public class PostsList implements Serializable {
 
-
-    @SerializedName("status")
-    @Expose
-    private Integer status;
     @SerializedName("id")
     @Expose
     private Integer id;
+    @SerializedName("status")
+    @Expose
+    private Integer status;
+    @SerializedName("massage")
+    @Expose
+    private Object massage;
+    @SerializedName("post_id")
+    @Expose
+    private Integer postId;
+    @SerializedName("user_id")
+    @Expose
+    private Integer userId;
+    @SerializedName("user_name")
+    @Expose
+    private String userName;
+    @SerializedName("user_image")
+    @Expose
+    private String userImage;
+    @SerializedName("created_at")
+    @Expose
+    private String createdAt;
+    @SerializedName("user_phone_number")
+    @Expose
+    private String userPhoneNumber;
+    @SerializedName("post")
+    @Expose
+    private Post post;
+    @SerializedName("published_at")
+    @Expose
+    private String publishedAt;
     @SerializedName("title")
     @Expose
     private String title;
@@ -66,53 +92,73 @@ public class PostsList implements Serializable {
     @SerializedName("is_ordered")
     @Expose
     private Boolean isOrdered;
+    @SerializedName("Order_id")
+    @Expose
+    private Integer orderId;
     @SerializedName("is_he_the_owner_of_the_post")
     @Expose
     private Boolean isHeTheOwnerOfThePost;
     @SerializedName("is_completed")
     @Expose
     private Boolean isCompleted;
-    @SerializedName("massage")
-    @Expose
-    private String massage;
-    @SerializedName("post_id")
-    @Expose
-    private Integer postId;
-    @SerializedName("user_id")
-    @Expose
-    private Integer userId;
-    @SerializedName("user_name")
-    @Expose
-    private String userName;
-    @SerializedName("user_image")
-    @Expose
-    private String userImage;
-    @SerializedName("created_at")
-    @Expose
-    private String createdAt;
-    @SerializedName("user_phone_number")
-    @Expose
-    private String userPhoneNumber;
-    @SerializedName("published_at")
-    @Expose
-    private String publishedAt;
-    @SerializedName("post")
-    @Expose
-    private Post post;
-    private final static long serialVersionUID = -7964658604594063691L;
     @SerializedName("the_owner_is_login")
     @Expose
-    private Boolean the_owner_is_login;
+    private Boolean theOwnerIsLogin;
+    private final static long serialVersionUID = -7138148163177232375L;
 
     /**
      * No args constructor for use in serialization
+     *
      */
     public PostsList() {
     }
 
-    public PostsList(Integer status, Integer id, String title, String description, Boolean isDonation, Integer categoryId, Integer firstUserId, Integer secondUserId, String categoryName, Integer numberOfRequests, String firstUserName, String secondUserName, Object postFirstUserEmail, String postSecondUserEmail, List<String> postMedia, String firstUserImageLink, Boolean isOrdered, Boolean isHeTheOwnerOfThePost, Boolean isCompleted, String massage, Integer postId, Integer userId, String userName, String userImage, String createdAt, String userPhoneNumber, String publishedAt, Post post) {
-        this.status = status;
+    /**
+     *
+     * @param secondUserId
+     * @param orderId
+     * @param postSecondUserEmail
+     * @param userPhoneNumber
+     * @param description
+     * @param theOwnerIsLogin
+     * @param title
+     * @param categoryName
+     * @param createdAt
+     * @param userImage
+     * @param post
+     * @param firstUserId
+     * @param isHeTheOwnerOfThePost
+     * @param firstUserName
+     * @param id
+     * @param massage
+     * @param isOrdered
+     * @param isDonation
+     * @param isCompleted
+     * @param secondUserName
+     * @param publishedAt
+     * @param postId
+     * @param userName
+     * @param userId
+     * @param postFirstUserEmail
+     * @param numberOfRequests
+     * @param postMedia
+     * @param categoryId
+     * @param status
+     * @param firstUserImageLink
+     */
+    public PostsList(Integer id, Integer status, Object massage, Integer postId, Integer userId, String userName, String userImage, String createdAt, String userPhoneNumber, Post post, String publishedAt, String title, String description, Boolean isDonation, Integer categoryId, Integer firstUserId, Integer secondUserId, String categoryName, Integer numberOfRequests, String firstUserName, String secondUserName, Object postFirstUserEmail, String postSecondUserEmail, List<String> postMedia, String firstUserImageLink, Boolean isOrdered, Integer orderId, Boolean isHeTheOwnerOfThePost, Boolean isCompleted, Boolean theOwnerIsLogin) {
+        super();
         this.id = id;
+        this.status = status;
+        this.massage = massage;
+        this.postId = postId;
+        this.userId = userId;
+        this.userName = userName;
+        this.userImage = userImage;
+        this.createdAt = createdAt;
+        this.userPhoneNumber = userPhoneNumber;
+        this.post = post;
+        this.publishedAt = publishedAt;
         this.title = title;
         this.description = description;
         this.isDonation = isDonation;
@@ -128,89 +174,19 @@ public class PostsList implements Serializable {
         this.postMedia = postMedia;
         this.firstUserImageLink = firstUserImageLink;
         this.isOrdered = isOrdered;
+        this.orderId = orderId;
         this.isHeTheOwnerOfThePost = isHeTheOwnerOfThePost;
         this.isCompleted = isCompleted;
-        this.massage = massage;
-        this.postId = postId;
-        this.userId = userId;
-        this.userName = userName;
-        this.userImage = userImage;
-        this.createdAt = createdAt;
-        this.userPhoneNumber = userPhoneNumber;
-        this.publishedAt = publishedAt;
-        this.post = post;
+        this.theOwnerIsLogin = theOwnerIsLogin;
     }
 
-    public Boolean getDonation() {
-        return isDonation;
+    public Integer getId() {
+        return id;
     }
 
-    public void setDonation(Boolean donation) {
-        isDonation = donation;
+    public void setId(Integer id) {
+        this.id = id;
     }
-
-    public Boolean getOrdered() {
-        return isOrdered;
-    }
-
-    public void setOrdered(Boolean ordered) {
-        isOrdered = ordered;
-    }
-
-    public Boolean getHeTheOwnerOfThePost() {
-        return isHeTheOwnerOfThePost;
-    }
-
-    public void setHeTheOwnerOfThePost(Boolean heTheOwnerOfThePost) {
-        isHeTheOwnerOfThePost = heTheOwnerOfThePost;
-    }
-
-    public Boolean getCompleted() {
-        return isCompleted;
-    }
-
-    public void setCompleted(Boolean completed) {
-        isCompleted = completed;
-    }
-
-    public Boolean getThe_owner_is_login() {
-        return the_owner_is_login;
-    }
-
-    public void setThe_owner_is_login(Boolean the_owner_is_login) {
-        this.the_owner_is_login = the_owner_is_login;
-    }
-
-    /**
-     * @param secondUserId
-     * @param postSecondUserEmail
-     * @param userPhoneNumber
-     * @param description
-     * @param title
-     * @param categoryName
-     * @param createdAt
-     * @param userImage
-     * @param firstUserId
-     * @param isHeTheOwnerOfThePost
-     * @param post
-     * @param firstUserName
-     * @param id
-     * @param massage
-     * @param isOrdered
-     * @param isDonation
-     * @param isCompleted
-     * @param secondUserName
-     * @param postId
-     * @param userName
-     * @param postFirstUserEmail
-     * @param userId
-     * @param numberOfRequests
-     * @param postMedia
-     * @param categoryId
-     * @param status
-     * @param firstUserImageLink
-     */
-
 
     public Integer getStatus() {
         return status;
@@ -220,12 +196,76 @@ public class PostsList implements Serializable {
         this.status = status;
     }
 
-    public Integer getId() {
-        return id;
+    public Object getMassage() {
+        return massage;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setMassage(Object massage) {
+        this.massage = massage;
+    }
+
+    public Integer getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Integer postId) {
+        this.postId = postId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUserPhoneNumber() {
+        return userPhoneNumber;
+    }
+
+    public void setUserPhoneNumber(String userPhoneNumber) {
+        this.userPhoneNumber = userPhoneNumber;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
+    public String getPublishedAt() {
+        return publishedAt;
+    }
+
+    public void setPublishedAt(String publishedAt) {
+        this.publishedAt = publishedAt;
     }
 
     public String getTitle() {
@@ -348,6 +388,14 @@ public class PostsList implements Serializable {
         this.isOrdered = isOrdered;
     }
 
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
+
     public Boolean getIsHeTheOwnerOfThePost() {
         return isHeTheOwnerOfThePost;
     }
@@ -364,75 +412,10 @@ public class PostsList implements Serializable {
         this.isCompleted = isCompleted;
     }
 
-    public String getMassage() {
-        return massage;
+    public Boolean getTheOwnerIsLogin() {
+        return theOwnerIsLogin;
     }
 
-    public void setMassage(String massage) {
-        this.massage = massage;
-    }
-
-    public Integer getPostId() {
-        return postId;
-    }
-
-    public void setPostId(Integer postId) {
-        this.postId = postId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getUserImage() {
-        return userImage;
-    }
-
-    public void setUserImage(String userImage) {
-        this.userImage = userImage;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUserPhoneNumber() {
-        return userPhoneNumber;
-    }
-
-    public void setUserPhoneNumber(String userPhoneNumber) {
-        this.userPhoneNumber = userPhoneNumber;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
-    }
-
-    public String getPublishedAt() {
-        return publishedAt;
-    }
-
-    public void setPublishedAt(String publishedAt) {
-        this.publishedAt = publishedAt;
-    }
-}
+    public void setTheOwnerIsLogin(Boolean theOwnerIsLogin) {
+        this.theOwnerIsLogin = theOwnerIsLogin;
+    }}

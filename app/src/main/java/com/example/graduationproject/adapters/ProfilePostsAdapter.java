@@ -19,7 +19,9 @@ import com.example.graduationproject.listener.PostAddOrderInterface;
 import com.example.graduationproject.listener.PostDetialsInterface;
 import com.example.graduationproject.listener.PostImageShowInterface;
 import com.example.graduationproject.listener.PostMenuInterface;
+import com.example.graduationproject.listener.PostProfileAddOrderInterface;
 import com.example.graduationproject.listener.PostProfileMenuInterface;
+import com.example.graduationproject.listener.PostProfileRemoveOrderInterface;
 import com.example.graduationproject.listener.PostRemoveOrderInterface;
 import com.example.graduationproject.listener.SliderInterface;
 import com.example.graduationproject.listener.UserIdtRequestInterface;
@@ -41,8 +43,8 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public static final int ITEM1 = 0;
     public static final int ITEM2 = 1;
 
-    PostAddOrderInterface addOrderInterface;
-    PostRemoveOrderInterface removeOrderInterface;
+    PostProfileAddOrderInterface addOrderInterface;
+    PostProfileRemoveOrderInterface removeOrderInterface;
     UserIdtRequestInterface userIdtRequestInterface;
     PostDetialsInterface postDetialsInterface;
     PostImageShowInterface postImageShowInterface;
@@ -50,8 +52,8 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public ProfilePostsAdapter(Context context,
                                PostDetialsInterface postDetialsInterface,
-                               PostAddOrderInterface addOrderInterface,
-                               PostRemoveOrderInterface removeOrderInterface,
+                               PostProfileAddOrderInterface addOrderInterface,
+                               PostProfileRemoveOrderInterface removeOrderInterface,
                                UserIdtRequestInterface userIdtRequestInterface,
                                PostImageShowInterface postImageShowInterface,
                                PostProfileMenuInterface postMenuInterface) {
@@ -69,6 +71,11 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @SuppressLint("NotifyDataSetChanged")
     public void setList(List<PostsList> list) {
         this.list = list;
+        notifyDataSetChanged();
+    }
+    public void modifyBtn(PostsList item, int position) {
+        list.remove(position);
+        list.add(position, item);
         notifyDataSetChanged();
 
     }
@@ -147,13 +154,13 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         holder.binding.uNamePost.setText(list.get(position).getUserName());
         holder.binding.uDatePost.setText(list.get(position).getPublishedAt());
         Glide.with(context).load(list.get(position).getUserImage()).circleCrop()
-                .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.uImgPost);
+                .placeholder(R.drawable.usericon).into(holder.binding.uImgPost);
         LayoutPostItemBinding layoutPostItemBinding = holder.binding.layoutPost;
         holder.binding.uNamePost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int user_Id;
-                if (list.get(position).getThe_owner_is_login())
+                if (list.get(position).getTheOwnerIsLogin())
                     user_Id = 0;
                 else
                     user_Id = list.get(position).getUserId();
@@ -192,7 +199,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         binding.uNamePost.setText("" + post.getFirstUserName());
         binding.uDatePost.setText("" + post.getPublishedAt());
         Glide.with(context).load(post.getFirstUserImageLink()).circleCrop()
-                .placeholder(R.drawable.ic_launcher_foreground).into(binding.uImgPost);
+                .placeholder(R.drawable.usericon).into(binding.uImgPost);
         setOrderPostImages(binding, post);
         setOrderPostOrderButton(binding, post, position);
         setOrderPostStatus(binding, post);
@@ -201,7 +208,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             @Override
             public void onClick(View view) {
                 int user_Id;
-                if (list.get(position).getThe_owner_is_login())
+                if (list.get(position).getTheOwnerIsLogin())
                     user_Id = 0;
                 else
                     user_Id = list.get(position).getPost().getFirstUserId();
@@ -249,13 +256,13 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             else if (list.getIsOrdered())
                 binding.commentBtn.setVisibility(View.INVISIBLE);
             else {
-                binding.commentBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        addOrderInterface.layout(list, position);
-                    }
-                });
-                binding.commentBtn.setText("Add order");
+//                binding.commentBtn.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        addOrderInterface.layout(list, position);
+//                    }
+//                });
+//                binding.commentBtn.setText("Add order");
             }
         }
 
@@ -275,14 +282,14 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     // post
     private void setPostHolder(MyPostViewHolder holder, int position) {
-        if (!list.get(position).getThe_owner_is_login())
+        if (!list.get(position).getTheOwnerIsLogin())
             holder.binding.postMenu.setVisibility(View.INVISIBLE);
 
 //        ((MyPostViewHolder) holder).binding.numberRequestsPost.setText(list.get(position).getNumberOfRequests() + " request   ");
         ((MyPostViewHolder) holder).binding.uNamePost.setText("" + list.get(position).getFirstUserName());
         ((MyPostViewHolder) holder).binding.uDatePost.setText("" + list.get(position).getPublishedAt());
         Glide.with(context).load(list.get(position).getFirstUserImageLink()).circleCrop()
-                .placeholder(R.drawable.ic_launcher_foreground).into(((MyPostViewHolder) holder).binding.uImgPost);
+                .placeholder(R.drawable.usericon).into(((MyPostViewHolder) holder).binding.uImgPost);
         setPostImages(holder, position);
         setOrderButton(holder, position);
         setPostStatus(holder, position);
@@ -291,7 +298,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             @Override
             public void onClick(View view) {
                 int user_Id;
-                if (list.get(position).getThe_owner_is_login())
+                if (list.get(position).getTheOwnerIsLogin())
                     user_Id = 0;
                 else
                     user_Id = list.get(position).getUserId();
@@ -340,7 +347,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        removeOrderInterface.layout(list.get(position).getPost(), position);
+                        removeOrderInterface.layout(list.get(position), position);
                     }
                 });
             } else {
@@ -348,7 +355,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        addOrderInterface.layout(list.get(position).getPost(), position);
+                        addOrderInterface.layout(list.get(position), position);
                     }
                 });
             }

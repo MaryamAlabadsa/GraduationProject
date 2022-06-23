@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -33,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -55,7 +57,9 @@ import com.example.graduationproject.listener.PostAddOrderInterface;
 import com.example.graduationproject.listener.PostDetialsInterface;
 import com.example.graduationproject.listener.PostImageShowInterface;
 import com.example.graduationproject.listener.PostMenuInterface;
+import com.example.graduationproject.listener.PostProfileAddOrderInterface;
 import com.example.graduationproject.listener.PostProfileMenuInterface;
+import com.example.graduationproject.listener.PostProfileRemoveOrderInterface;
 import com.example.graduationproject.listener.PostRemoveOrderInterface;
 import com.example.graduationproject.listener.UserIdtRequestInterface;
 import com.example.graduationproject.model.PostOrdersInfo;
@@ -361,23 +365,22 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 UtilMethods.getPostDetails(id, context, serviceApi, token);
 
             }
-        }, new PostAddOrderInterface() {
+        }, new PostProfileAddOrderInterface() {
             @Override
-            public void layout(Post post, int position) {
+            public void layout(PostsList post, int position) {
                 if (post.getIsHeTheOwnerOfThePost()) {
                     PostOrdersInfo info = new PostOrdersInfo(post.getId(), post.getIsCompleted(), post.getIsDonation(), post.getSecondUserId());
                     fragmentSwitcher.switchFragment(PagesFragment.POST_ORDERS, info, null);
                 } else {
-                    createDialog(post.getId(), post, position);
+//                    createAddDialog(post.getId(), post, position);
+                    createAddOrderDialog(post.getPostId(), post, position);
                     myDialogAddOrder.show();
                 }
-
             }
-        }, new PostRemoveOrderInterface() {
+        }, new PostProfileRemoveOrderInterface() {
             @Override
-            public void layout(Post post, int position) {
-                //showDialog();
-                RemoveRequest(post.getOrderId(), post, position);
+            public void layout(PostsList post, int position) {
+                removeOrderDialog(post.getOrderId(), post, position);
             }
         }, new UserIdtRequestInterface() {
             @Override
@@ -400,7 +403,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
             @Override
             public void layoutOrder(PostsList post, int position, View v) {
-//                Toast.makeText(context, post.getId() + "", Toast.LENGTH_SHORT).show();
                 showPopupMenuForOrder(v, post, post.getId(), position);
             }
         });
@@ -490,8 +492,26 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         fragmentSwitcher = (FragmentSwitcher) context;
 
     }
+    ///-----------------------------add request ----------------------------------
 
-    public void AddRequest(int id_post, String massage, Post post, int position) {
+
+    private void createAddOrderDialog(int id, PostsList post, int position) {
+        myDialogAddOrder = new MyDialogAddOrder(context, "", new Dialoginterface() {
+            @Override
+            public void yes(String massage) {
+                AddRequest(id, massage, post, position);
+                myDialogAddOrder.dismiss();
+                pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+                pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
+                pDialog.setTitleText("Loading ...");
+                pDialog.setCancelable(true);
+                pDialog.show();
+            }
+        });
+        myDialogAddOrder.show();
+    }
+
+    public void AddRequest(int id_post, String massage, PostsList post, int position) {
 
         RequestBody post_id = RequestBody.create(MediaType.parse("multipart/form-data"), id_post + "");
         RequestBody mPost = RequestBody.create(MediaType.parse("multipart/form-data"), massage);
@@ -505,36 +525,60 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
                 Log.d("response5 code", response.code() + "");
+                pDialog.dismiss();
+                pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                 changeAddButton(post, position);
-                myDialogAddOrder.dismiss();
-                Toasty.success(context, R.string.success_operation);
             }
 
             @Override
             public void onFailure(Call<Order> call, Throwable t) {
                 t.getMessage();
-                myDialogAddOrder.dismiss();
-                Toasty.error(context, R.string.filed_operation);
             }
         });
     }
 
-    private void changeAddButton(Post post, int position) {
+    private void changeAddButton(PostsList post, int position) {
         post.setIsOrdered(true);
-        adapter.restoreItem(post, position);
+        adapter.modifyBtn(post, position);
     }
 
-    private void changeRemoveButton(Post post, int position) {
+    //--------------------------remove request-----------------------------
+    private void removeOrderDialog(int order_id, PostsList post, int position) {
+        Button button = new Button(context);
+        button.setText("Retry");
+        button.setTextColor(Color.WHITE);
+        button.setAllCaps(false);
+        int purpleColor = ContextCompat.getColor(context, R.color.green);
+        button.setBackgroundTintList(ColorStateList.valueOf(purpleColor));
+        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Are you sure?")
+                .setContentText("Won't be able to recover this file!")
+                .setConfirmText("Yes,delete it!")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog
+                                .setTitleText("Deleted!")
+                                .setContentText("Your imaginary file has been deleted!")
+                                .setConfirmText("OK")
+                                .setConfirmClickListener(null)
+                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                        removeRequest(order_id, post, position);
+                    }
+                })
+                .show();
+    }
+
+
+    private void changeRemoveButton(PostsList post, int position) {
         post.setIsOrdered(false);
-        adapter.restoreItem(post, position);
+//        adapter.restorePost(post, position);
     }
 
-    private void RemoveRequest(int order_id, Post post, int position) {
-
+    private void removeRequest(int order_id, PostsList post, int position) {
         Call<MessageResponse> call = serviceApi.deleteOrder(order_id,
                 "Bearer " + token
         );
-
         call.enqueue(new Callback<MessageResponse>() {
             @SuppressLint("CheckResult")
             @Override
@@ -554,15 +598,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         });
     }
 
-    private void createDialog(int id, Post post, int position) {
+    private void createDialog(int id, PostsList post, int position) {
         myDialogAddOrder = new MyDialogAddOrder(context, "", new Dialoginterface() {
             @Override
             public void yes(String massage) {
                 AddRequest(id, massage, post, position);
-
             }
         });
-
     }
 
     private void postImageDialog(List<String> url_list) {
@@ -957,7 +999,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (item.getItemId() == R.id.delete_post) {
                     deleteOrderAndUndo(post, id, position);
                 } else if (item.getItemId() == R.id.edit_post) {
+                    Toast.makeText(context, "edit", Toast.LENGTH_SHORT).show();
                     createEditOrderDialog(id, post, position);
+//                    myDialogAddOrder.show();
                 }
                 return true;
             }
@@ -970,7 +1014,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     //------------------------------edit order ------------------------------------------------------
     private void createEditOrderDialog(int id, PostsList post, int position) {
-        myDialogAddOrder = new MyDialogAddOrder(context, post.getMassage(), new Dialoginterface() {
+        Toast.makeText(context, "diallog", Toast.LENGTH_SHORT).show();
+        String message=post.getMassage()+"";
+        myDialogAddOrder = new MyDialogAddOrder(context,message , new Dialoginterface() {
             @Override
             public void yes(String massage) {
                 EditRequest(id, post.getPost().getId(), massage, post, position);
@@ -982,24 +1028,25 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 pDialog.show();
             }
         });
+        myDialogAddOrder.show();
+
     }
 
     private void EditRequest(int id_order, int id_post, String massage, PostsList post, int position) {
 
-        RequestBody post_id = RequestBody.create(MediaType.parse("multipart/form-data"), id_post + "");
-        RequestBody mPost = RequestBody.create(MediaType.parse("multipart/form-data"), massage);
+//        RequestBody post_id = RequestBody.create(MediaType.parse("multipart/form-data"), id_post + "");
+//        RequestBody mPost = RequestBody.create(MediaType.parse("multipart/form-data"), massage);
 
         Call<MessageResponse> call = serviceApi.editOrder(id_order,
                 "Bearer " + token
-                , post_id
-                , mPost);
+                , massage);
 
         call.enqueue(new Callback<MessageResponse>() {
             @Override
             public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
                 Log.d("response5 code", response.code() + "");
-//                changeAddButton(post, position);
-                myDialogAddOrder.dismiss();
+                pDialog.dismiss();
+//                Toast.makeText(context, response.message() + "", Toast.LENGTH_SHORT).show();
             }
 
             @Override
