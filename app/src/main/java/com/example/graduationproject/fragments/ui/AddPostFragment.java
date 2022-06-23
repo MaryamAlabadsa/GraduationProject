@@ -208,145 +208,113 @@ AddPostFragment extends BaseFragment {
         return view;
     }
 
+    private void uploadImage1(MultipartBody.Part body, List<MultipartBody.Part> resourceBody) {
+        Uri uri = imagesList.get("image" + 1);
+        File file = null;
+        try {
+            file = FileUtil.from(context, uri);
+            RequestBody requestFile =
+                    RequestBody.create(MediaType.parse("multipart/form-data")
+                            , file);
+            body = MultipartBody.Part.createFormData(
+                    "assets[" + 1 + "]", file.getName(), requestFile);
+            resourceBody.add(body);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void uploadImage2(MultipartBody.Part body, List<MultipartBody.Part> resourceBody) {
+        Uri uri = imagesList.get("image" + 2);
+        File file = null;
+        try {
+            file = FileUtil.from(context, uri);
+            RequestBody requestFile =
+                    RequestBody.create(MediaType.parse("multipart/form-data")
+                            , file);
+            body = MultipartBody.Part.createFormData(
+                    "assets[" + 2 + "]", file.getName(), requestFile);
+            resourceBody.add(body);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void uploadImage3(MultipartBody.Part body, List<MultipartBody.Part> resourceBody) {
+        Uri uri = imagesList.get("image" + 3);
+        File file = null;
+        try {
+            file = FileUtil.from(context, uri);
+            RequestBody requestFile =
+                    RequestBody.create(MediaType.parse("multipart/form-data")
+                            , file);
+            body = MultipartBody.Part.createFormData(
+                    "assets[" + 3 + "]", file.getName(), requestFile);
+            resourceBody.add(body);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void uploadImage(MultipartBody.Part body, List<MultipartBody.Part> resourceBody,int init) {
+       Log.e("loream_edit_size",editImages.size()+"");
+       Log.e("loream_images_list",imagesList.get("image" + 1)+"");
+       Log.e("loream_images_list",imagesList.get("image" + 2)+"");
+       Log.e("loream_images_list",imagesList.get("image" + 3)+"");
+       Log.e("loream_initt",init+"");
+        for (int i = 0; i <imagesList.size() ; i++) {
+            init++;
+            Uri uri = imagesList.get("image" + init);
+            File file = null;
+            try {
+                file = FileUtil.from(context, uri);
+                RequestBody requestFile =
+                        RequestBody.create(MediaType.parse("multipart/form-data")
+                                , file);
+                body = MultipartBody.Part.createFormData(
+                        "assets[" + init + "]", file.getName(), requestFile);
+                resourceBody.add(body);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void editPostRequest(HashMap<String, Uri> imagesList, String pTitle, String pDescription, Integer category, int isDonation) {
         List<MultipartBody.Part> resourceBody = new ArrayList<>();
+        MultipartBody.Part body = null;
+        int editImagesSize = editImages.size(), addImagesSize = imagesList.size();
         if (imagesList.size() > 0) {
-            if (imagesList.size() == 1) {
-                if (editImages.size() == 2) {
-                    MultipartBody.Part body = null;
-                    Uri uri = imagesList.get("image" + 3);
-                    File file = null;
-                    try {
-                        file = FileUtil.from(context, uri);
-                        RequestBody requestFile =
-                                RequestBody.create(MediaType.parse("multipart/form-data")
-                                        , file);
-                        body = MultipartBody.Part.createFormData(
-                                "assets[" + 3 + "]", file.getName(), requestFile);
-                        resourceBody.add(body);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (editImages.size() == 1) {
-                    MultipartBody.Part body = null;
-                    Uri uri = imagesList.get("image" + 2);
-                    File file = null;
-                    try {
-                        file = FileUtil.from(context, uri);
-                        RequestBody requestFile =
-                                RequestBody.create(MediaType.parse("multipart/form-data")
-                                        , file);
-                        body = MultipartBody.Part.createFormData(
-                                "assets[" + 3 + "]", file.getName(), requestFile);
-                        resourceBody.add(body);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (editImages.size() == 0) {
-                    MultipartBody.Part body = null;
-                    Uri uri = imagesList.get("image" + 1);
-                    File file = null;
-                    try {
-                        file = FileUtil.from(context, uri);
-                        RequestBody requestFile =
-                                RequestBody.create(MediaType.parse("multipart/form-data")
-                                        , file);
-                        body = MultipartBody.Part.createFormData(
-                                "assets[" + 3 + "]", file.getName(), requestFile);
-                        resourceBody.add(body);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            if (editImagesSize == 0) {
+                if (addImagesSize==1){
+                    uploadImage1(body,resourceBody);
+                } else {
+                    uploadImage(body,resourceBody,0);
                 }
 
-            } else if (imagesList.size() == 2) {
-                if (editImages.size() == 1) {
-                    MultipartBody.Part body = null;
-                    Uri uri = imagesList.get("image" + 2);
-                    File file = null;
-                    try {
-                        file = FileUtil.from(context, uri);
-                        RequestBody requestFile =
-                                RequestBody.create(MediaType.parse("multipart/form-data")
-                                        , file);
-                        body = MultipartBody.Part.createFormData(
-                                "assets[" + 2 + "]", file.getName(), requestFile);
-                        resourceBody.add(body);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Uri uri2 = imagesList.get("image" + 3);
-                    try {
-                        file = FileUtil.from(context, uri2);
-                        RequestBody requestFile =
-                                RequestBody.create(MediaType.parse("multipart/form-data")
-                                        , file);
-                        body = MultipartBody.Part.createFormData(
-                                "assets[" + 3 + "]", file.getName(), requestFile);
-                        resourceBody.add(body);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (editImages.size() == 0) {
-                    MultipartBody.Part body = null;
-                    Uri uri = imagesList.get("image" + 1);
-                    File file = null;
-                    try {
-                        file = FileUtil.from(context, uri);
-                        RequestBody requestFile =
-                                RequestBody.create(MediaType.parse("multipart/form-data")
-                                        , file);
-                        body = MultipartBody.Part.createFormData(
-                                "assets[" + 1 + "]", file.getName(), requestFile);
-                        resourceBody.add(body);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Uri uri2 = imagesList.get("image" + 2);
-                    try {
-                        file = FileUtil.from(context, uri2);
-                        RequestBody requestFile =
-                                RequestBody.create(MediaType.parse("multipart/form-data")
-                                        , file);
-                        body = MultipartBody.Part.createFormData(
-                                "assets[" + 2 + "]", file.getName(), requestFile);
-                        resourceBody.add(body);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            } else if (editImagesSize == 1) {
+                if (addImagesSize==1){
+                    uploadImage2(body,resourceBody);
+                } else {
+                    uploadImage(body,resourceBody,1);
                 }
 
-            } else if (imagesList.size() == 3) {
-                for (int i = 0; i < imagesList.size(); i++) {
-                    int num = i + 1;
-                    MultipartBody.Part body = null;
-                    Uri uri = imagesList.get("image" + num);
-                    File file = null;
-                    try {
-                        file = FileUtil.from(context, uri);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    RequestBody requestFile =
-                            RequestBody.create(MediaType.parse("multipart/form-data")
-                                    , file);
-                    body = MultipartBody.Part.createFormData(
-                            "assets[" + i + "]", file.getName(), requestFile);
-                    resourceBody.add(body);
+            } else if (editImagesSize == 2) {
+                if (addImagesSize==1){
+                    uploadImage3(body,resourceBody);
+                } else {
+                    uploadImage(body,resourceBody,2);
                 }
             }
         }
 
 
-//        RequestBody title = RequestBody.create(MediaType.parse("multipart/form-data"), pTitle);
-//        RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), pDescription);
-//        RequestBody is_donation = RequestBody.create(MediaType.parse("multipart/form-data"), isDonation + "");
-//        RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), category + "");
+        RequestBody title = RequestBody.create(MediaType.parse("multipart/form-data"), pTitle);
+        RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), pDescription);
+        RequestBody is_donation = RequestBody.create(MediaType.parse("multipart/form-data"), isDonation + "");
+        RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), category + "");
         Call<MessageResponse> call = serviceApi.updatePost(post.getId(), "Bearer " + token
-                , pTitle
-                , pDescription
-                , isDonation + ""
-                , category + ""
+                , title
+                , description
+                , is_donation
+                , category_id
                 , resourceBody);
         call.enqueue(new Callback<MessageResponse>() {
             @Override
@@ -601,16 +569,13 @@ AddPostFragment extends BaseFragment {
         else
             binding.radioDon.setChecked(true);
         editImages = post.getPostMedia();
-        Toast.makeText(context, post.getPostMedia().size() + "", Toast.LENGTH_SHORT).show();
         setEditImage();
         setEditImagesAction(editImages);
     }
 
     private void setEditImage() {
         switch (editImages.size()) {
-
             case 3:
-                Toast.makeText(context, "3", Toast.LENGTH_SHORT).show();
                 Glide.with(context).load(editImages.get(0)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
                 Glide.with(context).load(editImages.get(1)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image2);
                 Glide.with(context).load(editImages.get(2)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image3);
@@ -621,7 +586,6 @@ AddPostFragment extends BaseFragment {
                 binding.delete3.setVisibility(View.VISIBLE);
                 break;
             case 2:
-                Toast.makeText(context, "2", Toast.LENGTH_SHORT).show();
                 Glide.with(context).load(editImages.get(0)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
                 Glide.with(context).load(editImages.get(1)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image2);
                 Glide.with(context).load(R.drawable.add).into(binding.image3);
@@ -631,7 +595,6 @@ AddPostFragment extends BaseFragment {
                 binding.delete2.setVisibility(View.VISIBLE);
                 break;
             case 1:
-                Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
                 Glide.with(context).load(editImages.get(0)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
                 binding.imagePost2.setVisibility(View.VISIBLE);
                 binding.delete1.setVisibility(View.VISIBLE);
@@ -651,6 +614,7 @@ AddPostFragment extends BaseFragment {
                 if (imagesList.size() == 1) {
                     Glide.with(context).load(imagesList.get(IMAGE2)).into(binding.image1);
                     Glide.with(context).load(R.drawable.add).into(binding.image2);
+                    Glide.with(context).load(R.drawable.add).into(binding.image3);
                     binding.imagePost3.setVisibility(View.GONE);
                     imagesList.put(IMAGE1, imagesList.get(IMAGE2));
                     imagesList.put(IMAGE2, null);

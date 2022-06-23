@@ -373,7 +373,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     fragmentSwitcher.switchFragment(PagesFragment.POST_ORDERS, info, null);
                 } else {
 //                    createAddDialog(post.getId(), post, position);
-                    createAddOrderDialog(post.getPostId(), post, position);
+                    createAddOrderDialog(post.getId(), post, position);
                     myDialogAddOrder.show();
                 }
             }
@@ -467,21 +467,16 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
                 Log.d("response5 code", response.code() + "");
-
-//                binding.progressBar.setVisibility(View.GONE);
-                Toasty.success(context, R.string.success_operation);
                 User user = response.body().getData().getUser();
                 Gson gson = new Gson();
                 String userString = gson.toJson(user);
-
                 sharedPreferences.writeString(AppSharedPreferences.USER, userString);
-
             }
 
             @SuppressLint("CheckResult")
             @Override
             public void onFailure(Call<RegisterResponse> call, Throwable t) {
-                Toasty.error(context, R.string.filed_operation);
+                Toast.makeText(context, t.getMessage()+"", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -524,9 +519,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         call.enqueue(new Callback<Order>() {
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
-                Log.d("response5 code", response.code() + "");
+//                Log.d("response5 code", response.body().getData() + "");
                 pDialog.dismiss();
                 pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+//                post.setOrderId(response.body().getData().getId());
                 changeAddButton(post, position);
             }
 
@@ -572,6 +568,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void changeRemoveButton(PostsList post, int position) {
         post.setIsOrdered(false);
+        adapter.modifyBtn(post,position);
 //        adapter.restorePost(post, position);
     }
 
@@ -585,15 +582,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
                 Log.d("response5 code", response.code() + "");
                 changeRemoveButton(post, position);
+//                adapter.modifyBtn(post,position);
 //                binding.progressBar.setVisibility(View.GONE);
-                Toasty.success(context, R.string.success_operation);
-
             }
 
             @SuppressLint("CheckResult")
             @Override
             public void onFailure(Call<MessageResponse> call, Throwable t) {
-                Toasty.error(context, R.string.filed_operation);
+                Toasty.error(context, R.string.filed_operation).show();
             }
         });
     }
@@ -726,7 +722,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     sharedPreferences.writeString(AppSharedPreferences.USER, userString);
                     //progressDialog.dismiss();
                     Log.e("image link", user.getImageLink() + "");
-                    Toast.makeText(context, response.message() + "", Toast.LENGTH_SHORT).show();
                 } else {
 //                    String errorMessage = parseError2(response);
 //                    Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
@@ -999,7 +994,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (item.getItemId() == R.id.delete_post) {
                     deleteOrderAndUndo(post, id, position);
                 } else if (item.getItemId() == R.id.edit_post) {
-                    Toast.makeText(context, "edit", Toast.LENGTH_SHORT).show();
                     createEditOrderDialog(id, post, position);
 //                    myDialogAddOrder.show();
                 }
@@ -1014,7 +1008,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     //------------------------------edit order ------------------------------------------------------
     private void createEditOrderDialog(int id, PostsList post, int position) {
-        Toast.makeText(context, "diallog", Toast.LENGTH_SHORT).show();
         String message=post.getMassage()+"";
         myDialogAddOrder = new MyDialogAddOrder(context,message , new Dialoginterface() {
             @Override
@@ -1034,9 +1027,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void EditRequest(int id_order, int id_post, String massage, PostsList post, int position) {
 
-//        RequestBody post_id = RequestBody.create(MediaType.parse("multipart/form-data"), id_post + "");
-//        RequestBody mPost = RequestBody.create(MediaType.parse("multipart/form-data"), massage);
-
         Call<MessageResponse> call = serviceApi.editOrder(id_order,
                 "Bearer " + token
                 , massage);
@@ -1045,8 +1035,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
                 Log.d("response5 code", response.code() + "");
+                post.setMassage(massage);
+                adapter.modifyBtn(post,position);
                 pDialog.dismiss();
-//                Toast.makeText(context, response.message() + "", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -1056,7 +1047,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             }
         });
     }
-
 
 //    private void storeInOrdersTable(List<Post> posts) {
 //        Log.e("read1", "read1");
@@ -1116,6 +1106,5 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 //        });
 //        thread.start();
 //    }
-
 
 }

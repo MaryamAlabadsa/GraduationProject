@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -73,6 +74,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.list = list;
         notifyDataSetChanged();
     }
+
     public void modifyBtn(PostsList item, int position) {
         list.remove(position);
         list.add(position, item);
@@ -178,6 +180,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 postMenuInterface.layoutOrder(list.get(position), position, holder.binding.orderMenu);
             }
         });
+
     }
 
     PostsList postsList;
@@ -188,7 +191,12 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         Post post = postsList.getPost();
         binding.postMenu.setVisibility(View.INVISIBLE);
         binding.commentBtn.setVisibility(View.INVISIBLE);
-
+        binding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                postDetialsInterface.layout(list.get(position).getId());
+            }
+        });
         binding.postMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -208,7 +216,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             @Override
             public void onClick(View view) {
                 int user_Id;
-                if (list.get(position).getTheOwnerIsLogin())
+                if (list.get(position).getPost().getThe_owner_is_login())
                     user_Id = 0;
                 else
                     user_Id = list.get(position).getPost().getFirstUserId();
@@ -250,6 +258,12 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private void setOrderPostOrderButton(LayoutPostItemBinding binding, Post list, int position) {
         if (list.getIsHeTheOwnerOfThePost()) {
             binding.commentBtn.setText("Show orders");
+            binding.commentBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                    addOrderInterface.layout();
+                }
+            });
         } else {
             if (list.getIsCompleted())
                 binding.commentBtn.setVisibility(View.INVISIBLE);
@@ -265,6 +279,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 //                binding.commentBtn.setText("Add order");
             }
         }
+
 
     }
 
@@ -336,7 +351,13 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private void setOrderButton(ProfilePostsAdapter.MyPostViewHolder holder, int position) {
+       holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                postDetialsInterface.layout(list.get(position).getId());
+            }
+        });
         if (list.get(position).getIsHeTheOwnerOfThePost()) {
             holder.binding.commentBtn.setText("Show orders");
         } else {
@@ -352,14 +373,15 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 });
             } else {
                 holder.binding.commentBtn.setText("Add");
-                holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        addOrderInterface.layout(list.get(position), position);
-                    }
-                });
             }
         }
+        holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addOrderInterface.layout(list.get(position), position);
+            }
+        });
+
         holder.binding.postMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

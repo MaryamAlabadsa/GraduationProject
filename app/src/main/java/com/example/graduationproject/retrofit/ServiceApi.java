@@ -120,14 +120,14 @@ public interface ServiceApi {
             , @Part("id") RequestBody id);
 
     @Multipart
-    @PUT("post/{id}")
+    @POST("editPost/{post}")
     Call<MessageResponse> updatePost(
-                @Path("id") int id
+                @Path("post") int post
             , @Header("Authorization") String token
-            , @Query("title") String title
-            , @Query("description") String description
-            , @Query("is_donation") String is_donation
-            , @Query("category_id") String category_id
+            , @Part("title") RequestBody title
+            , @Part("description") RequestBody description
+            , @Part("is_donation") RequestBody is_donation
+            , @Part("category_id") RequestBody category_id
             , @Part List<MultipartBody.Part> resources);
 
     @PUT("changePostStatus/{id}")

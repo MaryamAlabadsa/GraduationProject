@@ -343,9 +343,7 @@ public class AllPostsFragment extends BaseFragment {
             @SuppressLint("CheckResult")
             @Override
             public void layout(int id) {
-
                 UtilMethods.getPostDetails(id, context, serviceApi, token);
-
             }
         }, new PostAddOrderInterface() {
             @Override
@@ -362,8 +360,6 @@ public class AllPostsFragment extends BaseFragment {
         }, new PostRemoveOrderInterface() {
             @Override
             public void layout(Post post, int position) {
-                //showDialog();
-//                RemoveRequest(post.getOrderId(), post, position);
                 removeOrderDialog(post.getOrderId(), post, position);
             }
         }, new UserIdtRequestInterface() {
@@ -376,7 +372,6 @@ public class AllPostsFragment extends BaseFragment {
             @Override
             public void layout(List<String> images) {
                 postImageDialog(images);
-
             }
         }, new PostMenuInterface() {
             @Override

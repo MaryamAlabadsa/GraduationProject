@@ -119,7 +119,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         holder.binding.tvPostTitleImageSlider.setText("" + list.get(position).getTitle());
         holder.binding.tvPostDesImageSlider.setText("" + list.get(position).getDescription());
         Glide.with(context).load(list.get(position).getFirstUserImageLink()).circleCrop()
-                .placeholder(R.drawable.ic_launcher_foreground).into(holder.binding.uImgPost);
+                .placeholder(R.drawable.usericon).into(holder.binding.uImgPost);
 
         setPostImages(holder, position);
         setOrderButton(holder, position);
