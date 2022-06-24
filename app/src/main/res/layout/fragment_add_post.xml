@@ -104,18 +104,21 @@
 
                     <ImageView
                         android:id="@+id/image_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_10sdp"
+
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_add" />
+
                     <ImageButton
                         android:id="@+id/delete1"
                         android:layout_width="@dimen/_24sdp"
                         android:layout_height="@dimen/_24sdp"
-                        android:visibility="gone"
                         android:background="@color/red"
-                        android:src="@drawable/delete" />
+                        android:src="@drawable/delete"
+                        android:visibility="gone" />
 
 
                 </androidx.cardview.widget.CardView>
@@ -134,8 +137,10 @@
 
                     <ImageView
                         android:id="@+id/image_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/_10sdp"
+
                         android:layout_gravity="center"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_add" />
@@ -144,7 +149,6 @@
                         android:id="@+id/delete2"
                         android:layout_width="@dimen/_24sdp"
                         android:layout_height="@dimen/_24sdp"
-                        android:visibility="gone"
                         android:background="@color/red"
                         android:src="@drawable/delete" />
 
@@ -163,20 +167,20 @@
                     android:visibility="gone"
                     app:cardCornerRadius="@dimen/_10sdp">
 
-
                     <ImageButton
                         android:id="@+id/image_3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:background="@color/white"
+                        android:layout_margin="@dimen/_10sdp"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_add" />
+
                     <ImageButton
                         android:id="@+id/delete3"
                         android:layout_width="@dimen/_24sdp"
                         android:layout_height="@dimen/_24sdp"
-                        android:visibility="gone"
                         android:background="@color/red"
                         android:src="@drawable/delete" />
 

@@ -39,6 +39,7 @@ import com.example.graduationproject.fragments.BaseFragment;
 import com.example.graduationproject.fragments.FragmentSwitcher;
 import com.example.graduationproject.fragments.MyTitleEventBus;
 import com.example.graduationproject.fragments.PagesFragment;
+import com.example.graduationproject.model.MyImage;
 import com.example.graduationproject.retrofit.categories.AllCategories;
 import com.example.graduationproject.retrofit.categories.Category;
 import com.example.graduationproject.retrofit.post.AllPosts;
@@ -61,6 +62,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import es.dmoral.toasty.Toasty;
@@ -84,7 +86,7 @@ AddPostFragment extends BaseFragment {
     private static final String IMAGE3 = "image3";
     Context context;
     List<Category> categories;
-    HashMap<String, Uri> imagesList;
+    //    HashMap<String, Uri> imagesList;
     //    ArrayList<File> imagesList;
     int imageNum = 0;
     String pTitle, pDescription;
@@ -95,6 +97,8 @@ AddPostFragment extends BaseFragment {
     private String mParam1;
     private String mParam2;
     private SweetAlertDialog pDialog;
+    HashMap<String, MyImage> myImageHashMap;
+    String mapKey;
 
     public AddPostFragment() {
         // Required empty public constructor
@@ -153,7 +157,9 @@ AddPostFragment extends BaseFragment {
 
         context = getActivity();
         categories = new ArrayList<>();
-        imagesList = new HashMap<String, Uri>();
+
+        myImageHashMap = new HashMap<String, MyImage>();
+//        imagesList = new HashMap<String, Uri>();
 //        post = new Post();
         getAllCategories();
         if (isEdit)
@@ -190,8 +196,8 @@ AddPostFragment extends BaseFragment {
                     if (isDonation != 2) {
                         UtilMethods.launchLoadingLottieDialog(context);
                         if (isEdit)
-                            editPostRequest(imagesList, pTitle, pDescription, category, isDonation);
-                        else addPostRequest(imagesList, pTitle, pDescription, category, isDonation);
+                            editPostRequest(pTitle, pDescription, category, isDonation);
+                        else addPostRequest(pTitle, pDescription, category, isDonation);
                     } else {
                         Toast.makeText(context, "What is the post status?", Toast.LENGTH_SHORT).show();
                     }
@@ -206,142 +212,6 @@ AddPostFragment extends BaseFragment {
             }
         });
         return view;
-    }
-
-    private void uploadImage1(MultipartBody.Part body, List<MultipartBody.Part> resourceBody) {
-        Uri uri = imagesList.get("image" + 1);
-        File file = null;
-        try {
-            file = FileUtil.from(context, uri);
-            RequestBody requestFile =
-                    RequestBody.create(MediaType.parse("multipart/form-data")
-                            , file);
-            body = MultipartBody.Part.createFormData(
-                    "assets[" + 1 + "]", file.getName(), requestFile);
-            resourceBody.add(body);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    private void uploadImage2(MultipartBody.Part body, List<MultipartBody.Part> resourceBody) {
-        Uri uri = imagesList.get("image" + 2);
-        File file = null;
-        try {
-            file = FileUtil.from(context, uri);
-            RequestBody requestFile =
-                    RequestBody.create(MediaType.parse("multipart/form-data")
-                            , file);
-            body = MultipartBody.Part.createFormData(
-                    "assets[" + 2 + "]", file.getName(), requestFile);
-            resourceBody.add(body);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    private void uploadImage3(MultipartBody.Part body, List<MultipartBody.Part> resourceBody) {
-        Uri uri = imagesList.get("image" + 3);
-        File file = null;
-        try {
-            file = FileUtil.from(context, uri);
-            RequestBody requestFile =
-                    RequestBody.create(MediaType.parse("multipart/form-data")
-                            , file);
-            body = MultipartBody.Part.createFormData(
-                    "assets[" + 3 + "]", file.getName(), requestFile);
-            resourceBody.add(body);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    private void uploadImage(MultipartBody.Part body, List<MultipartBody.Part> resourceBody,int init) {
-       Log.e("loream_edit_size",editImages.size()+"");
-       Log.e("loream_images_list",imagesList.get("image" + 1)+"");
-       Log.e("loream_images_list",imagesList.get("image" + 2)+"");
-       Log.e("loream_images_list",imagesList.get("image" + 3)+"");
-       Log.e("loream_initt",init+"");
-        for (int i = 0; i <imagesList.size() ; i++) {
-            init++;
-            Uri uri = imagesList.get("image" + init);
-            File file = null;
-            try {
-                file = FileUtil.from(context, uri);
-                RequestBody requestFile =
-                        RequestBody.create(MediaType.parse("multipart/form-data")
-                                , file);
-                body = MultipartBody.Part.createFormData(
-                        "assets[" + init + "]", file.getName(), requestFile);
-                resourceBody.add(body);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void editPostRequest(HashMap<String, Uri> imagesList, String pTitle, String pDescription, Integer category, int isDonation) {
-        List<MultipartBody.Part> resourceBody = new ArrayList<>();
-        MultipartBody.Part body = null;
-        int editImagesSize = editImages.size(), addImagesSize = imagesList.size();
-        if (imagesList.size() > 0) {
-            if (editImagesSize == 0) {
-                if (addImagesSize==1){
-                    uploadImage1(body,resourceBody);
-                } else {
-                    uploadImage(body,resourceBody,0);
-                }
-
-            } else if (editImagesSize == 1) {
-                if (addImagesSize==1){
-                    uploadImage2(body,resourceBody);
-                } else {
-                    uploadImage(body,resourceBody,1);
-                }
-
-            } else if (editImagesSize == 2) {
-                if (addImagesSize==1){
-                    uploadImage3(body,resourceBody);
-                } else {
-                    uploadImage(body,resourceBody,2);
-                }
-            }
-        }
-
-
-        RequestBody title = RequestBody.create(MediaType.parse("multipart/form-data"), pTitle);
-        RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), pDescription);
-        RequestBody is_donation = RequestBody.create(MediaType.parse("multipart/form-data"), isDonation + "");
-        RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), category + "");
-        Call<MessageResponse> call = serviceApi.updatePost(post.getId(), "Bearer " + token
-                , title
-                , description
-                , is_donation
-                , category_id
-                , resourceBody);
-        call.enqueue(new Callback<MessageResponse>() {
-            @Override
-            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
-                Log.d("response code", response.code() + "");
-                if (response.isSuccessful()) {
-                    Log.d("Success", new Gson().toJson(response.body()));
-                    fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null, null);
-                    UtilMethods.launchLoadingLottieDialogDismiss(context);
-
-                } else {
-                    String errorMessage = parseError(response);
-                    Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
-                    UtilMethods.launchLoadingLottieDialogDismiss(context);
-
-                    Log.e("errorMessage", errorMessage + "");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MessageResponse> call, Throwable t) {
-                Log.d("onFailure", t.getMessage() + "");
-                UtilMethods.launchLoadingLottieDialogDismiss(context);
-
-                call.cancel();
-            }
-        });
     }
 
 
@@ -382,14 +252,6 @@ AddPostFragment extends BaseFragment {
             binding.descriptionPost.requestFocus();
             binding.descriptionPost.setError("FIELD CANNOT BE EMPTY IN DESCRIPTION");
             return "error2";
-        } else if (imagesList.isEmpty() && !isEdit) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-            alert.setTitle("ALERT");
-            alert.setMessage("PLEASE UPLOAD PHOTO");
-            alert.setPositiveButton("ok", null);
-            alert.show();
-            Toasty.error(context, "PLEASE UPLOAD PHOTO", Toast.LENGTH_SHORT).show();
-            return "error4";
         } else if (isDonation == -1) {
             Toasty.error(context, "PLEASE SELECTED REQUEST OR DONATION", Toast.LENGTH_SHORT).show();
             return "error 5 ";
@@ -408,7 +270,6 @@ AddPostFragment extends BaseFragment {
         binding.imagePost2.setVisibility(View.GONE);
         binding.imagePost3.setVisibility(View.GONE);
         imageNum = 0;
-        imagesList.clear();
         binding.titlePost.setText(null);
         binding.descriptionPost.setText(null);
         if (binding.radioDon.isChecked())
@@ -418,64 +279,60 @@ AddPostFragment extends BaseFragment {
     }
 
 
-    private void addPostRequest(HashMap<String, Uri> imagesList, String uTitle, String uDescription, int pCategory, int pIsDonation) {
-
+    private void addPostRequest(String uTitle, String uDescription, int pCategory, int pIsDonation) {
         List<MultipartBody.Part> resourceBody = new ArrayList<>();
-        for (int i = 0; i < imagesList.size(); i++) {
-            int num = i + 1;
-            MultipartBody.Part body = null;
-            Uri uri = imagesList.get("image" + num);
-            File file = null;
-            try {
-                file = FileUtil.from(context, uri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            RequestBody requestFile =
-                    RequestBody.create(MediaType.parse("multipart/form-data")
-                            , file);
-            body = MultipartBody.Part.createFormData(
-                    "assets[" + i + "]", file.getName(), requestFile);
-            resourceBody.add(body);
+        MultipartBody.Part body = null;
+        if (myImageHashMap.get(IMAGE1) != null) {
 
+            uploadUriImage1(body, resourceBody);
+            uploadUriImage2(body, resourceBody);
+            uploadUriImage3(body, resourceBody);
+
+            RequestBody title = RequestBody.create(MediaType.parse("multipart/form-data"), uTitle);
+            RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), uDescription);
+            RequestBody is_donation = RequestBody.create(MediaType.parse("multipart/form-data"), pIsDonation + "");
+            RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), pCategory + "");
+            Call<AllPosts> call = serviceApi.addPost("Bearer " + token
+                    , title
+                    , description
+                    , is_donation
+                    , category_id
+                    , resourceBody);
+            call.enqueue(new Callback<AllPosts>() {
+                @Override
+                public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
+                    Log.d("response code", response.code() + "");
+                    if (response.isSuccessful()) {
+                        Log.d("Success", new Gson().toJson(response.body()));
+                        fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null, null);
+                        UtilMethods.launchLoadingLottieDialogDismiss(context);
+
+                    } else {
+                        String errorMessage = parseError(response);
+                        Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
+                        UtilMethods.launchLoadingLottieDialogDismiss(context);
+
+                        Log.e("errorMessage", errorMessage + "");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AllPosts> call, Throwable t) {
+                    Log.d("onFailure", t.getMessage() + "");
+                    UtilMethods.launchLoadingLottieDialogDismiss(context);
+
+                    call.cancel();
+                }
+            });
+        } else {
+            UtilMethods.launchLoadingLottieDialogDismiss(context);
+            pDialog = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
+            pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
+            pDialog.setTitleText("you must choose one image at least ");
+            pDialog.setCancelable(true);
+            pDialog.show();
         }
 
-        RequestBody title = RequestBody.create(MediaType.parse("multipart/form-data"), uTitle);
-        RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), uDescription);
-        RequestBody is_donation = RequestBody.create(MediaType.parse("multipart/form-data"), pIsDonation + "");
-        RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), pCategory + "");
-        Call<AllPosts> call = serviceApi.addPost("Bearer " + token
-                , title
-                , description
-                , is_donation
-                , category_id
-                , resourceBody);
-        call.enqueue(new Callback<AllPosts>() {
-            @Override
-            public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
-                Log.d("response code", response.code() + "");
-                if (response.isSuccessful()) {
-                    Log.d("Success", new Gson().toJson(response.body()));
-                    fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null, null);
-                    UtilMethods.launchLoadingLottieDialogDismiss(context);
-
-                } else {
-                    String errorMessage = parseError(response);
-                    Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
-                    UtilMethods.launchLoadingLottieDialogDismiss(context);
-
-                    Log.e("errorMessage", errorMessage + "");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AllPosts> call, Throwable t) {
-                Log.d("onFailure", t.getMessage() + "");
-                UtilMethods.launchLoadingLottieDialogDismiss(context);
-
-                call.cancel();
-            }
-        });
     }
 
     public static String parseError(Response<?> response) {
@@ -491,38 +348,6 @@ AddPostFragment extends BaseFragment {
         return errorMsg;
     }
 
-    ActivityResultLauncher<Intent> someActivityResultLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                    new ActivityResultCallback<ActivityResult>() {
-                        @Override
-                        public void onActivityResult(ActivityResult result) {
-                            if (result.getResultCode() == Activity.RESULT_OK) { // There are no request codes
-                                Intent data = result.getData();
-                                Log.e("data", data.getDataString() + "");
-                                File file_posts = null;
-                                try {
-                                    file_posts = FileUtil.from(context, data.getData());
-
-                                    if (imageNum == 1) {
-                                        binding.image1.setImageURI(data.getData());
-//                                        binding.image2.setColorFilter(ContextCompat.getColor(context, R.color.bink), android.graphics.PorterDuff.Mode.MULTIPLY);
-                                        binding.imagePost2.setVisibility(View.VISIBLE);
-                                        imagesList.put(IMAGE1, data.getData());
-                                    } else if (imageNum == 2) {
-                                        imagesList.put(IMAGE2, data.getData());
-                                        binding.imagePost3.setVisibility(View.VISIBLE);
-                                        binding.image2.setImageURI(data.getData());
-                                    } else if (imageNum == 3) {
-                                        imagesList.put(IMAGE3, data.getData());
-                                        binding.image3.setImageURI(data.getData());
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-                        }
-                    });
 
     @Override
     public int getFragmentTitle() {
@@ -558,9 +383,156 @@ AddPostFragment extends BaseFragment {
         });
     }
 
-    //-------------------------------edit images-----------------------------------------------
-    List<String> editImages;
+    private void uploadUriImage1(MultipartBody.Part body, List<MultipartBody.Part> resourceBody) {
+        if (!isImage1Uploaded()) {
+            Uri uri = myImageHashMap.get(IMAGE1).getImageUri();
+            File file = null;
+            try {
+                file = FileUtil.from(context, uri);
+                RequestBody requestFile =
+                        RequestBody.create(MediaType.parse("multipart/form-data")
+                                , file);
+                body = MultipartBody.Part.createFormData(
+                        "assets[" + 1 + "]", file.getName(), requestFile);
+                resourceBody.add(body);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    private void uploadUriImage2(MultipartBody.Part body, List<MultipartBody.Part> resourceBody) {
+
+        if (myImageHashMap.get(IMAGE2) != null) {
+            if (!isImage2Uploaded()) {
+                Uri uri = myImageHashMap.get(IMAGE2).getImageUri();
+                File file = null;
+                try {
+                    file = FileUtil.from(context, uri);
+                    RequestBody requestFile =
+                            RequestBody.create(MediaType.parse("multipart/form-data")
+                                    , file);
+                    body = MultipartBody.Part.createFormData(
+                            "assets[" + 2 + "]", file.getName(), requestFile);
+                    resourceBody.add(body);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void uploadUriImage3(MultipartBody.Part body, List<MultipartBody.Part> resourceBody) {
+
+        if (myImageHashMap.get(IMAGE3) != null) {
+            if (!isImage3Uploaded()) {
+                Uri uri = myImageHashMap.get(IMAGE3).getImageUri();
+                File file = null;
+
+                try {
+                    file = FileUtil.from(context, uri);
+                    RequestBody requestFile =
+                            RequestBody.create(MediaType.parse("multipart/form-data")
+                                    , file);
+                    body = MultipartBody.Part.createFormData(
+                            "assets[" + 3 + "]", file.getName(), requestFile);
+                    resourceBody.add(body);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
+    private void editPostRequest(String pTitle, String pDescription, Integer category, int isDonation) {
+        List<MultipartBody.Part> resourceBody = new ArrayList<>();
+        MultipartBody.Part body = null;
+        if (myImageHashMap.get(IMAGE1) != null) {
+
+            uploadUriImage1(body, resourceBody);
+            uploadUriImage2(body, resourceBody);
+            uploadUriImage3(body, resourceBody);
+
+            RequestBody title = RequestBody.create(MediaType.parse("multipart/form-data"), pTitle);
+            RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), pDescription);
+            RequestBody is_donation = RequestBody.create(MediaType.parse("multipart/form-data"), isDonation + "");
+            RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), category + "");
+            Call<MessageResponse> call = serviceApi.updatePost(post.getId(), "Bearer " + token
+                    , title
+                    , description
+                    , is_donation
+                    , category_id
+                    , resourceBody);
+            call.enqueue(new Callback<MessageResponse>() {
+                @Override
+                public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                    Log.d("response code", response.code() + "");
+                    if (response.isSuccessful()) {
+                        Log.d("Success", new Gson().toJson(response.body()));
+                        fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null, null);
+                        UtilMethods.launchLoadingLottieDialogDismiss(context);
+
+                    } else {
+                        String errorMessage = parseError(response);
+                        Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
+                        UtilMethods.launchLoadingLottieDialogDismiss(context);
+
+                        Log.e("errorMessage", errorMessage + "");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<MessageResponse> call, Throwable t) {
+                    Log.d("onFailure", t.getMessage() + "");
+                    UtilMethods.launchLoadingLottieDialogDismiss(context);
+
+                    call.cancel();
+                }
+            });
+        } else {
+            UtilMethods.launchLoadingLottieDialogDismiss(context);
+            pDialog = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
+            pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
+            pDialog.setTitleText("you must choose one image at least ");
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+    }
+
+
+    ActivityResultLauncher<Intent> someActivityResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    new ActivityResultCallback<ActivityResult>() {
+                        @Override
+                        public void onActivityResult(ActivityResult result) {
+                            if (result.getResultCode() == Activity.RESULT_OK) { // There are no request codes
+                                Intent data = result.getData();
+                                Log.e("data", data.getDataString() + "");
+                                File file_posts = null;
+                                try {
+                                    file_posts = FileUtil.from(context, data.getData());
+                                    if (imageNum == 1) {
+                                        binding.image1.setImageURI(data.getData());
+                                        myImageHashMap.put(IMAGE1, new MyImage(data.getData(), false));
+                                    } else if (imageNum == 2) {
+                                        binding.image2.setImageURI(data.getData());
+                                        myImageHashMap.put(IMAGE2, new MyImage(data.getData(), false));
+                                    } else if (imageNum == 3) {
+                                        binding.image3.setImageURI(data.getData());
+                                        myImageHashMap.put(IMAGE3, new MyImage(data.getData(), false));
+                                    }
+                                    setImageView();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }
+                    });
+
+
+    //-------------------------------edit images-----------------------------------------------
     private void setFields() {
         binding.descriptionPost.setText(post.getDescription());
         binding.titlePost.setText(post.getTitle());
@@ -568,17 +540,30 @@ AddPostFragment extends BaseFragment {
             binding.radioDon.setChecked(true);
         else
             binding.radioDon.setChecked(true);
-        editImages = post.getPostMedia();
-        setEditImage();
-        setEditImagesAction(editImages);
+        appendEditImageToMap(post.getPostMedia());
+//        editImages = post.getPostMedia();
+        setImageView();
+        setDeleteImagesAction();
+        setAddImagesAction();
     }
 
-    private void setEditImage() {
-        switch (editImages.size()) {
+    private void appendEditImageToMap(List<String> editImage) {
+        for (int i = 0; i < editImage.size(); i++) {
+            MyImage myImage = new MyImage(editImage.get(i), true);
+            String mapKey = "image" + (i + 1);
+            myImageHashMap.put(mapKey, myImage);
+        }
+    }
+
+    private void setImageView() {
+        switch (myImageHashMap.size()) {
             case 3:
-                Glide.with(context).load(editImages.get(0)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
-                Glide.with(context).load(editImages.get(1)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image2);
-                Glide.with(context).load(editImages.get(2)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image3);
+                //image 1
+                isImage1Uploaded();
+//               image 2
+                isImage2Uploaded();
+//                image 3
+                isImage3Uploaded();
                 binding.imagePost2.setVisibility(View.VISIBLE);
                 binding.imagePost3.setVisibility(View.VISIBLE);
                 binding.delete1.setVisibility(View.VISIBLE);
@@ -586,125 +571,98 @@ AddPostFragment extends BaseFragment {
                 binding.delete3.setVisibility(View.VISIBLE);
                 break;
             case 2:
-                Glide.with(context).load(editImages.get(0)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
-                Glide.with(context).load(editImages.get(1)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image2);
-                Glide.with(context).load(R.drawable.add).into(binding.image3);
+                //image 1
+                isImage1Uploaded();
+                // image 2
+                isImage2Uploaded();
+                Glide.with(context).load(R.drawable.profile).into(binding.image3);
                 binding.imagePost3.setVisibility(View.VISIBLE);
                 binding.imagePost2.setVisibility(View.VISIBLE);
                 binding.delete1.setVisibility(View.VISIBLE);
                 binding.delete2.setVisibility(View.VISIBLE);
+                binding.delete3.setVisibility(View.INVISIBLE);
                 break;
             case 1:
-                Glide.with(context).load(editImages.get(0)).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
+                //image 1
+                isImage1Uploaded();
+                Glide.with(context).load(R.drawable.profile).into(binding.image2);
+                Glide.with(context).load(R.drawable.profile).into(binding.image3);
                 binding.imagePost2.setVisibility(View.VISIBLE);
+                binding.imagePost3.setVisibility(View.INVISIBLE);
                 binding.delete1.setVisibility(View.VISIBLE);
-                if (imagesList.size() == 0) {
-                    Glide.with(context).load(R.drawable.add).into(binding.image2);
-                    Glide.with(context).load(R.drawable.add).into(binding.image3);
-                    binding.imagePost3.setVisibility(View.GONE);
-                } else if (imagesList.size() == 1) {
-                    Glide.with(context).load(imagesList.get(IMAGE3)).into(binding.image2);
-                    Glide.with(context).load(R.drawable.add).into(binding.image3);
-                    imagesList.put(IMAGE2, imagesList.get(IMAGE3));
-                    imagesList.put(IMAGE3, null);
-                }
-
+                binding.delete2.setVisibility(View.INVISIBLE);
+                binding.delete3.setVisibility(View.INVISIBLE);
                 break;
             case 0:
-                if (imagesList.size() == 1) {
-                    Glide.with(context).load(imagesList.get(IMAGE2)).into(binding.image1);
-                    Glide.with(context).load(R.drawable.add).into(binding.image2);
-                    Glide.with(context).load(R.drawable.add).into(binding.image3);
-                    binding.imagePost3.setVisibility(View.GONE);
-                    imagesList.put(IMAGE1, imagesList.get(IMAGE2));
-                    imagesList.put(IMAGE2, null);
-                } else if (imagesList.size() == 2) {
-                    Glide.with(context).load(imagesList.get(IMAGE2)).into(binding.image1);
-                    Glide.with(context).load(imagesList.get(IMAGE3)).into(binding.image2);
-                    binding.imagePost3.setVisibility(View.VISIBLE);
-                    Glide.with(context).load(R.drawable.add).into(binding.image3);
-                    imagesList.put(IMAGE1, imagesList.get(IMAGE2));
-                    imagesList.put(IMAGE2, imagesList.get(IMAGE3));
-                    imagesList.put(IMAGE3, null);
+                binding.imagePost1.setVisibility(View.VISIBLE);
+                binding.imagePost2.setVisibility(View.GONE);
+                binding.imagePost3.setVisibility(View.GONE);
+                Glide.with(context).load(R.drawable.profile).into(binding.image1);
 
+        }
+    }
+
+    private void setDeleteImagesAction() {
+        binding.delete1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isImage1Uploaded()) {
+                    createDialogConfirmDeleteUrlImage(0);
                 } else {
-                    Glide.with(context).load(imagesList.get(IMAGE1)).into(binding.image1);
-                    Glide.with(context).load(imagesList.get(IMAGE2)).into(binding.image2);
-                    Glide.with(context).load(imagesList.get(IMAGE3)).into(binding.image3);
-
+                    deleteUriImageFromMap(0);
                 }
-                break;
-        }
+            }
+        });
+        binding.delete2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isImage2Uploaded()) {
+                    createDialogConfirmDeleteUrlImage(1);
+                } else {
+                    deleteUriImageFromMap(1);
+                }
+            }
+        });
+        binding.delete3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isImage3Uploaded()) {
+                    createDialogConfirmDeleteUrlImage(2);
+                } else {
+                    deleteUriImageFromMap(2);
+                }
+            }
+        });
     }
 
-    private void setEditImagesAction(List<String> imageName) {
-        binding.imagePost1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (editImages.size() == 0) {
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    someActivityResultLauncher.launch(intent);
-                    imageNum = 1;
-                } else
-                    createDialogConfirmDelete(0);
-            }
-        });
-        binding.imagePost2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (editImages.size() < 2) {
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    someActivityResultLauncher.launch(intent);
-                    imageNum = 2;
-                } else
-                    createDialogConfirmDelete(1);
-            }
-        });
-        binding.imagePost3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (editImages.size() < 3) {
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    someActivityResultLauncher.launch(intent);
-                    imageNum = 3;
-                } else
-                    createDialogConfirmDelete(2);
-            }
-        });
-
+    private String createMapKey(int i) {
+        String mapKey = "image" + i;
+        return mapKey;
     }
 
-    private void createDialogConfirmDelete(int position) {
+    private void deleteUriImageFromMap(int i) {
+        mapKey = createMapKey(i + 1);
+        myImageHashMap.remove(mapKey);
+        changePositionAfterDelete(i);
+        setImageView();
+    }
 
+    private void createDialogConfirmDeleteUrlImage(int position) {
 
-        if (editImages.size() == 1 && imagesList.size() == 0) {
-            pDialog = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
-            pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
-            pDialog.setTitleText("you cannot do this!");
-            pDialog.setCancelable(true);
-            pDialog.show();
-        } else {
-            pDialog = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE);
-            pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
-            pDialog.setTitleText("you will lose this image if you continue ");
-            pDialog.setCancelable(true);
-            pDialog.setConfirmButton("sure", new SweetAlertDialog.OnSweetClickListener() {
-                @Override
-                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                    String finalImageName = editImages.get(position).replace("http://54.209.160.242/storage/", "");
-                    deleteImageRequest(finalImageName, position);
+        pDialog = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
+        pDialog.setTitleText("you will lose this image if you continue ");
+        pDialog.setCancelable(true);
+        pDialog.setConfirmButton("sure", new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                mapKey = createMapKey(position + 1);
+                String finalImageName = myImageHashMap.get(mapKey).getImageUrl().replace("http://54.209.160.242/storage/", "");
+                deleteImageRequest(finalImageName, position);
+            }
+        });
+        pDialog.show();
 
-                    setEditImage();
-                }
-            });
-            pDialog.show();
-        }
 
     }
 
@@ -715,11 +673,12 @@ AddPostFragment extends BaseFragment {
             @Override
             public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
                 Log.d("response5 code", response.code() + "");
-//                resetEditImages();
+                mapKey = createMapKey(position + 1);
                 pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                 pDialog.dismiss();
-                editImages.remove(position);
-                setEditImage();
+                myImageHashMap.remove(mapKey);
+                changePositionAfterDelete(position);
+                setImageView();
             }
 
             @Override
@@ -729,37 +688,98 @@ AddPostFragment extends BaseFragment {
         });
     }
 
+    private void changePositionAfterDelete(int i) {
+        switch (myImageHashMap.size()) {
+            case 2:
+                if (i == 0) {
+                    myImageHashMap.put(IMAGE1, myImageHashMap.get(IMAGE2));
+                    myImageHashMap.put(IMAGE2, myImageHashMap.get(IMAGE3));
+                    myImageHashMap.remove(IMAGE3);
+                } else if (i == 1) {
+                    myImageHashMap.put(IMAGE2, myImageHashMap.get(IMAGE3));
+                    myImageHashMap.remove(IMAGE3);
+                }
+                break;
+            case 1:
+                if (i == 0) {
+                    myImageHashMap.put(IMAGE1, myImageHashMap.get(IMAGE2));
+                    myImageHashMap.remove(IMAGE2);
+                }
+                break;
+        }
+    }
+
     private void setAddImagesAction() {
         binding.imagePost1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                someActivityResultLauncher.launch(intent);
-                imageNum = 1;
-
+                if (myImageHashMap.get(IMAGE1) != null) {
+                    if (!isImage1Uploaded())
+                        openGallery(1);
+                } else
+                    openGallery(1);
             }
         });
         binding.imagePost2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                someActivityResultLauncher.launch(intent);
-                imageNum = 2;
+                if (myImageHashMap.get(IMAGE2) != null) {
+                    if (!isImage2Uploaded())
+                        openGallery(2);
+                } else
+                    openGallery(2);
             }
         });
         binding.imagePost3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                someActivityResultLauncher.launch(intent);
-                imageNum = 3;
+                if (myImageHashMap.get(IMAGE3) != null) {
+                    if (!isImage3Uploaded())
+                        openGallery(3);
+                } else
+                    openGallery(3);
             }
         });
+    }
+
+    private void openGallery(int i) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        someActivityResultLauncher.launch(intent);
+        imageNum = i;
+
+    }
+
+    private Boolean isImage1Uploaded() {
+        if (myImageHashMap.get(IMAGE1).getUploaded()) {
+            Glide.with(context).load(myImageHashMap.get(IMAGE1).getImageUrl()).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
+            return true;
+        } else {
+            Glide.with(context).load(myImageHashMap.get(IMAGE1).getImageUri()).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
+            return false;
+        }
+    }
+
+    private Boolean isImage2Uploaded() {
+        if (myImageHashMap.get(IMAGE2).getUploaded()) {
+            Glide.with(context).load(myImageHashMap.get(IMAGE2).getImageUrl()).placeholder(R.drawable.ic_launcher_foreground).into(binding.image2);
+            return true;
+        } else {
+            Glide.with(context).load(myImageHashMap.get(IMAGE2).getImageUri()).placeholder(R.drawable.ic_launcher_foreground).into(binding.image2);
+            return false;
+        }
+
+    }
+
+    private Boolean isImage3Uploaded() {
+        if (myImageHashMap.get(IMAGE3).getUploaded()) {
+            Glide.with(context).load(myImageHashMap.get(IMAGE3).getImageUrl()).placeholder(R.drawable.ic_launcher_foreground).into(binding.image3);
+            return true;
+        } else {
+            Glide.with(context).load(myImageHashMap.get(IMAGE3).getImageUri()).placeholder(R.drawable.ic_launcher_foreground).into(binding.image3);
+            return false;
+        }
+
     }
 }

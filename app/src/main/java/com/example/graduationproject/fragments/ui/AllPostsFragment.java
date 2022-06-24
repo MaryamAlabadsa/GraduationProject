@@ -694,7 +694,7 @@ public class AllPostsFragment extends BaseFragment {
             @SuppressLint("CheckResult")
             @Override
             public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
-                Log.d("response5 code", response.code() + "");
+                Log.d("response5 code", response.body().getMessage() + "");
                 UtilMethods.launchLoadingLottieDialogDismiss(context);
                 removePostFromRv(post, id, position);
             }
