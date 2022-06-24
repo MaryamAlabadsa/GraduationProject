@@ -41,6 +41,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.activities.MainActivity;
+import com.example.graduationproject.activities.SignUpActivity;
 import com.example.graduationproject.adapters.CategoryAdapter;
 import com.example.graduationproject.adapters.PostsAdapter;
 import com.example.graduationproject.adapters.ProfilePostsAdapter;
@@ -688,7 +689,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private boolean checkStoragePermission() {
-        boolean res2 = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        boolean res2 = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED;
         return res2;
     }
@@ -700,6 +701,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 == PackageManager.PERMISSION_GRANTED;
         return res1 && res2;
     }
+
 
 
     private void changeUserImageRequest() {
@@ -716,6 +718,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 Log.d("response code", response.code() + "");
                 if (response.isSuccessful() || response.code() == 200) {
                     assert response.body() != null;
+                    UtilMethods.launchLoadingLottieDialogDismiss(context);
+                    binding.profileImage.setImageBitmap(bitmap);
                     User user = response.body().getData().getUser();
                     Gson gson = new Gson();
                     String userString = gson.toJson(user);
@@ -740,8 +744,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void uploadImage() {
-        ImageView user_image = binding.profileImage;
-        user_image.setImageBitmap(bitmap);
+        UtilMethods.launchLoadingLottieDialog(context);
         changeUserImageRequest();
     }
 
@@ -776,6 +779,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             if (resultCode == Activity.RESULT_OK) {
                 Uri resultUri = result.getUri();
                 try {
+                    Toast.makeText(context, "yessss", Toast.LENGTH_SHORT).show();
                     bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), resultUri);
                     uploadImage();
                 } catch (IOException e) {

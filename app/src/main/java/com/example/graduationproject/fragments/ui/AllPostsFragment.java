@@ -829,8 +829,6 @@ public class AllPostsFragment extends BaseFragment {
     }
 
     private void searchPostRequest(String data) {
-
-        Toast.makeText(context, "search", Toast.LENGTH_SHORT).show();
         int donationId = 2, postStatusId = 2;
         if ((checkedNum == Constant.DONATION_CHECKED)) {
             donationId = 1;

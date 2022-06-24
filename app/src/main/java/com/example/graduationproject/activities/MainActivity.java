@@ -212,7 +212,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             @Override
             public void onQueryTextChange(String s) {
-//                Toast.makeText(MainActivity.this, s+"", Toast.LENGTH_SHORT).show();
+                EventBus.getDefault().post(new MyTitleEventBus(SEARCH, s));
 
             }
         }); // this class implements OnSearchViewListener
