@@ -41,7 +41,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.activities.MainActivity;
-import com.example.graduationproject.activities.SignUpActivity;
 import com.example.graduationproject.adapters.CategoryAdapter;
 import com.example.graduationproject.adapters.PostsAdapter;
 import com.example.graduationproject.adapters.ProfilePostsAdapter;
@@ -703,7 +702,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
 
-
     private void changeUserImageRequest() {
         //showDialog();
         MultipartBody.Part body = null;
@@ -779,7 +777,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             if (resultCode == Activity.RESULT_OK) {
                 Uri resultUri = result.getUri();
                 try {
-                    Toast.makeText(context, "yessss", Toast.LENGTH_SHORT).show();
                     bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), resultUri);
                     uploadImage();
                 } catch (IOException e) {

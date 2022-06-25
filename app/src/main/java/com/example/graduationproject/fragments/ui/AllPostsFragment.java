@@ -1,17 +1,11 @@
 package com.example.graduationproject.fragments.ui;
 
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static com.example.graduationproject.fragments.PagesFragment.ADD_POSTS;
-import static com.example.graduationproject.fragments.PagesFragment.ALL_POSTS;
-import static com.example.graduationproject.fragments.PagesFragment.CHANGE_PASSWORD;
-import static com.example.graduationproject.fragments.PagesFragment.NOTIFICATION;
-import static com.example.graduationproject.fragments.PagesFragment.PROFILE;
 import static com.example.graduationproject.fragments.PagesFragment.SEARCH;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -19,26 +13,20 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -47,7 +35,6 @@ import com.amrdeveloper.lottiedialog.LottieDialog;
 import com.example.graduationproject.R;
 import com.example.graduationproject.adapters.CategoryAdapter;
 import com.example.graduationproject.adapters.PostsAdapter;
-import com.example.graduationproject.database.DatabaseClient;
 import com.example.graduationproject.databinding.FragmentAllPostsBinding;
 import com.example.graduationproject.databinding.LayoutDialogAddOrderBinding;
 import com.example.graduationproject.dialog.DialogCheckedInterface;
@@ -70,10 +57,8 @@ import com.example.graduationproject.retrofit.categories.AllCategories;
 import com.example.graduationproject.retrofit.categories.Category;
 import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.post.Post;
-import com.example.graduationproject.retrofit.register.User;
 import com.example.graduationproject.retrofit.request.Order;
 import com.example.graduationproject.retrofit.token.MessageResponse;
-import com.example.graduationproject.utils.AppSharedPreferences;
 import com.example.graduationproject.utils.Constant;
 import com.example.graduationproject.utils.UtilMethods;
 import com.google.android.material.snackbar.Snackbar;
@@ -633,7 +618,7 @@ public class AllPostsFragment extends BaseFragment {
     private void getCheckedBtn(Constant checkedBtn) {
         String mainTextTitle, secondaryTitle;
         if (checkedBtn == Constant.ALL_CHECKED) {
-            mainTextTitle = "All Posts";
+            mainTextTitle = "Our Donation Posts";
         } else if (checkedBtn == Constant.DONATION_CHECKED) {
             mainTextTitle = "Donation Posts";
         } else {
@@ -650,11 +635,11 @@ public class AllPostsFragment extends BaseFragment {
 
     }
 
-    //--------------------------------image view piger
+    //--------------------------------image view piger\
     private void postImageDialog(List<String> url_list) {
         Dialog dialog = new PopopDialogBuilder(context)
                 .setList(url_list, 0)
-                .setHeaderBackgroundColor(android.R.color.holo_blue_light)
+                .setHeaderBackgroundColor(android.R.color.holo_green_light)
                 .setDialogBackgroundColor(R.color.color_dialog_bg)
                 .setCloseDrawable(R.drawable.ic_close_white_24dp)
                 .showThumbSlider(true)
@@ -694,7 +679,7 @@ public class AllPostsFragment extends BaseFragment {
             @SuppressLint("CheckResult")
             @Override
             public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
-                Log.d("response5 code", response.body().getMessage() + "");
+                Log.d("response5 code", response.code() + "");
                 UtilMethods.launchLoadingLottieDialogDismiss(context);
                 removePostFromRv(post, id, position);
             }
@@ -785,7 +770,7 @@ public class AllPostsFragment extends BaseFragment {
         button.setText("Retry");
         button.setTextColor(Color.WHITE);
         button.setAllCaps(false);
-        int purpleColor = ContextCompat.getColor(context, R.color.green);
+        int purpleColor = ContextCompat.getColor(context, R.color.color_app);
         button.setBackgroundTintList(ColorStateList.valueOf(purpleColor));
 
         LottieDialog dialog = new LottieDialog(context)
@@ -829,6 +814,8 @@ public class AllPostsFragment extends BaseFragment {
     }
 
     private void searchPostRequest(String data) {
+
+        Toast.makeText(context, "search", Toast.LENGTH_SHORT).show();
         int donationId = 2, postStatusId = 2;
         if ((checkedNum == Constant.DONATION_CHECKED)) {
             donationId = 1;

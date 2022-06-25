@@ -11,7 +11,9 @@
         android:id="@+id/layoutDialog"
         android:layout_width="@dimen/_250sdp"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:paddingBottom="@dimen/_16sdp"
+        android:background="@drawable/commend_dilog"
+        android:paddingTop="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -25,6 +27,7 @@
             android:layout_height="@dimen/_20sdp"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_6sdp"
+            android:tint="@color/color_app"
             android:background="@drawable/bottom_felter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -50,30 +53,28 @@
                     android:id="@+id/donation_check"
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="match_parent"
-                    android:buttonTint="@color/blue"
+                    android:buttonTint="@color/dark_blue"
                     android:gravity="center|start"
                     android:scaleX="0.75"
                     android:scaleY="0.75"
                     android:text="Donation"
-                    android:textColor="@color/blue"
+                    android:textColor="@color/color_app"
                     android:textSize="@dimen/_14sdp"
-                    android:textStyle="bold"
-                    android:typeface="serif" />
+                    android:textStyle="bold" />
 
                 <CheckBox
                     android:id="@+id/request_check"
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="match_parent"
-                    android:buttonTint="@color/blue"
+                    android:buttonTint="@color/dark_blue"
                     android:gravity="center|start"
                     android:paddingStart="@dimen/_2sdp"
                     android:scaleX="0.75"
                     android:scaleY="0.75"
                     android:text="Request"
-                    android:textColor="@color/blue"
+                    android:textColor="@color/color_app"
                     android:textSize="@dimen/_14sdp"
-                    android:textStyle="bold"
-                    android:typeface="serif" />
+                    android:textStyle="bold"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -86,28 +87,26 @@
                     android:id="@+id/complete_check"
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="match_parent"
-                    android:buttonTint="@color/blue"
+                    android:buttonTint="@color/dark_blue"
                     android:gravity="center|start"
                     android:scaleX="0.75"
                     android:scaleY="0.75"
                     android:text="completed"
-                    android:textColor="@color/blue"
+                    android:textColor="@color/color_app"
                     android:textSize="@dimen/_14sdp"
-                    android:textStyle="bold"
-                    android:typeface="serif" />
+                    android:textStyle="bold" />
                 <CheckBox
                     android:id="@+id/pending_check"
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="match_parent"
-                    android:buttonTint="@color/blue"
+                    android:buttonTint="@color/dark_blue"
                     android:gravity="center|start"
                     android:scaleX="0.75"
                     android:scaleY="0.75"
                     android:text="pending"
-                    android:textColor="@color/blue"
+                    android:textColor="@color/color_app"
                     android:textSize="@dimen/_14sdp"
-                    android:textStyle="bold"
-                    android:typeface="serif" />
+                    android:textStyle="bold" />
 
 
             </LinearLayout>
@@ -147,7 +146,7 @@
                     android:background="@drawable/button_style"
                     android:text="Cancel"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textColor="@color/blue"
+                    android:textColor="@color/color_app"
                     android:textSize="@dimen/_10ssp"
                     android:textStyle="bold" />
 

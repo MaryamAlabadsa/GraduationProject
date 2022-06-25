@@ -4,19 +4,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/allPosts"
-            android:icon="@drawable/homee"
+            android:icon="@drawable/ic_baseline_home_24"
             android:title="@string/home" />
         <item
             android:id="@+id/add_post"
-            android:icon="@drawable/addd"
+            android:icon="@drawable/add"
             android:title="@string/add_post" />
         <item
             android:id="@+id/notifcation"
-            android:icon="@drawable/notifi"
+            android:icon="@drawable/ic_baseline_notifications_none_24"
             android:title="@string/notification" />
         <item
             android:id="@+id/profile"
-            android:icon="@drawable/prof"
+            android:icon="@drawable/person"
             android:title="@string/see_your_profile" />
 
     </group>
@@ -26,11 +26,11 @@
         <menu>
             <item
                 android:id="@+id/nav_change_password"
-                android:icon="@drawable/lockk"
+                android:icon="@drawable/ic_baseline_lock_24"
                 android:title="@string/changePassword" />
             <item
                 android:id="@+id/nav_logout"
-                android:icon="@drawable/out"
+                android:icon="@drawable/ic_baseline_logout_24"
                 android:title="@string/log_out" />
         </menu>
     </item>

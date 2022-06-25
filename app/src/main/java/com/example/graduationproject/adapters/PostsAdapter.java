@@ -2,11 +2,9 @@ package com.example.graduationproject.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,9 +20,7 @@ import com.example.graduationproject.listener.PostMenuInterface;
 import com.example.graduationproject.listener.PostRemoveOrderInterface;
 import com.example.graduationproject.listener.SliderInterface;
 import com.example.graduationproject.listener.UserIdtRequestInterface;
-import com.example.graduationproject.model.SliderItem;
 import com.example.graduationproject.retrofit.post.Post;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
@@ -140,7 +136,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         holder.binding.sliderLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "nnnn", Toast.LENGTH_SHORT).show();
                 postImageShowInterface.layout(list.get(position).getPostMedia());
             }
         });
@@ -179,7 +174,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         sliderView.setIndicatorAnimation(IndicatorAnimationType.SCALE_DOWN); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
         sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
         sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
-        sliderView.setIndicatorSelectedColor(context.getColor(R.color.bink));
+        sliderView.setIndicatorSelectedColor(context.getColor(R.color.pink));
         sliderView.setIndicatorUnselectedColor(context.getColor(R.color.colorPrimaryDark));
         sliderView.setScrollTimeInSec(4); //set scroll delay in seconds :
         sliderView.startAutoCycle();
@@ -217,7 +212,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
 
                     }
                 });
-                holder.binding.commentBtn.setText("Add order");
+                holder.binding.commentBtn.setText("Add Comment");
             }
         }
     }
@@ -225,13 +220,29 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     private void setPostStatus(MyViewHolder holder, int position) {
         if (list.get(position).getSecondUserName().equals("not found")) {
 //            holder.binding.postStatus.setBackgroundColor(Color.WHITE);
-            holder.binding.postStatus.setTextColor(Color.RED);
-            holder.binding.postStatus.setText("Pending");
+//            holder.binding.postStatus.setti(Color.RED);
+            holder.binding.postStatus.setBackgroundResource(R.drawable.deadline);
+            holder.binding.postStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "pending", Toast.LENGTH_SHORT).show();
+                }
+            });
         } else {
 //            holder.binding.postStatus.setBackgroundColor(Color.red(0));
-            holder.binding.postStatus.setTextColor(context.getColor(R.color.colorAccent));
-            holder.binding.postStatus.setText("completed");
+//            holder.binding.postStatus.set(context.getColor(R.color.colorAccent));
+            holder.binding.postStatus.setBackgroundResource(R.drawable.clipboard);
+            holder.binding.postStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "completed", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
+
+
+
+
     }
 
     @Override

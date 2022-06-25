@@ -169,15 +169,15 @@ AddPostFragment extends BaseFragment {
 
         EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ADD_POSTS, "Add Post"));
 
-
-        String user = sharedPreferences.readUser(AppSharedPreferences.USER);
-        Gson gson = new Gson();
-        if (!user.isEmpty()) {
-            User user1 = gson.fromJson(user, User.class);
-            Glide.with(context).load(user1.getImageLink()).circleCrop()
-                    .placeholder(R.drawable.ic_launcher_foreground).into(binding.imageProfile);
-            binding.userName.setText(user1.getName());
-        }
+//
+//        String user = sharedPreferences.readUser(AppSharedPreferences.USER);
+//        Gson gson = new Gson();
+//        if (!user.isEmpty()) {
+//            User user1 = gson.fromJson(user, User.class);
+//            Glide.with(context).load(user1.getImageLink()).circleCrop()
+//                    .placeholder(R.drawable.ic_launcher_foreground).into(binding.imageProfile);
+//            binding.userName.setText(user1.getName());
+//        }
 
 
         binding.postButton.setOnClickListener(new View.OnClickListener() {
@@ -263,12 +263,19 @@ AddPostFragment extends BaseFragment {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     public void clearAllFields() {
-        binding.image1.setImageDrawable(context.getDrawable(R.drawable.add));
-        binding.image2.setImageDrawable(context.getDrawable(R.drawable.add));
-        binding.image3.setImageDrawable(context.getDrawable(R.drawable.add));
+//        binding.image1.setImageDrawable(context.getDrawable(R.drawable.adapterdd));
+//        binding.image2.setImageDrawable(context.getDrawable(R.drawable.add));
+//        binding.image3.setImageDrawable(context.getDrawable(R.drawable.add));
+        for (int i = 0; i <myImageHashMap.size() ; i++) {
+            String mapKey=createMapKey(i+1);
+            if (!myImageHashMap.get(mapKey).getUploaded()){
+                myImageHashMap.remove(mapKey);
+            }
+        }
+        setImageView();
 
-        binding.imagePost2.setVisibility(View.GONE);
-        binding.imagePost3.setVisibility(View.GONE);
+//        binding.imagePost2.setVisibility(View.GONE);
+//        binding.imagePost3.setVisibility(View.GONE);
         imageNum = 0;
         binding.titlePost.setText(null);
         binding.descriptionPost.setText(null);
@@ -575,29 +582,32 @@ AddPostFragment extends BaseFragment {
                 isImage1Uploaded();
                 // image 2
                 isImage2Uploaded();
-                Glide.with(context).load(R.drawable.profile).into(binding.image3);
+                Glide.with(context).load(R.drawable.hourglass_split).into(binding.image3);
                 binding.imagePost3.setVisibility(View.VISIBLE);
                 binding.imagePost2.setVisibility(View.VISIBLE);
                 binding.delete1.setVisibility(View.VISIBLE);
                 binding.delete2.setVisibility(View.VISIBLE);
-                binding.delete3.setVisibility(View.INVISIBLE);
+                binding.delete3.setVisibility(View.GONE);
+                binding.addImage3.setVisibility(View.VISIBLE);
                 break;
             case 1:
                 //image 1
                 isImage1Uploaded();
-                Glide.with(context).load(R.drawable.profile).into(binding.image2);
-                Glide.with(context).load(R.drawable.profile).into(binding.image3);
+                Glide.with(context).load(R.drawable.hourglass_split).into(binding.image2);
+                Glide.with(context).load(R.drawable.hourglass_split).into(binding.image3);
                 binding.imagePost2.setVisibility(View.VISIBLE);
-                binding.imagePost3.setVisibility(View.INVISIBLE);
+                binding.imagePost3.setVisibility(View.GONE);
                 binding.delete1.setVisibility(View.VISIBLE);
-                binding.delete2.setVisibility(View.INVISIBLE);
-                binding.delete3.setVisibility(View.INVISIBLE);
+                binding.delete2.setVisibility(View.GONE);
+                binding.delete3.setVisibility(View.GONE);
+                binding.addImage2.setVisibility(View.VISIBLE);
                 break;
             case 0:
                 binding.imagePost1.setVisibility(View.VISIBLE);
                 binding.imagePost2.setVisibility(View.GONE);
                 binding.imagePost3.setVisibility(View.GONE);
-                Glide.with(context).load(R.drawable.profile).into(binding.image1);
+                binding.addImage1.setVisibility(View.VISIBLE);
+//                Glide.with(context).load(R.drawable.add).into(binding.image1);
 
         }
     }
@@ -752,7 +762,8 @@ AddPostFragment extends BaseFragment {
     }
 
     private Boolean isImage1Uploaded() {
-        if (myImageHashMap.get(IMAGE1).getUploaded()) {
+        binding.addImage1.setVisibility(View.INVISIBLE);
+    if (myImageHashMap.get(IMAGE1).getUploaded()) {
             Glide.with(context).load(myImageHashMap.get(IMAGE1).getImageUrl()).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
             return true;
         } else {
@@ -762,6 +773,7 @@ AddPostFragment extends BaseFragment {
     }
 
     private Boolean isImage2Uploaded() {
+        binding.addImage2.setVisibility(View.INVISIBLE);
         if (myImageHashMap.get(IMAGE2).getUploaded()) {
             Glide.with(context).load(myImageHashMap.get(IMAGE2).getImageUrl()).placeholder(R.drawable.ic_launcher_foreground).into(binding.image2);
             return true;
@@ -773,6 +785,8 @@ AddPostFragment extends BaseFragment {
     }
 
     private Boolean isImage3Uploaded() {
+        binding.addImage3.setVisibility(View.INVISIBLE);
+
         if (myImageHashMap.get(IMAGE3).getUploaded()) {
             Glide.with(context).load(myImageHashMap.get(IMAGE3).getImageUrl()).placeholder(R.drawable.ic_launcher_foreground).into(binding.image3);
             return true;

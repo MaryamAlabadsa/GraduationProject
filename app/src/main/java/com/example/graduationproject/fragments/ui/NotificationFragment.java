@@ -39,6 +39,7 @@ import com.example.graduationproject.retrofit.notifiction.Datum;
 import com.example.graduationproject.retrofit.notifiction.Notification;
 import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.post.PostDetails;
+import com.example.graduationproject.utils.UtilMethods;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 
@@ -79,11 +80,13 @@ public class NotificationFragment extends BaseFragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +108,7 @@ public class NotificationFragment extends BaseFragment {
 
         //event bus
         EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ALL_POSTS, TAG));
-
+        showWaitingImage();
         //showDialog();
         getNotification();
         return view;
@@ -122,11 +125,17 @@ public class NotificationFragment extends BaseFragment {
                 Log.d("response code", response.code() + "");
 
                 if (response.isSuccessful()) {
+                    dismissWaitingImage();
+
                     Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
                     Log.d("Success", new Gson().toJson(response.body()));
-                    binding.tv.setVisibility(View.GONE);
-                    binding.rvNotification.setVisibility(View.VISIBLE);
-                    setNotificationRv(response.body().getData());
+                    if (response.body().getData().isEmpty()) {
+                        showNotificationImage();
+                    } else {
+                        binding.rvNotification.setVisibility(View.VISIBLE);
+                        setNotificationRv(response.body().getData());
+                    }
+
                     //progressDialog.dismiss();
 
 
@@ -173,8 +182,8 @@ public class NotificationFragment extends BaseFragment {
             @Override
             public void layout(String postId, String userId) {
                 if (postId != null) {
-
-                    //showDialog();
+//
+//                    showDialog();
                     getPostDetails(postId);
                 } else if (userId != null) {
 //                    switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(Integer.parseInt(user_id_notifaction)));
@@ -256,8 +265,6 @@ public class NotificationFragment extends BaseFragment {
 
         }
         //progressDialog.dismiss();
-
-
         bottomSheetDialog.show();
     }
 
@@ -271,7 +278,7 @@ public class NotificationFragment extends BaseFragment {
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     PostDetails postDetails = response.body();
-                    showBottomSheetDialog(postDetails);
+                    UtilMethods.showBottomSheetDialog(postDetails,context);
                 } else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
@@ -286,5 +293,24 @@ public class NotificationFragment extends BaseFragment {
         });
     }
 
+    private void showWaitingImage() {
+        binding.lottieImg.setAnimation(R.raw.loading_pink);
+        binding.lottieImg.loop(true);
+        binding.lottieImg.playAnimation();
+        binding.lottieImg.setVisibility(View.VISIBLE);
+        binding.rvNotification.setVisibility(View.GONE);
+    }
 
+    private void showNotificationImage() {
+        binding.lottieImg.setAnimation(R.raw.no_notifaiction);
+        binding.lottieImg.loop(true);
+        binding.lottieImg.playAnimation();
+        binding.lottieImg.setVisibility(View.VISIBLE);
+        binding.rvNotification.setVisibility(View.GONE);
+    }
+
+    private void dismissWaitingImage() {
+        binding.lottieImg.setVisibility(View.GONE);
+        binding.rvNotification.setVisibility(View.VISIBLE);
+    }
 }

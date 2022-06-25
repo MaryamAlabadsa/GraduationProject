@@ -6,11 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/_50sdp"
     android:layout_marginTop="-10dp"
-    android:background="@color/white"
     android:elevation="@dimen/_25sdp"
     android:outlineAmbientShadowColor="@color/black"
     android:outlineSpotShadowColor="@color/black"
-    app:cardBackgroundColor="@color/colorPrimaryDark"
+    app:cardBackgroundColor="@color/lite_gray"
     app:cardCornerRadius="@dimen/_10sdp"
     app:cardElevation="15dp">
 
@@ -27,6 +26,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:elevation="0dp"
+        android:layout_marginTop="@dimen/_4sdp"
         android:gravity="center"
          android:orientation="horizontal"
         tools:ignore="UseCompoundDrawables">
@@ -38,7 +38,7 @@
             android:paddingTop="@dimen/_7sdp"
             android:layout_gravity="center"
             android:paddingBottom="@dimen/_7sdp"
-            android:src="@drawable/log" />
+            android:src="@drawable/logo" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -47,10 +47,9 @@
              android:gravity="center"
             android:paddingTop="@dimen/_7sdp"
             android:paddingBottom="@dimen/_7sdp"
-            android:text="@string/app_name"
-            android:textColor="@color/blue"
+            android:text="DonationApp"
+            android:textColor="@color/color_app"
             android:textSize="20sp"
-            android:typeface="serif"
             android:textStyle="bold"/>
 
     </LinearLayout>

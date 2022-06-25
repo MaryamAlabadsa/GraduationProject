@@ -70,7 +70,7 @@
                     android:layout_marginTop="@dimen/_1ssp"
                     android:background="#dddddd"
                     android:fontFamily="@font/din_next_arabic_medium"
-                    android:textColor="@color/bink"
+                    android:textColor="@color/color_app"
                     android:textSize="@dimen/_8ssp"
                     app:layout_constraintStart_toEndOf="@+id/u_img_post_placeholder"
                     app:layout_constraintTop_toBottomOf="@+id/u_name_post_placeholder" />
@@ -172,7 +172,7 @@
                     android:layout_marginTop="@dimen/_1ssp"
                     android:background="#dddddd"
                     android:fontFamily="@font/din_next_arabic_medium"
-                    android:textColor="@color/bink"
+                    android:textColor="@color/color_app"
                     android:textSize="@dimen/_8ssp"
                     app:layout_constraintStart_toEndOf="@+id/u_img_post2_placeholder"
                     app:layout_constraintTop_toBottomOf="@+id/u_name_post2_placeholder" />

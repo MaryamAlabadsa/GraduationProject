@@ -122,7 +122,7 @@ public interface ServiceApi {
     @Multipart
     @POST("editPost/{post}")
     Call<MessageResponse> updatePost(
-                @Path("post") int post
+            @Path("post") int post
             , @Header("Authorization") String token
             , @Part("title") RequestBody title
             , @Part("description") RequestBody description

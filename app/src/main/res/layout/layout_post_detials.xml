@@ -47,7 +47,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_10sdp"
-            android:fontFamily="@font/din_next_arabic_medium"
             android:text="TextView"
             android:textColor="@color/black"
             android:textSize="@dimen/_8ssp"
@@ -60,9 +59,8 @@
             android:layout_width="@dimen/_90sdp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_10sdp"
-            android:fontFamily="@font/din_next_arabic_medium"
             android:text="TextView"
-            android:textColor="@color/bink"
+            android:textColor="@color/color_app"
             android:textSize="@dimen/_8ssp"
             app:layout_constraintBottom_toBottomOf="@+id/user_image"
             app:layout_constraintStart_toEndOf="@+id/user_image"
@@ -75,7 +73,6 @@
             android:layout_width="@dimen/_70sdp"
             android:layout_height="@dimen/_30sdp"
             android:background="@drawable/button_profile1"
-            android:fontFamily="@font/din_next_arabic_bold"
             android:gravity="center"
             android:paddingLeft="@dimen/_10sdp"
             android:paddingRight="@dimen/_10sdp"
@@ -92,14 +89,15 @@
 
         <TextView
             android:id="@+id/post_title_text"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_10sdp"
-            android:fontFamily="@font/din_next_arabic_bold"
+            android:layout_marginStart="16dp"
             android:gravity="center|start"
             android:text="Chair Post"
-            android:textColor="@color/blue"
+            android:textColor="@color/dark_blue"
             android:textSize="@dimen/_15ssp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/user_image"
             tools:ignore="MissingConstraints" />
 
@@ -108,24 +106,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_10sdp"
-            android:fontFamily="@font/din_next_arabic_bold"
+            android:layout_marginStart="16dp"
             android:gravity="start|center"
             android:paddingStart="@dimen/_5sdp"
             android:text="session was expired was expired logout processing logout logout processing session was expired logout processing"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/post_title_text"
             tools:ignore="MissingConstraints" />
 
 
         <TextView
             android:id="@+id/status_detials"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/_30sdp"
             android:layout_margin="@dimen/_10sdp"
-            android:fontFamily="@font/din_next_arabic_bold"
+            android:layout_marginStart="16dp"
             android:gravity="center|start"
             android:text="Status"
-            android:textColor="@color/blue"
+            android:textColor="@color/dark_blue"
             android:textSize="@dimen/_15ssp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/post_description_text"
             tools:ignore="MissingConstraints" />
 
@@ -135,7 +135,9 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
             android:layout_margin="@dimen/_10sdp"
+            android:layout_marginStart="16dp"
             android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/status_detials"
             tools:ignore="MissingConstraints">
 
@@ -157,7 +159,7 @@
                 android:layout_marginStart="@dimen/_6sdp"
                 android:background="@drawable/button_profile2"
                 android:text="Request"
-                android:textColor="@color/blue"
+                android:textColor="@color/color_app"
                 android:textSize="@dimen/_8ssp" />
 
             <Button
@@ -188,20 +190,19 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_30sdp"
             android:layout_margin="@dimen/_10sdp"
-            android:fontFamily="@font/din_next_arabic_bold"
             android:gravity="center|start"
             android:text="Orders"
-            android:textColor="@color/blue"
+            android:textColor="@color/dark_blue"
             android:textSize="@dimen/_15ssp"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="13dp" />
 
         <TextView
             android:id="@+id/order_text"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_30sdp"
             android:layout_margin="@dimen/_10sdp"
-            android:fontFamily="@font/din_next_arabic_bold"
             android:gravity="center|start"
             android:text="orders not available"
             android:textColor="@color/black"

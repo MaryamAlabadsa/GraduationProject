@@ -76,7 +76,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
         } else {
             holder.binding.card.setBackground(context.getDrawable(R.drawable.button_profile2));
             holder.binding.categoryImage.setVisibility(View.GONE);
-            holder.binding.categoryName.setTextColor(context.getColor(R.color.blue));
+            holder.binding.categoryName.setTextColor(context.getColor(R.color.color_app));
 
         }
     }

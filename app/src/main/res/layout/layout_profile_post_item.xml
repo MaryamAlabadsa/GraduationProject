@@ -4,25 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/button_publish"
+    android:background="@drawable/profile_post"
     android:orientation="vertical"
-    android:padding="@dimen/_10sdp"
-    android:layout_margin="@dimen/_5sdp">
+    android:paddingTop="@dimen/_10sdp"
+    android:elevation="@dimen/_3sdp"
+    android:layout_margin="@dimen/_10sdp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_marginBottom="@dimen/_3sdp"
+        android:layout_margin="@dimen/_3sdp"
         android:layout_height="@dimen/_50sdp">
+
         <ImageView
             android:id="@+id/order_menu"
-            android:layout_width="@dimen/_16sdp"
+            android:layout_width="@dimen/_10sdp"
             android:layout_height="@dimen/_16sdp"
             android:layout_marginRight="@dimen/_16sdp"
             android:src="@drawable/post_menu"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:tint="@color/bink" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/color_app" />
 
         <ImageView
             android:id="@+id/u_img_post"
@@ -30,6 +33,7 @@
             android:layout_height="50dp"
             android:layout_marginStart="@dimen/_10sdp"
             android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
@@ -38,14 +42,13 @@
             android:id="@+id/u_name_post"
             android:layout_width="@dimen/_100sdp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/_3ssp"
-            android:fontFamily="@font/din_next_arabic_medium"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
             android:text="TextView"
             android:textColor="@color/black"
             android:textSize="@dimen/_10ssp"
             app:layout_constraintStart_toEndOf="@+id/u_img_post"
-            app:layout_constraintTop_toTopOf="@+id/u_img_post" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/u_date_post"
@@ -53,9 +56,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_2ssp"
-            android:fontFamily="@font/din_next_arabic_medium"
             android:text="TextView"
-            android:textColor="@color/bink"
+            android:textColor="@color/color_app"
             android:textSize="@dimen/_7ssp"
             app:layout_constraintStart_toEndOf="@+id/u_img_post"
             app:layout_constraintTop_toBottomOf="@+id/u_name_post" />
@@ -77,6 +79,8 @@
 
     <include
         android:id="@+id/layout_post"
-        layout="@layout/layout_post_item" />
+        layout="@layout/layout_post_item"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" />
 
 </LinearLayout>

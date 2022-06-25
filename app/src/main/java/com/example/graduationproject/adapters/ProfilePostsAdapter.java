@@ -3,7 +3,6 @@ package com.example.graduationproject.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +15,11 @@ import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.LayoutPostItemBinding;
 import com.example.graduationproject.databinding.LayoutProfilePostItemBinding;
-import com.example.graduationproject.listener.PostAddOrderInterface;
 import com.example.graduationproject.listener.PostDetialsInterface;
 import com.example.graduationproject.listener.PostImageShowInterface;
-import com.example.graduationproject.listener.PostMenuInterface;
 import com.example.graduationproject.listener.PostProfileAddOrderInterface;
 import com.example.graduationproject.listener.PostProfileMenuInterface;
 import com.example.graduationproject.listener.PostProfileRemoveOrderInterface;
-import com.example.graduationproject.listener.PostRemoveOrderInterface;
 import com.example.graduationproject.listener.SliderInterface;
 import com.example.graduationproject.listener.UserIdtRequestInterface;
 import com.example.graduationproject.model.SliderItem;
@@ -257,7 +253,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void setOrderPostOrderButton(LayoutPostItemBinding binding, Post list, int position) {
         if (list.getIsHeTheOwnerOfThePost()) {
-            binding.commentBtn.setText("Show orders");
+            binding.commentBtn.setText("Show Orders");
             binding.commentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -286,12 +282,24 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private void setOrderPostStatus(LayoutPostItemBinding binding, Post list) {
         if (list.getSecondUserName().equals("not found")) {
 //           binding.postStatus.setBackgroundColor(Color.WHITE);
-            binding.postStatus.setTextColor(Color.RED);
-            binding.postStatus.setText("Pending");
+//            binding.postStatus.setTextColor(Color.RED);
+           binding.postStatus.setBackgroundResource(R.drawable.deadline);
+           binding.postStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "pending", Toast.LENGTH_SHORT).show();
+                }
+            });
         } else {
-//           binding.postStatus.setBackgroundColor(Color.red(0));
-            binding.postStatus.setTextColor(Color.GREEN);
-            binding.postStatus.setText("completed");
+//            holder.binding.postStatus.setBackgroundColor(Color.red(0));
+//            holder.binding.postStatus.set(context.getColor(R.color.colorAccent));
+            binding.postStatus.setBackgroundResource(R.drawable.clipboard);
+            binding.postStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "completed", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
@@ -338,7 +346,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         sliderView.setIndicatorAnimation(IndicatorAnimationType.SCALE_DOWN); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
         sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
         sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
-        sliderView.setIndicatorSelectedColor(context.getColor(R.color.bink));
+        sliderView.setIndicatorSelectedColor(context.getColor(R.color.pink));
         sliderView.setIndicatorUnselectedColor(Color.WHITE);
         sliderView.setScrollTimeInSec(4); //set scroll delay in seconds :
         sliderView.startAutoCycle();
@@ -372,7 +380,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                 });
             } else {
-                holder.binding.commentBtn.setText("Add");
+                holder.binding.commentBtn.setText("Add Comment");
             }
         }
         holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
@@ -392,12 +400,24 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void setPostStatus(ProfilePostsAdapter.MyPostViewHolder holder, int position) {
         if (list.get(position).getSecondUserName().equals("not found")) {
-            holder.binding.postStatus.setTextColor(Color.RED);
-            holder.binding.postStatus.setText("Pending");
+//            holder.binding.postStatus.setTextColor(Color.RED);
+            holder.binding.postStatus.setBackgroundResource(R.drawable.deadline);
+            holder.binding.postStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "pending", Toast.LENGTH_SHORT).show();
+                }
+            });
         } else {
 //            holder.binding.postStatus.setBackgroundColor(Color.red(0));
-            holder.binding.postStatus.setTextColor(Color.GREEN);
-            holder.binding.postStatus.setText("completed");
+//            holder.binding.postStatus.set(context.getColor(R.color.colorAccent));
+            holder.binding.postStatus.setBackgroundResource(R.drawable.clipboard);
+            holder.binding.postStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "completed", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 

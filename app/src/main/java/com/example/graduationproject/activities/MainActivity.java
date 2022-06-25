@@ -1,45 +1,26 @@
 package com.example.graduationproject.activities;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.LayerDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.amrdeveloper.lottiedialog.LottieDialog;
 import com.bumptech.glide.Glide;
@@ -47,7 +28,6 @@ import com.claudiodegio.msv.OnSearchViewListener;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.ActivityMainBinding;
 import com.example.graduationproject.databinding.LayoutToolbarBinding;
-import com.example.graduationproject.fragments.SearchFragment;
 import com.example.graduationproject.fragments.ui.ChangePasswordFragment;
 import com.example.graduationproject.fragments.MyTitleEventBus;
 import com.example.graduationproject.fragments.ui.AddPostFragment;
@@ -62,18 +42,11 @@ import com.example.graduationproject.model.PostOrdersInfo;
 import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.logout.LogOut;
-import com.example.graduationproject.retrofit.post.Post;
-import com.example.graduationproject.retrofit.register.RegisterResponse;
 import com.example.graduationproject.retrofit.register.User;
-import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
-import com.example.graduationproject.utils.FileUtil;
 import com.example.graduationproject.utils.UtilMethods;
-import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
 import static com.example.graduationproject.fragments.PagesFragment.ADD_POSTS;
 import static com.example.graduationproject.fragments.PagesFragment.ALL_POSTS;
@@ -86,21 +59,9 @@ import static com.example.graduationproject.fragments.PagesFragment.SEARCH;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -213,7 +174,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onQueryTextChange(String s) {
                 EventBus.getDefault().post(new MyTitleEventBus(SEARCH, s));
-
             }
         }); // this class implements OnSearchViewListener
 
@@ -451,7 +411,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
 
     private void launchRippleLottieDialog() {
-        int orangeColor = ContextCompat.getColor(context, R.color.bink);
+        int orangeColor = ContextCompat.getColor(context, R.color.color_app);
 
         LottieDialog dialog = new LottieDialog(context)
                 .setAnimation(R.raw.ripple)
