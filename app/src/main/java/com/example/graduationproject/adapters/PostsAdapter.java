@@ -191,9 +191,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
                 }
             });
             holder.binding.commentBtn.setText("Show orders");
+            holder.binding.postMenu.setVisibility(View.INVISIBLE);
+
         } else {
-            if (list.get(position).getIsCompleted())
+            if (list.get(position).getIsCompleted()){
                 holder.binding.commentBtn.setVisibility(View.INVISIBLE);
+                holder.binding.postMenu.setVisibility(View.INVISIBLE);
+            }
             else if (list.get(position).getIsOrdered()) {
                 holder.binding.commentBtn.setText("Remove order");
                 holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
@@ -209,7 +213,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
                     public void onClick(View view) {
                         addOrderInterface.layout(list.get(position), position);
                         notifyDataSetChanged();
-
                     }
                 });
                 holder.binding.commentBtn.setText("Add Comment");

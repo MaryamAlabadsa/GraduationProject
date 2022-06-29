@@ -27,7 +27,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_50sdp"
+                android:layout_marginTop="@dimen/_70sdp"
                 android:layout_marginRight="@dimen/_16sdp"
                 app:srcCompat="@drawable/undraw_secure_login_pdn4" />
 

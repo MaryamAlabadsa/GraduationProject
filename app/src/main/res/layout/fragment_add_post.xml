@@ -22,13 +22,15 @@
                 android:layout_height="@dimen/_170sdp"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="40dp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
                 android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/image_post1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="@dimen/_13sdp"
+                    android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="1"
                     app:cardCornerRadius="@dimen/_10sdp">
 
@@ -99,7 +101,7 @@
                     android:id="@+id/image_post3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="@dimen/_10sdp"
+                    android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="1"
                     android:background="#FCFCFC"
                     android:visibility="gone"
@@ -242,7 +244,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:buttonTint="@color/dark_blue"
-                    android:text="Request"
+                    android:text="Receipt"
                     android:textAlignment="textStart"
                     android:textColor="@color/color_app"
                     android:textSize="@dimen/_14ssp"

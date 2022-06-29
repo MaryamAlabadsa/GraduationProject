@@ -82,7 +82,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 message = list.get(position).getSenderName() + " create new account";
             }
         } else {
-            message = list.get(position).getSenderName() + " send you a request";
+            if (list.get(position).getIsDeleted()==null)
+                message = list.get(position).getSenderName() + " send you a request";
+            else
+                message = list.get(position).getSenderName() + " canceled his/her request";
+
+
+
         }
         holder.binding.tvNotificationText.setText(message);
         holder.binding.tvNotificationDate.setText(list.get(position).getSent_at());

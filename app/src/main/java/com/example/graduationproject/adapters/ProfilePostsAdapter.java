@@ -168,8 +168,9 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         });
         setOrderPostHolder(layoutPostItemBinding, position);
-        if (list.get(position).getPost().getThe_owner_is_login())
+        if (!list.get(position).getPost().getThe_owner_is_login() && list.get(position).getPost().getIsCompleted())
             holder.binding.orderMenu.setVisibility(View.INVISIBLE);
+
         holder.binding.orderMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -185,8 +186,9 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private void setOrderPostHolder(LayoutPostItemBinding binding, int position) {
 
         Post post = postsList.getPost();
-        binding.postMenu.setVisibility(View.INVISIBLE);
         binding.commentBtn.setVisibility(View.INVISIBLE);
+        binding.tvPostTitleImageSlider.setText(post.getTitle());
+        binding.tvPostDesImageSlider.setText(post.getTitle());
         binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -232,6 +234,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 postImageShowInterface.layout(list.getPostMedia());
             }
         });
+        binding.postMenu.setVisibility(View.INVISIBLE);
         sliderView.setSliderAdapter(adapter);
         SliderItem sliderItem = new SliderItem(list.getTitle(), list.getDescription(), list.getPostMedia());
         adapter.addItem(list.getPostMedia());
@@ -283,16 +286,14 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (list.getSecondUserName().equals("not found")) {
 //           binding.postStatus.setBackgroundColor(Color.WHITE);
 //            binding.postStatus.setTextColor(Color.RED);
-           binding.postStatus.setBackgroundResource(R.drawable.deadline);
-           binding.postStatus.setOnClickListener(new View.OnClickListener() {
+            binding.postStatus.setBackgroundResource(R.drawable.deadline);
+            binding.postStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(context, "pending", Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
-//            holder.binding.postStatus.setBackgroundColor(Color.red(0));
-//            holder.binding.postStatus.set(context.getColor(R.color.colorAccent));
             binding.postStatus.setBackgroundResource(R.drawable.clipboard);
             binding.postStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -301,12 +302,15 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
             });
         }
-    }
-
+      }
+//--------------------------------------------------------------------------------------------
     // post
+
+    //---------------------------------------normal post-------------------------------------------------
     private void setPostHolder(MyPostViewHolder holder, int position) {
-        if (!list.get(position).getTheOwnerIsLogin())
+        if (!list.get(position).getIsHeTheOwnerOfThePost()|| list.get(position).getIsCompleted())
             holder.binding.postMenu.setVisibility(View.INVISIBLE);
+
 
 //        ((MyPostViewHolder) holder).binding.numberRequestsPost.setText(list.get(position).getNumberOfRequests() + " request   ");
         ((MyPostViewHolder) holder).binding.uNamePost.setText("" + list.get(position).getFirstUserName());
@@ -359,7 +363,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private void setOrderButton(ProfilePostsAdapter.MyPostViewHolder holder, int position) {
-       holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
+        holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -409,8 +413,6 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
             });
         } else {
-//            holder.binding.postStatus.setBackgroundColor(Color.red(0));
-//            holder.binding.postStatus.set(context.getColor(R.color.colorAccent));
             holder.binding.postStatus.setBackgroundResource(R.drawable.clipboard);
             holder.binding.postStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -419,8 +421,11 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
             });
         }
+        holder.binding.tvPostTitleImageSlider.setText(list.get(position).getTitle());
+        holder.binding.tvPostDesImageSlider.setText(list.get(position).getTitle());
     }
 
+    //--------------------------------------------------------------------------------------------------
     @Override
     public int getItemCount() {
         return list != null ? list.size() : 0;

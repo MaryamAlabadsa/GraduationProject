@@ -155,7 +155,7 @@ public class AllPostsFragment extends BaseFragment {
         checkNetwork(context);
         binding.shimmerView.setVisibility(View.VISIBLE);
 
-        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ALL_POSTS, "All post"));
+        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ALL_POSTS, "All Posts"));
 
         filterDialog();
         setPostsRv(new ArrayList<>());
@@ -179,7 +179,6 @@ public class AllPostsFragment extends BaseFragment {
                 swipeRefreshLayout.setRefreshing(false);
                 binding.shimmerView.setVisibility(View.VISIBLE);
                 binding.dataLayout.setVisibility(View.GONE);
-//                getAllCategories();
                 checkNetwork(context);
             }, 1000);
         });
@@ -202,7 +201,6 @@ public class AllPostsFragment extends BaseFragment {
                     AllCategories getAllCategories = response.body();
                     data = getAllCategories.getData();
                     setCategoryRv(data);
-//                    binding.isDonationLinear.setVisibility(View.VISIBLE);
                 } else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
@@ -328,7 +326,7 @@ public class AllPostsFragment extends BaseFragment {
             @SuppressLint("CheckResult")
             @Override
             public void layout(int id) {
-                UtilMethods.getPostDetails(id, context, serviceApi, token);
+                UtilMethods.getPostDetails(id, context, serviceApi, token,fragmentSwitcher);
             }
         }, new PostAddOrderInterface() {
             @Override
@@ -598,9 +596,14 @@ public class AllPostsFragment extends BaseFragment {
     }
 
     private void setSelectedCategory(Constant checkedBtn, Constant postStatus) {
-        binding.dataLayout.setVisibility(View.VISIBLE);
-        binding.shimmerView.setVisibility(View.GONE);
-        showWaitingImage();
+        if (page == 1) {
+            binding.dataLayout.setVisibility(View.VISIBLE);
+            binding.shimmerView.setVisibility(View.GONE);
+            showWaitingImage();
+        }else{
+
+        }
+
         getCheckedBtn(checkedBtn);
         if (selectedCategory == Constant.NO_SELECTED_CATEGORY) {
             if (checkedBtn == Constant.ALL_CHECKED && postStatus == Constant.ALL_CHECKED) {
@@ -639,7 +642,7 @@ public class AllPostsFragment extends BaseFragment {
     private void postImageDialog(List<String> url_list) {
         Dialog dialog = new PopopDialogBuilder(context)
                 .setList(url_list, 0)
-                .setHeaderBackgroundColor(android.R.color.holo_green_light)
+                .setHeaderBackgroundColor(R.color.color_app)
                 .setDialogBackgroundColor(R.color.color_dialog_bg)
                 .setCloseDrawable(R.drawable.ic_close_white_24dp)
                 .showThumbSlider(true)
@@ -814,8 +817,6 @@ public class AllPostsFragment extends BaseFragment {
     }
 
     private void searchPostRequest(String data) {
-
-        Toast.makeText(context, "search", Toast.LENGTH_SHORT).show();
         int donationId = 2, postStatusId = 2;
         if ((checkedNum == Constant.DONATION_CHECKED)) {
             donationId = 1;
@@ -845,21 +846,31 @@ public class AllPostsFragment extends BaseFragment {
             public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
                 Log.d("Success", new Gson().toJson(response.body()));
                 AllPosts getAllPosts = response.body();
-                assert response.body() != null;
-                if (getAllPosts.getData().size() == 0) {
-                    showSearchImage();
-                } else {
-                    dismissWaitingImage();
-                    if (page == 1) {
-                        adapter.setList(getAllPosts.getData());
-                    } else
-                        adapter.addToList(getAllPosts.getData());
-                    if (response.body().getMeta().getLastPage() == page) {
-                        isLastPage = true;
-                        Log.e("lastPage", isLastPage + "");
+
+                if (response.isSuccessful()){
+                    assert response.body() != null;
+
+                    if (getAllPosts.getData().size() == 0) {
+                        showSearchImage();
                     } else {
-                        isLastPage = false;
+                        dismissWaitingImage();
+                        if (page == 1) {
+                            adapter.setList(getAllPosts.getData());
+                        } else
+                            adapter.addToList(getAllPosts.getData());
+                        if (response.body().getMeta().getLastPage() == page) {
+                            isLastPage = true;
+                            Log.e("lastPage", isLastPage + "");
+                        } else {
+                            isLastPage = false;
+                        }
                     }
+                }else if (response.code()==422){
+                    pDialog = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
+                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
+                    pDialog.setTitleText("Loading ...");
+                    pDialog.setCancelable(true);
+                    pDialog.show();
                 }
             }
 

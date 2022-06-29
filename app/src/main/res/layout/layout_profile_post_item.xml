@@ -18,9 +18,9 @@
 
         <ImageView
             android:id="@+id/order_menu"
-            android:layout_width="@dimen/_10sdp"
-            android:layout_height="@dimen/_16sdp"
-            android:layout_marginRight="@dimen/_16sdp"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_16sdp"
             android:src="@drawable/post_menu"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"

@@ -187,9 +187,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void onResponse(Call<UserProfileInfo> call, Response<UserProfileInfo> response) {
                 Log.d("response1 code", response.code() + "");
-
                 if (response.isSuccessful()) {
-                    Toast.makeText(context, "mu info", Toast.LENGTH_SHORT).show();
                     Log.d("Success", new Gson().toJson(response.body()));
                     Glide.with(context).load(response.body().getData().getUserImage()).circleCrop()
                             .placeholder(R.drawable.usericon).into(binding.profileImage);
@@ -197,7 +195,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     binding.tvDonationPostsNum.setText(response.body().getData().getNumDonationPost() + "");
                     binding.tvRequestPostsNum.setText(response.body().getData().getNumRequestPost() + "");
                     getMyRequestPosts();
-
                 } else {
 //                    String errorMessage
 //                    = parseError(response);
@@ -362,7 +359,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void layout(int id) {
 
-                UtilMethods.getPostDetails(id, context, serviceApi, token);
+                UtilMethods.getPostDetails(id, context, serviceApi, token,fragmentSwitcher);
 
             }
         }, new PostProfileAddOrderInterface() {
@@ -609,15 +606,15 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 .setList(url_list, 0)
                 // or setList with initial position that like .setList(list,position)
                 // Set dialog header color
-                .setHeaderBackgroundColor(android.R.color.holo_blue_light)
+                .setHeaderBackgroundColor(R.color.color_app)
                 // Set dialog background color
                 .setDialogBackgroundColor(R.color.color_dialog_bg)
                 // Set close icon drawable
                 .setCloseDrawable(R.drawable.ic_close_white_24dp)
                 // Set loading view for pager image and preview image
-//            .setLoadingView(R.layout.loading_view)
+            .setLoadingView(R.layout.crop_image_view)
                 // Set dialog style
-//            .setDialogStyle(R.style.DialogStyle)
+            .setDialogStyle(R.style.alert_dialog_dark)
                 // Choose selector type, indicator or thumbnail
                 .showThumbSlider(true)
                 // Set image scale type for slider image
@@ -650,15 +647,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                                 .maxResultSize(233, 280)    //Final image resolution will be less than 1080 x 1080(Optional)
                                 .start();
 
-                } else {
-                    if (!checkStoragePermission()) {
-                        requestStoragePermission();
-                    } else new ImagePicker.Builder(getActivity())
-                            .crop(83, 100)                    //Crop image(Optional), Check Customization for more option
-                            .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                            .maxResultSize(233, 280)    //Final image resolution will be less than 1080 x 1080(Optional)
-                            .start();
-
                 }
             }
         });
@@ -675,22 +663,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestStoragePermission() {
-        requestPermissions(new String[]{
-                Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void requestCameraPermission() {
         requestPermissions(new String[]{Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-    }
-
-    private boolean checkStoragePermission() {
-        boolean res2 = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED;
-        return res2;
     }
 
     private boolean checkCameraPermission() {

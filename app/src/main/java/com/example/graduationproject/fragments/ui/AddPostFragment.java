@@ -159,8 +159,9 @@ AddPostFragment extends BaseFragment {
         categories = new ArrayList<>();
 
         myImageHashMap = new HashMap<String, MyImage>();
-//        imagesList = new HashMap<String, Uri>();
-//        post = new Post();
+        if (myImageHashMap != null)
+            setDeleteImagesAction();
+
         getAllCategories();
         if (isEdit)
             setFields();
@@ -263,19 +264,17 @@ AddPostFragment extends BaseFragment {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     public void clearAllFields() {
-//        binding.image1.setImageDrawable(context.getDrawable(R.drawable.adapterdd));
-//        binding.image2.setImageDrawable(context.getDrawable(R.drawable.add));
-//        binding.image3.setImageDrawable(context.getDrawable(R.drawable.add));
-        for (int i = 0; i <myImageHashMap.size() ; i++) {
-            String mapKey=createMapKey(i+1);
-            if (!myImageHashMap.get(mapKey).getUploaded()){
+        for (int i = 0; i < myImageHashMap.size(); i++) {
+            String mapKey = createMapKey(i + 1);
+            if (!myImageHashMap.get(mapKey).getUploaded()) {
                 myImageHashMap.remove(mapKey);
             }
         }
-        setImageView();
+        if (myImageHashMap != null) {
+            setImageView();
+        }
 
-//        binding.imagePost2.setVisibility(View.GONE);
-//        binding.imagePost3.setVisibility(View.GONE);
+
         imageNum = 0;
         binding.titlePost.setText(null);
         binding.descriptionPost.setText(null);
@@ -548,9 +547,7 @@ AddPostFragment extends BaseFragment {
         else
             binding.radioDon.setChecked(true);
         appendEditImageToMap(post.getPostMedia());
-//        editImages = post.getPostMedia();
         setImageView();
-        setDeleteImagesAction();
         setAddImagesAction();
     }
 
@@ -607,8 +604,9 @@ AddPostFragment extends BaseFragment {
                 binding.imagePost2.setVisibility(View.GONE);
                 binding.imagePost3.setVisibility(View.GONE);
                 binding.addImage1.setVisibility(View.VISIBLE);
-//                Glide.with(context).load(R.drawable.add).into(binding.image1);
-
+                binding.delete1.setVisibility(View.INVISIBLE);
+                Glide.with(context).load(R.drawable.hourglass_split).into(binding.image1);
+                break;
         }
     }
 
@@ -740,7 +738,7 @@ AddPostFragment extends BaseFragment {
                     openGallery(2);
             }
         });
-        binding.imagePost3.setOnClickListener(new View.OnClickListener() {
+        binding.addImage3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (myImageHashMap.get(IMAGE3) != null) {
@@ -763,7 +761,7 @@ AddPostFragment extends BaseFragment {
 
     private Boolean isImage1Uploaded() {
         binding.addImage1.setVisibility(View.INVISIBLE);
-    if (myImageHashMap.get(IMAGE1).getUploaded()) {
+        if (myImageHashMap.get(IMAGE1).getUploaded()) {
             Glide.with(context).load(myImageHashMap.get(IMAGE1).getImageUrl()).placeholder(R.drawable.ic_launcher_foreground).into(binding.image1);
             return true;
         } else {

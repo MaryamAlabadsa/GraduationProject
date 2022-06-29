@@ -42,6 +42,7 @@ import com.example.graduationproject.retrofit.post.Post;
 import com.example.graduationproject.retrofit.request.Data;
 import com.example.graduationproject.retrofit.request.GetAllOrder;
 import com.example.graduationproject.retrofit.request.Order;
+import com.example.graduationproject.utils.UtilMethods;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
@@ -74,11 +75,13 @@ public class PostOrdersFragment extends BaseFragment {
     public PostOrdersFragment() {
         // Required empty public constructor
     }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
     }
+
     public static PostOrdersFragment newInstance(PostOrdersInfo param1) {
         PostOrdersFragment fragment = new PostOrdersFragment();
         Bundle args = new Bundle();
@@ -116,7 +119,7 @@ public class PostOrdersFragment extends BaseFragment {
         context = getActivity();
 
         //event bus
-        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ALL_POSTS, "Your Order"));
+        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ALL_POSTS, "Your Orders"));
 
         //showDialog();
         getPostsOrdersRequest();
@@ -138,9 +141,6 @@ public class PostOrdersFragment extends BaseFragment {
                     Log.d("Success", new Gson().toJson(response.body()));
                     GetAllOrder getPostOrders = response.body();
                     setOrdersRv(getPostOrders);
-                    //progressDialog.dismiss();
-
-
                 } else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
@@ -155,55 +155,6 @@ public class PostOrdersFragment extends BaseFragment {
         });
     }
 
-    private void changePostStatusRequest(int user_id) {
-
-        Call<Post> call = serviceApi.changePostStatus(postId,
-                "Bearer " + token, user_id);
-        call.enqueue(new Callback<Post>() {
-            @Override
-            public void onResponse(Call<Post> call, Response<Post> response) {
-                Log.d("response3 code", response.code() + "");
-
-                if (response.isSuccessful()) {
-                    Log.d("Success", new Gson().toJson(response.body()));
-                    fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null,null);
-                    pDialog.dismiss();
-                    adapter.clearData();
-                    getPostsOrdersRequest();
-
-                } else {
-                    String errorMessage = parseError(response);
-                    Log.e("errorMessage", errorMessage + "");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Post> call, Throwable t) {
-                Log.d("onFailure2", t.getMessage() + "");
-                call.cancel();
-            }
-        });
-    }
-
-    AlertDialog.Builder builder;
-
-    private void createAcceptOrderDialog(int userId) {
-
-        pDialog = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
-        pDialog.setTitleText("Are you sure you wanna accept this order?");
-        pDialog.changeAlertType(SweetAlertDialog.WARNING_TYPE);
-        pDialog.setCancelable(true);
-
-        pDialog.setConfirmButton("sure", new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                changePostStatusRequest(userId);
-            }
-        });
-        pDialog.show();
-    }
-
     private void setOrdersRv(GetAllOrder order) {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 context, RecyclerView.VERTICAL, false);
@@ -212,7 +163,8 @@ public class PostOrdersFragment extends BaseFragment {
         adapter = new PostOrdersAdapter(context, new PostOrderRequestInterface() {
             @Override
             public void layout(int userId) {
-                createAcceptOrderDialog(userId);
+                UtilMethods.createAcceptOrderDialog(userId, context, serviceApi, postId, token, fragmentSwitcher);
+//                createAcceptOrderDialog(userId);
             }
         }, isCompleted, isDonation, secondUser);
         adapter.setList(order.getData());

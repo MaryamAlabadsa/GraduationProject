@@ -114,7 +114,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         String user_id_notifaction = getIntent().getStringExtra("user_id");
         if (post_id_notifaction != null) {
 //            //showDialog();
-            UtilMethods.getPostDetails(Integer.parseInt(post_id_notifaction), context, serviceApi, token);
+            UtilMethods.getPostDetails(Integer.parseInt(post_id_notifaction), context, serviceApi, token,this::switchFragment);
             switchFragment(NOTIFICATION, null,"");
 
         } else if (user_id_notifaction != null) {
@@ -151,7 +151,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (!user.isEmpty()) {
             User user1 = gson.fromJson(user, User.class);
             Glide.with(context).load(user1.getImageLink()).circleCrop()
-                    .placeholder(R.drawable.ic_launcher_foreground).into(userImage);
+                    .placeholder(R.drawable.usericon).into(userImage);
             username.setText(user1.getName());
         }
         binding.sv.setOnSearchViewListener(new OnSearchViewListener() {
@@ -162,7 +162,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             @Override
             public void onSearchViewClosed() {
-
+                binding.sv.setVisibility(View.GONE);
             }
 
             @Override
@@ -235,12 +235,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             toolbarBinding.getRoot().setVisibility(View.VISIBLE);
             binding.marginTop.setVisibility(View.VISIBLE);
 
-        } else if (event.getType() == SEARCH) {
-            toolbarBinding.tvTitle.setText(event.getText());
-            toolbarBinding.getRoot().setVisibility(View.VISIBLE);
-            binding.marginTop.setVisibility(View.VISIBLE);
-
-        } else if (event.getType() == ADD_POSTS) {
+        }  else if (event.getType() == ADD_POSTS) {
             toolbarBinding.tvTitle.setText(event.getText());
             toolbarBinding.getRoot().setVisibility(View.VISIBLE);
             binding.marginTop.setVisibility(View.VISIBLE);

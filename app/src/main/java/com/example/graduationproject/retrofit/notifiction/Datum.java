@@ -31,6 +31,9 @@ public class Datum implements Serializable
     @SerializedName("sender_name")
     @Expose
     private String senderName;
+    @SerializedName("ia_deleted")
+    @Expose
+    private String isDeleted;
     private final static long serialVersionUID = 2792360874378452260L;
 
     /**
@@ -118,5 +121,13 @@ public class Datum implements Serializable
 
     public void setSenderName(String senderName) {
         this.senderName = senderName;
+    }
+
+    public String getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(String isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

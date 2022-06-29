@@ -143,7 +143,7 @@
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/layout_post_detials.xml" value="0.25" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/layout_post_item.xml" value="0.22" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/layout_post_order.xml" value="0.19610507246376813" />
-        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/layout_profile_post_item.xml" value="0.22447916666666667" />
+        <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/layout_profile_post_item.xml" value="0.22" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/layout_toolbar.xml" value="0.22" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/my_home_placeholder.xml" value="0.10916919959473151" />
         <entry key="..\:/ucas/Graduation_project/GraduationProject/app/src/main/res/layout/my_post_placeholder.xml" value="0.182518115942029" />
@@ -160,5 +160,5 @@
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="11" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>
