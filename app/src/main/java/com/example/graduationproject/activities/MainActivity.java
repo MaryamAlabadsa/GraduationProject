@@ -24,6 +24,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.amrdeveloper.lottiedialog.LottieDialog;
 import com.bumptech.glide.Glide;
+import com.claudiodegio.msv.BaseMaterialSearchView;
 import com.claudiodegio.msv.OnSearchViewListener;
 import com.example.graduationproject.R;
 import com.example.graduationproject.databinding.ActivityMainBinding;
@@ -162,7 +163,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             @Override
             public void onSearchViewClosed() {
-                binding.sv.setVisibility(View.GONE);
+//                binding.sv.closeSearch();
             }
 
             @Override

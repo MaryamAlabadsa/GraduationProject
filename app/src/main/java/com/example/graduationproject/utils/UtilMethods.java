@@ -98,7 +98,7 @@ public class UtilMethods {
             PostOrdersAdapter adapter = new PostOrdersAdapter(context, new PostOrderRequestInterface() {
                 @Override
                 public void layout(int userId) {
-                    createAcceptOrderDialog(userId, context, serviceApi, postId, token, fragmentSwitcher);
+                    createAcceptOrderDialog(userId, context, serviceApi, postId, token, fragmentSwitcher,bottomSheetDialog);
                 }
             }, postDetails.getPost().getIsCompleted(), postDetails.getPost().getIsDonation(), postDetails.getPost().getSecondUserId());
             adapter.setList(postDetails.getOrders());
@@ -109,7 +109,7 @@ public class UtilMethods {
         bottomSheetDialog.show();
     }
 
-    public static void createAcceptOrderDialog(int userId, Context context, ServiceApi serviceApi, int postId, String token, FragmentSwitcher fragmentSwitcher) {
+    public static void createAcceptOrderDialog(int userId, Context context, ServiceApi serviceApi, int postId, String token, FragmentSwitcher fragmentSwitcher, BottomSheetDialog bottomSheetDialog) {
 
         pDialog = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
@@ -122,13 +122,14 @@ public class UtilMethods {
             public void onClick(SweetAlertDialog sweetAlertDialog) {
                 pDialog.dismiss();
 
-                changePostStatusRequest(userId, serviceApi, postId, token, fragmentSwitcher,sweetAlertDialog);
+                changePostStatusRequest(userId, serviceApi, postId, token, fragmentSwitcher,sweetAlertDialog,bottomSheetDialog);
             }
         });
         pDialog.show();
     }
 
-    public static void changePostStatusRequest(int user_id, ServiceApi serviceApi, int postId, String token, FragmentSwitcher fragmentSwitcher,SweetAlertDialog sweetAlertDialog) {
+    public static void changePostStatusRequest(int user_id, ServiceApi serviceApi, int postId, String token,
+                                               FragmentSwitcher fragmentSwitcher,SweetAlertDialog sweetAlertDialog, BottomSheetDialog bottomSheetDialog) {
 
         Call<Post> call = serviceApi.changePostStatus(postId,
                 "Bearer " + token, user_id);
@@ -141,7 +142,8 @@ public class UtilMethods {
                     Log.d("Success", new Gson().toJson(response.body()));
                     if (fragmentSwitcher != null) {
                         fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null, null);
-                    }
+                    }else if(bottomSheetDialog!=null)
+                        bottomSheetDialog.dismiss();
                     sweetAlertDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                     sweetAlertDialog.dismiss();
                 } else {

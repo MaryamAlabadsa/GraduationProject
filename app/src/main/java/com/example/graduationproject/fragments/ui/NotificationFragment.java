@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
@@ -105,15 +107,24 @@ public class NotificationFragment extends BaseFragment {
         binding = FragmentNotificationBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         context = getActivity();
-
+        swipeToRefresh();
         //event bus
         EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ALL_POSTS, TAG));
         showWaitingImage();
-        //showDialog();
         getNotification();
         return view;
     }
 
+    private void swipeToRefresh() {
+        SwipeRefreshLayout swipeRefreshLayout = binding.scroll;
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            new Handler().postDelayed(() -> {
+                swipeRefreshLayout.setRefreshing(false);
+                showWaitingImage();
+                getNotification();  
+            }, 1000);
+        });
+    }
 
     private void getNotification() {
 
@@ -127,11 +138,11 @@ public class NotificationFragment extends BaseFragment {
                 if (response.isSuccessful()) {
                     dismissWaitingImage();
 
-                    Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
                     Log.d("Success", new Gson().toJson(response.body()));
                     if (response.body().getData().isEmpty()) {
                         showNotificationImage();
                     } else {
+
                         binding.rvNotification.setVisibility(View.VISIBLE);
                         setNotificationRv(response.body().getData());
                     }
@@ -175,6 +186,7 @@ public class NotificationFragment extends BaseFragment {
 
 
     private void setNotificationRv(List<Datum> list) {
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 context, RecyclerView.VERTICAL, false);
         binding.rvNotification.setLayoutManager(layoutManager);
@@ -184,8 +196,6 @@ public class NotificationFragment extends BaseFragment {
                 if (postId != null) {
                     UtilMethods.launchLoadingLottieDialog(context);
                     getPostDetails(postId);
-                } else if (userId != null) {
-//                    switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(Integer.parseInt(user_id_notifaction)));
                 }
             }
         });

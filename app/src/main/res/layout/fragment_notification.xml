@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".fragments.ui.NotificationFragment">
 
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <!-- TODO: Update blank fragment layout -->
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottie_img"
@@ -29,5 +35,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

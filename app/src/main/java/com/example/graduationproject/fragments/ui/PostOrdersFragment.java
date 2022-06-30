@@ -163,7 +163,7 @@ public class PostOrdersFragment extends BaseFragment {
         adapter = new PostOrdersAdapter(context, new PostOrderRequestInterface() {
             @Override
             public void layout(int userId) {
-                UtilMethods.createAcceptOrderDialog(userId, context, serviceApi, postId, token, fragmentSwitcher);
+                UtilMethods.createAcceptOrderDialog(userId, context, serviceApi, postId, token, fragmentSwitcher,null);
 //                createAcceptOrderDialog(userId);
             }
         }, isCompleted, isDonation, secondUser);

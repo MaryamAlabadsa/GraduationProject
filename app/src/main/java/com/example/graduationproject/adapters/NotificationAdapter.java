@@ -72,9 +72,20 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public void onBindViewHolder(@NonNull NotificationAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         if (list.get(position).getType().equals("accept_request")) {
-            message = list.get(position).getSenderName() + "accept your request";
+            message = list.get(position).getSenderName() + " accept your request";
+            holder.binding.view.setBackground(context.getDrawable(R.drawable.notification_view_shape_peach));
+        } else if (list.get(position).getType().equals("add_request")) {
+            message = list.get(position).getSenderName() + " add request to your post";
+            holder.binding.view.setBackground(context.getDrawable(R.drawable.notification_view_shape_pink));
+        }else if (list.get(position).getType().equals("update_post")) {
+            message = list.get(position).getSenderName() + " add request to your post";
+            holder.binding.view.setBackground(context.getDrawable(R.drawable.notification_view_shape_blue_gray));
+        }else if (list.get(position).getType().equals("delete_post")) {
+            message = list.get(position).getSenderName() + " add request to your post";
+            holder.binding.view.setBackground(context.getDrawable(R.drawable.notification_view_shape_orange_yellow));
+        }
 
-        } else if (list.get(position).getType().equals("admin")) {
+        else if (list.get(position).getType().equals("admin")) {
             holder.binding.view.setBackground(context.getDrawable(R.drawable.notification_view_shape_red));
             if (list.get(position).getPostId()!=0){
                 message = list.get(position).getSenderName() + " add post ";

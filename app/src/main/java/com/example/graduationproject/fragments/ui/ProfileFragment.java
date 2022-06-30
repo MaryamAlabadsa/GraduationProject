@@ -163,8 +163,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 startActivity(intent);
             }
         });
+        Toast.makeText(context, userId+ "", Toast.LENGTH_SHORT).show();
         if (userId == 0)
             binding.editUserName.setVisibility(View.VISIBLE);
+        else
+            binding.editUserName.setVisibility(View.INVISIBLE);
 
         return view;
     }
@@ -646,7 +649,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                                 .compress(1024)            //Final image size will be less than 1 MB(Optional)
                                 .maxResultSize(233, 280)    //Final image resolution will be less than 1080 x 1080(Optional)
                                 .start();
-
                 }
             }
         });
@@ -655,11 +657,17 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        new ImagePicker.Builder(this)
-                .crop(83, 100)                    //Crop image(Optional), Check Customization for more option
-                .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                .maxResultSize(233, 280)    //Final image resolution will be less than 1080 x 1080(Optional)
-                .start();
+        Log.e("PERMISSION_GRANTED",grantResults[0]+"");
+        if (grantResults[0]==PackageManager.PERMISSION_GRANTED){
+            new ImagePicker.Builder(this)
+                    .crop(83, 100)                    //Crop image(Optional), Check Customization for more option
+                    .compress(1024)            //Final image size will be less than 1 MB(Optional)
+                    .maxResultSize(233, 280)    //Final image resolution will be less than 1080 x 1080(Optional)
+                    .start();
+        }else {
+            Toast.makeText(context, "sssss", Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
@@ -668,13 +676,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void requestCameraPermission() {
         requestPermissions(new String[]{Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+                Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
     }
 
     private boolean checkCameraPermission() {
         boolean res1 = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED;
-        boolean res2 = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        boolean res2 = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED;
         return res1 && res2;
     }
