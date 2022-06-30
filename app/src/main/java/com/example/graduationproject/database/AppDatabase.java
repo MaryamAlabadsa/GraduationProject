@@ -6,9 +6,8 @@ import androidx.room.TypeConverters;
 
 import com.example.graduationproject.retrofit.post.Post;
 
-@Database(entities = {Post.class}, version = 2)
+//@Database(entities = {}, version = 3)
 @TypeConverters({DataConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
-
     public abstract PostDao postDao();
 }

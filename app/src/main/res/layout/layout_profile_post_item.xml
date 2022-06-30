@@ -51,7 +51,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/u_date_post"
+            android:id="@+id/u_date_order"
             android:layout_width="@dimen/_90sdp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10sdp"

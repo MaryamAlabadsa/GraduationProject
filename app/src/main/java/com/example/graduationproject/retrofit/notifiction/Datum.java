@@ -10,77 +10,56 @@ import com.google.gson.annotations.SerializedName;
 public class Datum implements Serializable
 {
 
-    @SerializedName("id")
-    @Expose
-    private Integer id;
+
     @SerializedName("post_id")
     @Expose
     private Integer postId;
+    @SerializedName("id")
+    @Expose
+    private Integer id;
     @SerializedName("sender_id")
     @Expose
     private Integer senderId;
-    @SerializedName("receiver_id")
-    @Expose
-    private Integer receiverId;
-    @SerializedName("sent_at")
-    @Expose
-    private String sent_at;
     @SerializedName("type")
     @Expose
     private String type;
+    @SerializedName("receiver_id")
+    @Expose
+    private Integer receiverId;
     @SerializedName("sender_name")
     @Expose
     private String senderName;
-    @SerializedName("ia_deleted")
+    @SerializedName("sent_time")
     @Expose
-    private String isDeleted;
-    private final static long serialVersionUID = 2792360874378452260L;
+    private String sentTime;
+    private final static long serialVersionUID = 1714189985170398041L;
 
     /**
      * No args constructor for use in serialization
-     * 
+     *
      */
     public Datum() {
-    }
-
-    public Datum(Integer id, Integer postId, Integer senderId, Integer receiverId, String sent_at, String type, String senderName) {
-        this.id = id;
-        this.postId = postId;
-        this.senderId = senderId;
-        this.receiverId = receiverId;
-        this.sent_at = sent_at;
-        this.type = type;
-        this.senderName = senderName;
-    }
-
-    public String getSent_at() {
-        return sent_at;
-    }
-
-    public void setSent_at(String sent_at) {
-        this.sent_at = sent_at;
     }
 
     /**
      *
      * @param senderId
-     * @param receiverId
-     * @param id
-     * @param postId
-     * @param type
      * @param senderName
+     * @param receiverId
+     * @param sentTime
+     * @param postId
+     * @param id
+     * @param type
      */
-
-
-
-
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
+    public Datum(Integer postId, Integer id, Integer senderId, String type, Integer receiverId, String senderName, String sentTime) {
+        super();
+        this.postId = postId;
         this.id = id;
+        this.senderId = senderId;
+        this.type = type;
+        this.receiverId = receiverId;
+        this.senderName = senderName;
+        this.sentTime = sentTime;
     }
 
     public Integer getPostId() {
@@ -91,20 +70,20 @@ public class Datum implements Serializable
         this.postId = postId;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public Integer getSenderId() {
         return senderId;
     }
 
     public void setSenderId(Integer senderId) {
         this.senderId = senderId;
-    }
-
-    public Integer getReceiverId() {
-        return receiverId;
-    }
-
-    public void setReceiverId(Integer receiverId) {
-        this.receiverId = receiverId;
     }
 
     public String getType() {
@@ -115,6 +94,14 @@ public class Datum implements Serializable
         this.type = type;
     }
 
+    public Integer getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(Integer receiverId) {
+        this.receiverId = receiverId;
+    }
+
     public String getSenderName() {
         return senderName;
     }
@@ -123,11 +110,11 @@ public class Datum implements Serializable
         this.senderName = senderName;
     }
 
-    public String getIsDeleted() {
-        return isDeleted;
+    public String getSentTime() {
+        return sentTime;
     }
 
-    public void setIsDeleted(String isDeleted) {
-        this.isDeleted = isDeleted;
+    public void setSentTime(String sentTime) {
+        this.sentTime = sentTime;
     }
 }

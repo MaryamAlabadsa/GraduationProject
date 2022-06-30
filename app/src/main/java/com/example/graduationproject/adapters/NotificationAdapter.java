@@ -81,17 +81,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             }else {
                 message = list.get(position).getSenderName() + " create new account";
             }
-        } else {
-            if (list.get(position).getIsDeleted()==null)
-                message = list.get(position).getSenderName() + " send you a request";
-            else
-                message = list.get(position).getSenderName() + " canceled his/her request";
-
-
-
         }
+//        else {
+//            if (list.get(position).getIsDeleted()==null)
+//                message = list.get(position).getSenderName() + " send you a request";
+//            else
+//                message = list.get(position).getSenderName() + " canceled his/her request";
+//        }
         holder.binding.tvNotificationText.setText(message);
-        holder.binding.tvNotificationDate.setText(list.get(position).getSent_at());
+        holder.binding.tvNotificationDate.setText(list.get(position).getSentTime());
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

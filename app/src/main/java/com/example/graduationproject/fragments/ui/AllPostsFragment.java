@@ -621,7 +621,7 @@ public class AllPostsFragment extends BaseFragment {
     private void getCheckedBtn(Constant checkedBtn) {
         String mainTextTitle, secondaryTitle;
         if (checkedBtn == Constant.ALL_CHECKED) {
-            mainTextTitle = "Our Donation Posts";
+            mainTextTitle = "Our Posts";
         } else if (checkedBtn == Constant.DONATION_CHECKED) {
             mainTextTitle = "Donation Posts";
         } else {

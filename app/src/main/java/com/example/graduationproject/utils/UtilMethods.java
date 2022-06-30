@@ -68,7 +68,7 @@ public class UtilMethods {
         Glide.with(context).load(postDetails.getPost().getFirstUserImageLink()).circleCrop()
                 .placeholder(R.drawable.usericon).into(userImage);
         userName.setText(postDetails.getPost().getFirstUserName());
-        postDate.setText(postDetails.getPost().getPublishedAt());
+        postDate.setText(postDetails.getPost().getPostCreatedAt());
         postRequestText.setText(postDetails.getPost().getNumberOfRequests() + " requests");
         postTitleText.setText(postDetails.getPost().getTitle());
         postDescriptionText.setText(postDetails.getPost().getDescription() + "");

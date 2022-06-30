@@ -150,7 +150,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void setOrderHolder(MyOrderViewHolder holder, int position) {
         holder.binding.uNamePost.setText(list.get(position).getUserName());
-        holder.binding.uDatePost.setText(list.get(position).getPublishedAt());
+        holder.binding.uDateOrder.setText(list.get(position).getOrderUpdatedAt());
         Glide.with(context).load(list.get(position).getUserImage()).circleCrop()
                 .placeholder(R.drawable.usericon).into(holder.binding.uImgPost);
         LayoutPostItemBinding layoutPostItemBinding = holder.binding.layoutPost;
@@ -168,7 +168,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         });
         setOrderPostHolder(layoutPostItemBinding, position);
-        if (!list.get(position).getPost().getThe_owner_is_login() && list.get(position).getPost().getIsCompleted())
+        if (!list.get(position).getPost().getIsHeTheOwnerOfThePost() || list.get(position).getPost().getIsCompleted())
             holder.binding.orderMenu.setVisibility(View.INVISIBLE);
 
         holder.binding.orderMenu.setOnClickListener(new View.OnClickListener() {
@@ -195,15 +195,9 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 postDetialsInterface.layout(list.get(position).getId());
             }
         });
-        binding.postMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                postMenuInterface.layoutOrder(list.get(position), position, binding.postMenu);
-            }
-        });
-//        binding.numberRequestsPost.setText(post.getNumberOfRequests() + " request   ");
+
         binding.uNamePost.setText("" + post.getFirstUserName());
-        binding.uDatePost.setText("" + post.getPublishedAt());
+        binding.uDatePost.setText("" + post.getPostCreatedAt());
         Glide.with(context).load(post.getFirstUserImageLink()).circleCrop()
                 .placeholder(R.drawable.usericon).into(binding.uImgPost);
         setOrderPostImages(binding, post);
@@ -214,7 +208,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             @Override
             public void onClick(View view) {
                 int user_Id;
-                if (list.get(position).getPost().getThe_owner_is_login())
+                if (list.get(position).getPost().getIsHeTheOwnerOfThePost())
                     user_Id = 0;
                 else
                     user_Id = list.get(position).getPost().getFirstUserId();
@@ -268,18 +262,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 binding.commentBtn.setVisibility(View.INVISIBLE);
             else if (list.getIsOrdered())
                 binding.commentBtn.setVisibility(View.INVISIBLE);
-            else {
-//                binding.commentBtn.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        addOrderInterface.layout(list, position);
-//                    }
-//                });
-//                binding.commentBtn.setText("Add order");
-            }
         }
-
-
     }
 
     private void setOrderPostStatus(LayoutPostItemBinding binding, Post list) {
@@ -302,19 +285,13 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
             });
         }
-      }
+    }
 //--------------------------------------------------------------------------------------------
-    // post
 
     //---------------------------------------normal post-------------------------------------------------
     private void setPostHolder(MyPostViewHolder holder, int position) {
-        if (!list.get(position).getIsHeTheOwnerOfThePost()|| list.get(position).getIsCompleted())
-            holder.binding.postMenu.setVisibility(View.INVISIBLE);
-
-
-//        ((MyPostViewHolder) holder).binding.numberRequestsPost.setText(list.get(position).getNumberOfRequests() + " request   ");
         ((MyPostViewHolder) holder).binding.uNamePost.setText("" + list.get(position).getFirstUserName());
-        ((MyPostViewHolder) holder).binding.uDatePost.setText("" + list.get(position).getPublishedAt());
+        ((MyPostViewHolder) holder).binding.uDatePost.setText("" + list.get(position).getPostCreatedAt());
         Glide.with(context).load(list.get(position).getFirstUserImageLink()).circleCrop()
                 .placeholder(R.drawable.usericon).into(((MyPostViewHolder) holder).binding.uImgPost);
         setPostImages(holder, position);
@@ -333,6 +310,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 userIdtRequestInterface.layout(user_Id);
             }
         });
+        setPostMenu(holder, position);
     }
 
     private void setPostImages(ProfilePostsAdapter.MyPostViewHolder holder, int position) {
@@ -394,12 +372,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         });
 
-        holder.binding.postMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                postMenuInterface.layoutPost(list.get(position), position, holder.binding.postMenu);
-            }
-        });
+
     }
 
     private void setPostStatus(ProfilePostsAdapter.MyPostViewHolder holder, int position) {
@@ -423,6 +396,18 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         holder.binding.tvPostTitleImageSlider.setText(list.get(position).getTitle());
         holder.binding.tvPostDesImageSlider.setText(list.get(position).getTitle());
+    }
+
+    private void setPostMenu(MyPostViewHolder holder, int position) {
+        holder.binding.postMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                postMenuInterface.layoutPost(list.get(position), position, holder.binding.postMenu);
+            }
+        });
+
+        if (!list.get(position).getIsHeTheOwnerOfThePost() || list.get(position).getIsCompleted())
+            holder.binding.postMenu.setVisibility(View.INVISIBLE);
     }
 
     //--------------------------------------------------------------------------------------------------

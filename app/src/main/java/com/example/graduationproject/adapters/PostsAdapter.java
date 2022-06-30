@@ -62,6 +62,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         list.add(position, item);
         notifyDataSetChanged();
     }
+
     public void modifyBtn(Post item, int position) {
         list.remove(position);
         list.add(position, item);
@@ -110,7 +111,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     public void onBindViewHolder(@NonNull PostsAdapter.MyViewHolder holder,
                                  @SuppressLint("RecyclerView") final int position) {
 //        holder.binding.numberRequestsPost.setText(list.get(position).getNumberOfRequests() + " request   ");
-        holder.binding.uDatePost.setText(list.get(position).getPublishedAt());
+        holder.binding.uDatePost.setText(list.get(position).getPostCreatedAt());
         holder.binding.uNamePost.setText("" + list.get(position).getFirstUserName());
         holder.binding.tvPostTitleImageSlider.setText("" + list.get(position).getTitle());
         holder.binding.tvPostDesImageSlider.setText("" + list.get(position).getDescription());
@@ -125,7 +126,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
             @Override
             public void onClick(View view) {
                 int user_Id;
-                if (list.get(position).getThe_owner_is_login())
+                if (list.get(position).getTheOwnerIsLogin())
                     user_Id = 0;
                 else
                     user_Id = list.get(position).getFirstUserId();
@@ -145,6 +146,11 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
                 postDetialsInterface.layout(list.get(position).getId());
             }
         });
+        setPostMenu(holder, position);
+
+    }
+
+    private void setPostMenu(PostsAdapter.MyViewHolder holder, int position) {
         holder.binding.postMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -152,11 +158,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
             }
         });
 
-        if (!list.get(position).getIsHeTheOwnerOfThePost())
+        if (!list.get(position).getIsHeTheOwnerOfThePost()||list.get(position).getIsCompleted())
             holder.binding.postMenu.setVisibility(View.INVISIBLE);
-
     }
-
 
     private void setPostImages(MyViewHolder holder, int position) {
         SliderView sliderView = holder.binding.imageSlider;
@@ -191,14 +195,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
                 }
             });
             holder.binding.commentBtn.setText("Show orders");
-            holder.binding.postMenu.setVisibility(View.INVISIBLE);
 
         } else {
-            if (list.get(position).getIsCompleted()){
+            if (list.get(position).getIsCompleted()) {
                 holder.binding.commentBtn.setVisibility(View.INVISIBLE);
                 holder.binding.postMenu.setVisibility(View.INVISIBLE);
-            }
-            else if (list.get(position).getIsOrdered()) {
+            } else if (list.get(position).getIsOrdered()) {
                 holder.binding.commentBtn.setText("Remove order");
                 holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -232,8 +234,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
                 }
             });
         } else {
-//            holder.binding.postStatus.setBackgroundColor(Color.red(0));
-//            holder.binding.postStatus.set(context.getColor(R.color.colorAccent));
             holder.binding.postStatus.setBackgroundResource(R.drawable.clipboard);
             holder.binding.postStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -242,8 +242,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
                 }
             });
         }
-
-
 
 
     }

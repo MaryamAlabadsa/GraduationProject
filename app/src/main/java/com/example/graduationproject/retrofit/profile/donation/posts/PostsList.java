@@ -14,39 +14,12 @@ import com.google.gson.annotations.SerializedName;
 @Generated("jsonschema2pojo")
 public class PostsList implements Serializable {
 
-    @SerializedName("id")
-    @Expose
-    private Integer id;
     @SerializedName("status")
     @Expose
     private Integer status;
-    @SerializedName("massage")
+    @SerializedName("id")
     @Expose
-    private Object massage;
-    @SerializedName("post_id")
-    @Expose
-    private Integer postId;
-    @SerializedName("user_id")
-    @Expose
-    private Integer userId;
-    @SerializedName("user_name")
-    @Expose
-    private String userName;
-    @SerializedName("user_image")
-    @Expose
-    private String userImage;
-    @SerializedName("created_at")
-    @Expose
-    private String createdAt;
-    @SerializedName("user_phone_number")
-    @Expose
-    private String userPhoneNumber;
-    @SerializedName("post")
-    @Expose
-    private Post post;
-    @SerializedName("published_at")
-    @Expose
-    private String publishedAt;
+    private Integer id;
     @SerializedName("title")
     @Expose
     private String title;
@@ -101,21 +74,56 @@ public class PostsList implements Serializable {
     @SerializedName("is_completed")
     @Expose
     private Boolean isCompleted;
+    @SerializedName("post_created_at")
+    @Expose
+    private String postCreatedAt;
+    @SerializedName("post_updated_at")
+    @Expose
+    private String postUpdatedAt;
     @SerializedName("the_owner_is_login")
     @Expose
     private Boolean theOwnerIsLogin;
-    private final static long serialVersionUID = -7138148163177232375L;
+    @SerializedName("massage")
+    @Expose
+    private String massage;
+    @SerializedName("post_id")
+    @Expose
+    private Integer postId;
+    @SerializedName("user_id")
+    @Expose
+    private Integer userId;
+    @SerializedName("user_name")
+    @Expose
+    private String userName;
+    @SerializedName("user_image")
+    @Expose
+    private String userImage;
+    @SerializedName("created_at")
+    @Expose
+    private String createdAt;
+    @SerializedName("user_phone_number")
+    @Expose
+    private String userPhoneNumber;
+    @SerializedName("order_created_at")
+    @Expose
+    private String orderCreatedAt;
+    @SerializedName("order_updated_at")
+    @Expose
+    private String orderUpdatedAt;
+    @SerializedName("post")
+    @Expose
+    private Post post;
+    private final static long serialVersionUID = 546720302819376881L;
 
     /**
      * No args constructor for use in serialization
-     *
      */
     public PostsList() {
     }
 
     /**
-     *
      * @param secondUserId
+     * @param postCreatedAt
      * @param orderId
      * @param postSecondUserEmail
      * @param userPhoneNumber
@@ -125,9 +133,9 @@ public class PostsList implements Serializable {
      * @param categoryName
      * @param createdAt
      * @param userImage
-     * @param post
      * @param firstUserId
      * @param isHeTheOwnerOfThePost
+     * @param post
      * @param firstUserName
      * @param id
      * @param massage
@@ -135,30 +143,23 @@ public class PostsList implements Serializable {
      * @param isDonation
      * @param isCompleted
      * @param secondUserName
-     * @param publishedAt
      * @param postId
      * @param userName
-     * @param userId
      * @param postFirstUserEmail
+     * @param userId
+     * @param postUpdatedAt
      * @param numberOfRequests
      * @param postMedia
+     * @param orderUpdatedAt
      * @param categoryId
+     * @param orderCreatedAt
      * @param status
      * @param firstUserImageLink
      */
-    public PostsList(Integer id, Integer status, Object massage, Integer postId, Integer userId, String userName, String userImage, String createdAt, String userPhoneNumber, Post post, String publishedAt, String title, String description, Boolean isDonation, Integer categoryId, Integer firstUserId, Integer secondUserId, String categoryName, Integer numberOfRequests, String firstUserName, String secondUserName, Object postFirstUserEmail, String postSecondUserEmail, List<String> postMedia, String firstUserImageLink, Boolean isOrdered, Integer orderId, Boolean isHeTheOwnerOfThePost, Boolean isCompleted, Boolean theOwnerIsLogin) {
+    public PostsList(Integer status, Integer id, String title, String description, Boolean isDonation, Integer categoryId, Integer firstUserId, Integer secondUserId, String categoryName, Integer numberOfRequests, String firstUserName, String secondUserName, Object postFirstUserEmail, String postSecondUserEmail, List<String> postMedia, String firstUserImageLink, Boolean isOrdered, Integer orderId, Boolean isHeTheOwnerOfThePost, Boolean isCompleted, String postCreatedAt, String postUpdatedAt, Boolean theOwnerIsLogin, String massage, Integer postId, Integer userId, String userName, String userImage, String createdAt, String userPhoneNumber, String orderCreatedAt, String orderUpdatedAt, Post post) {
         super();
-        this.id = id;
         this.status = status;
-        this.massage = massage;
-        this.postId = postId;
-        this.userId = userId;
-        this.userName = userName;
-        this.userImage = userImage;
-        this.createdAt = createdAt;
-        this.userPhoneNumber = userPhoneNumber;
-        this.post = post;
-        this.publishedAt = publishedAt;
+        this.id = id;
         this.title = title;
         this.description = description;
         this.isDonation = isDonation;
@@ -177,15 +178,19 @@ public class PostsList implements Serializable {
         this.orderId = orderId;
         this.isHeTheOwnerOfThePost = isHeTheOwnerOfThePost;
         this.isCompleted = isCompleted;
+        this.postCreatedAt = postCreatedAt;
+        this.postUpdatedAt = postUpdatedAt;
         this.theOwnerIsLogin = theOwnerIsLogin;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+        this.massage = massage;
+        this.postId = postId;
+        this.userId = userId;
+        this.userName = userName;
+        this.userImage = userImage;
+        this.createdAt = createdAt;
+        this.userPhoneNumber = userPhoneNumber;
+        this.orderCreatedAt = orderCreatedAt;
+        this.orderUpdatedAt = orderUpdatedAt;
+        this.post = post;
     }
 
     public Integer getStatus() {
@@ -196,76 +201,12 @@ public class PostsList implements Serializable {
         this.status = status;
     }
 
-    public Object getMassage() {
-        return massage;
+    public Integer getId() {
+        return id;
     }
 
-    public void setMassage(Object massage) {
-        this.massage = massage;
-    }
-
-    public Integer getPostId() {
-        return postId;
-    }
-
-    public void setPostId(Integer postId) {
-        this.postId = postId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getUserImage() {
-        return userImage;
-    }
-
-    public void setUserImage(String userImage) {
-        this.userImage = userImage;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUserPhoneNumber() {
-        return userPhoneNumber;
-    }
-
-    public void setUserPhoneNumber(String userPhoneNumber) {
-        this.userPhoneNumber = userPhoneNumber;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
-    }
-
-    public String getPublishedAt() {
-        return publishedAt;
-    }
-
-    public void setPublishedAt(String publishedAt) {
-        this.publishedAt = publishedAt;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -412,10 +353,107 @@ public class PostsList implements Serializable {
         this.isCompleted = isCompleted;
     }
 
+    public String getPostCreatedAt() {
+        return postCreatedAt;
+    }
+
+    public void setPostCreatedAt(String postCreatedAt) {
+        this.postCreatedAt = postCreatedAt;
+    }
+
+    public String getPostUpdatedAt() {
+        return postUpdatedAt;
+    }
+
+    public void setPostUpdatedAt(String postUpdatedAt) {
+        this.postUpdatedAt = postUpdatedAt;
+    }
+
     public Boolean getTheOwnerIsLogin() {
         return theOwnerIsLogin;
     }
 
     public void setTheOwnerIsLogin(Boolean theOwnerIsLogin) {
         this.theOwnerIsLogin = theOwnerIsLogin;
-    }}
+    }
+
+    public String getMassage() {
+        return massage;
+    }
+
+    public void setMassage(String massage) {
+        this.massage = massage;
+    }
+
+    public Integer getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Integer postId) {
+        this.postId = postId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUserPhoneNumber() {
+        return userPhoneNumber;
+    }
+
+    public void setUserPhoneNumber(String userPhoneNumber) {
+        this.userPhoneNumber = userPhoneNumber;
+    }
+
+    public String getOrderCreatedAt() {
+        return orderCreatedAt;
+    }
+
+    public void setOrderCreatedAt(String orderCreatedAt) {
+        this.orderCreatedAt = orderCreatedAt;
+    }
+
+    public String getOrderUpdatedAt() {
+        return orderUpdatedAt;
+    }
+
+    public void setOrderUpdatedAt(String orderUpdatedAt) {
+        this.orderUpdatedAt = orderUpdatedAt;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+}

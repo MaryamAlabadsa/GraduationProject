@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
@@ -17,6 +18,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 
@@ -262,20 +264,13 @@ AddPostFragment extends BaseFragment {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @SuppressLint("UseCompatLoadingForDrawables")
     public void clearAllFields() {
-        for (int i = 0; i < myImageHashMap.size(); i++) {
-            String mapKey = createMapKey(i + 1);
-            if (!myImageHashMap.get(mapKey).getUploaded()) {
-                myImageHashMap.remove(mapKey);
-            }
-        }
-        if (myImageHashMap != null) {
-            setImageView();
-        }
 
-
-        imageNum = 0;
+        myImageHashMap.entrySet().removeIf(entries -> entries.getValue().getUploaded().equals(false));
+        setImageView();
+         imageNum = 0;
         binding.titlePost.setText(null);
         binding.descriptionPost.setText(null);
         if (binding.radioDon.isChecked())
@@ -644,12 +639,13 @@ AddPostFragment extends BaseFragment {
     }
 
     private String createMapKey(int i) {
-        String mapKey = "image" + i;
+        int a = i + 1;
+        String mapKey = "image" + a;
         return mapKey;
     }
 
     private void deleteUriImageFromMap(int i) {
-        mapKey = createMapKey(i + 1);
+        mapKey = createMapKey(i);
         myImageHashMap.remove(mapKey);
         changePositionAfterDelete(i);
         setImageView();
@@ -664,7 +660,7 @@ AddPostFragment extends BaseFragment {
         pDialog.setConfirmButton("sure", new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                mapKey = createMapKey(position + 1);
+                mapKey = createMapKey(position);
                 String finalImageName = myImageHashMap.get(mapKey).getImageUrl().replace("http://54.209.160.242/storage/", "");
                 deleteImageRequest(finalImageName, position);
             }
@@ -681,7 +677,7 @@ AddPostFragment extends BaseFragment {
             @Override
             public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
                 Log.d("response5 code", response.code() + "");
-                mapKey = createMapKey(position + 1);
+                mapKey = createMapKey(position);
                 pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                 pDialog.dismiss();
                 myImageHashMap.remove(mapKey);
