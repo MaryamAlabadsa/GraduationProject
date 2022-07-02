@@ -77,21 +77,26 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         } else if (list.get(position).getType().equals("add_request")) {
             message = list.get(position).getSenderName() + " add request to your post";
             holder.binding.view.setBackground(context.getDrawable(R.drawable.notification_view_shape_pink));
-        }else if (list.get(position).getType().equals("update_post")) {
-            message = list.get(position).getSenderName() + " add request to your post";
+        } else if (list.get(position).getType().equals("update_Post")) {
+            message = list.get(position).getSenderName() + " update his post";
             holder.binding.view.setBackground(context.getDrawable(R.drawable.notification_view_shape_blue_gray));
-        }else if (list.get(position).getType().equals("delete_post")) {
-            message = list.get(position).getSenderName() + " add request to your post";
+        } else if (list.get(position).getType().equals("delete_post")) {
+            message = list.get(position).getSenderName() + " delete his  post";
             holder.binding.view.setBackground(context.getDrawable(R.drawable.notification_view_shape_orange_yellow));
-        }
-
-        else if (list.get(position).getType().equals("admin")) {
+        }else if (list.get(position).getType().equals("delete_request")) {
+            message = list.get(position).getSenderName() + " delete his  request";
+            holder.binding.view.setBackground(context.getDrawable(R.drawable.notification_view_green_peach));
+        } else if (list.get(position).getType().equals("admin")) {
             holder.binding.view.setBackground(context.getDrawable(R.drawable.notification_view_shape_red));
-            if (list.get(position).getPostId()!=0){
+            if (list.get(position).getPostId() != 0) {
                 message = list.get(position).getSenderName() + " add post ";
-            }else {
+            } else {
                 message = list.get(position).getSenderName() + " create new account";
             }
+        } else {
+            holder.binding.view.setBackground(context.getDrawable(R.drawable.button_complete2));
+
+            message = list.get(position).getType();
         }
 //        else {
 //            if (list.get(position).getIsDeleted()==null)
@@ -104,7 +109,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                notificationInterface.layout(list.get(position).getPostId()+"", list.get(position).getSenderId()+"");
+                notificationInterface.layout(list.get(position).getPostId() + "", list.get(position).getSenderId() + "");
             }
         });
     }

@@ -644,7 +644,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     if (!checkCameraPermission()) {
                         requestCameraPermission();
                     } else
-                        new ImagePicker.Builder(getActivity())
+                        new ImagePicker.Builder(ProfileFragment.this)
                                 .crop(83, 100)                    //Crop image(Optional), Check Customization for more option
                                 .compress(1024)            //Final image size will be less than 1 MB(Optional)
                                 .maxResultSize(233, 280)    //Final image resolution will be less than 1080 x 1080(Optional)

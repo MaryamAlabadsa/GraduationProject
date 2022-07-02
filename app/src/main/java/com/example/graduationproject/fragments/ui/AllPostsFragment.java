@@ -288,9 +288,20 @@ public class AllPostsFragment extends BaseFragment {
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     AllPosts getAllPosts = response.body();
-                    setPostsRv(getAllPosts.getData());
+                    assert response.body() != null;
+                    if (page == 1) {
+                        adapter.setList(getAllPosts.getData());
+                    } else
+                        adapter.addToList(getAllPosts.getData());
+                    if (response.body().getMeta().getLastPage() == page) {
+                        isLastPage = true;
+                        Log.e("lastPage", isLastPage + "");
+                    } else {
+                        isLastPage = false;
+
+                    }
                     dismissWaitingImage();
-                } else {
+                }  else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
                 }
@@ -600,10 +611,7 @@ public class AllPostsFragment extends BaseFragment {
             binding.dataLayout.setVisibility(View.VISIBLE);
             binding.shimmerView.setVisibility(View.GONE);
             showWaitingImage();
-        }else{
-
         }
-
         getCheckedBtn(checkedBtn);
         if (selectedCategory == Constant.NO_SELECTED_CATEGORY) {
             if (checkedBtn == Constant.ALL_CHECKED && postStatus == Constant.ALL_CHECKED) {
