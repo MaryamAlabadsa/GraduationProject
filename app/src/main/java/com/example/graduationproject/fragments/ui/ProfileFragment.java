@@ -117,6 +117,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     // TODO: Rename and change types of parameters
     private int userId;
     private SweetAlertDialog pDialog;
+    private Boolean isDonationPosts=false;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -334,9 +335,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
                     setRvData(response.body().getData().getPostsList());
-//                    binding.progressBar.setVisibility(View.GONE);
-//                    binding.getRoot().setVisibility(View.VISIBLE);
-
                 } else {
 //                    String errorMessage
 //                    = parseError(response);
@@ -421,6 +419,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         switch (view.getId()) {
             //when user click rating button
             case R.id.btn_donation_post:
+                isDonationPosts=true;
                 if (userId == 0)
                     getMyDonationPosts();
                 else
@@ -431,6 +430,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 break;
 
             case R.id.btn_request_post:
+                isDonationPosts=false;
                 if (userId == 0)
                     getMyRequestPosts();
                 else
@@ -485,10 +485,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         fragmentSwitcher = (FragmentSwitcher) context;
-
     }
     ///-----------------------------add request ----------------------------------
-
 
     private void createAddOrderDialog(int id, PostsList post, int position) {
         myDialogAddOrder = new MyDialogAddOrder(context, "", new Dialoginterface() {
@@ -565,7 +563,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 .show();
     }
 
-
     private void changeRemoveButton(PostsList post, int position) {
         post.setIsOrdered(false);
         adapter.modifyBtn(post,position);
@@ -630,7 +627,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 .build();
     }
 
-
     // change user image
     File file;
 
@@ -667,11 +663,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         }else {
             Toast.makeText(context, "sssss", Toast.LENGTH_SHORT).show();
         }
-
-
     }
-
-
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void requestCameraPermission() {
@@ -686,7 +678,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 == PackageManager.PERMISSION_GRANTED;
         return res1 && res2;
     }
-
 
     private void changeUserImageRequest() {
         //showDialog();
@@ -803,12 +794,19 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         );
 
         call.enqueue(new Callback<MessageResponse>() {
-            @SuppressLint("CheckResult")
+            @SuppressLint({"CheckResult", "SetTextI18n"})
             @Override
             public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
                 Log.d("response5 code", response.code() + "");
                 UtilMethods.launchLoadingLottieDialogDismiss(context);
                 removePostFromRv(post, id, position);
+                if (isDonationPosts){
+                    int b=Integer.parseInt(binding.tvDonationPostsNum.getText()+"");
+                    binding.tvDonationPostsNum.setText((b-1)+"");
+                }else {
+                    int b=Integer.parseInt(binding.tvRequestPostsNum.getText()+"");
+                    binding.tvRequestPostsNum.setText((b-1)+"");
+                }
             }
 
             @SuppressLint("CheckResult")
@@ -852,6 +850,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 Log.d("response5 code", response.code() + "");
                 UtilMethods.launchLoadingLottieDialogDismiss(context);
                 binding.rvPosts.scrollToPosition(position);
+                if (isDonationPosts){
+                    int b=Integer.parseInt(binding.tvDonationPostsNum.getText()+"");
+                    binding.tvDonationPostsNum.setText((b++)+"");
+                }else {
+                    int b=Integer.parseInt(binding.tvRequestPostsNum.getText()+"");
+                    binding.tvRequestPostsNum.setText((b++)+"");
+                }
             }
 
             @SuppressLint("CheckResult")
@@ -878,6 +883,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                         UtilMethods.launchLoadingLottieDialog(context);
                         deleteOrderRequest(post, id, position);
                         sDialog.dismissWithAnimation();
+                        if (isDonationPosts){
+                            int b=Integer.parseInt(binding.tvDonationPostsNum.getText()+"");
+                            binding.tvDonationPostsNum.setText((b-1)+"");
+                        }else {
+                            int b=Integer.parseInt(binding.tvRequestPostsNum.getText()+"");
+                            binding.tvRequestPostsNum.setText((b-1)+"");
+                        }
                     }
                 })
                 .show();
@@ -937,6 +949,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 Log.d("response5 code", response.code() + "");
                 UtilMethods.launchLoadingLottieDialogDismiss(context);
                 binding.rvPosts.scrollToPosition(position);
+                if (isDonationPosts){
+                    int b=Integer.parseInt(binding.tvDonationPostsNum.getText()+"");
+                    binding.tvDonationPostsNum.setText((b++)+"");
+                }else {
+                    int b=Integer.parseInt(binding.tvRequestPostsNum.getText()+"");
+                    binding.tvRequestPostsNum.setText((b++)+"");
+                }
             }
 
             @SuppressLint("CheckResult")

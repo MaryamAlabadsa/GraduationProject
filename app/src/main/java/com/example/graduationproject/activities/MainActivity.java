@@ -291,7 +291,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             default:
         }
+        switch (fragmentSelcted) {
+            case ADD_POSTS:
+                binding.navView.getMenu().getItem(1).setChecked(true);
+                break;
+            case ALL_POSTS:
+                binding.navView.getMenu().getItem(0).setChecked(true);
+                break;
+            case NOTIFICATION:
+                binding.navView.getMenu().getItem(2).setChecked(true);
+                break;
+            case PROFILE:
+                binding.navView.getMenu().getItem(3).setChecked(true);
+                break;
 
+        }   
         if (ALL_POSTS == pagesFragment) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, null).commit();
         } else {

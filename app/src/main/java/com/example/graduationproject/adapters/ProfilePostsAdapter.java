@@ -168,7 +168,7 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         });
         setOrderPostHolder(layoutPostItemBinding, position);
-        if (!list.get(position).getPost().getIsHeTheOwnerOfThePost() || list.get(position).getPost().getIsCompleted())
+        if (!list.get(position).getIsMyProfile() || list.get(position).getPost().getIsCompleted())
             holder.binding.orderMenu.setVisibility(View.INVISIBLE);
 
         holder.binding.orderMenu.setOnClickListener(new View.OnClickListener() {

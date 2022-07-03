@@ -110,6 +110,9 @@ public class PostsList implements Serializable {
     @SerializedName("order_updated_at")
     @Expose
     private String orderUpdatedAt;
+    @SerializedName("is_my_profile")
+    @Expose
+    private Boolean isMyProfile;
     @SerializedName("post")
     @Expose
     private Post post;
@@ -455,5 +458,13 @@ public class PostsList implements Serializable {
 
     public void setPost(Post post) {
         this.post = post;
+    }
+
+    public Boolean getIsMyProfile() {
+        return isMyProfile;
+    }
+
+    public void setIsMyProfile(Boolean isMyProfile) {
+        this.isMyProfile = isMyProfile;
     }
 }

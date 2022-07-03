@@ -110,7 +110,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     @Override
     public void onBindViewHolder(@NonNull PostsAdapter.MyViewHolder holder,
                                  @SuppressLint("RecyclerView") final int position) {
-//        holder.binding.numberRequestsPost.setText(list.get(position).getNumberOfRequests() + " request   ");
         holder.binding.uDatePost.setText(list.get(position).getPostCreatedAt());
         holder.binding.uNamePost.setText("" + list.get(position).getFirstUserName());
         holder.binding.tvPostTitleImageSlider.setText("" + list.get(position).getTitle());

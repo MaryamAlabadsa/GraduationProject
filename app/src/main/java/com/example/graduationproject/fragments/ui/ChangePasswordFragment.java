@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.graduationproject.InputFilterMinMax;
 import com.example.graduationproject.R;
 import com.example.graduationproject.activities.SignInActivity;
 import com.example.graduationproject.databinding.FragmentChangePasswordBinding;
@@ -29,6 +31,7 @@ import com.example.graduationproject.utils.AppSharedPreferences;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import retrofit2.Call;
@@ -74,11 +77,13 @@ public class ChangePasswordFragment extends BaseFragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
     }
+
     @Override
     public int getFragmentTitle() {
         return R.string.changePassword;
@@ -94,23 +99,18 @@ public class ChangePasswordFragment extends BaseFragment {
 
         serviceApi = Creator.getClient().create(ServiceApi.class);
         sharedPreferences = new AppSharedPreferences(getActivity().getApplicationContext());
-        token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);        binding.changePasswordBtn.setOnClickListener(new View.OnClickListener() {
+        token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
+        binding.changePasswordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 binding.progressBar.setVisibility(View.VISIBLE);
                 String oldPassword = binding.oldPassword.getText().toString();
                 String newPassword = binding.newPassword.getText().toString();
                 String confirmationPassword = binding.confirmationPassword.getText().toString();
-                if (oldPassword != null) {
-                    if (newPassword != null) {
-                        if (confirmationPassword != null) {
-                            changePasswordRequest(oldPassword, newPassword, confirmationPassword);
-                        } else
-                            binding.confirmationPassword.setError("this field is required.");
-                    } else
-                        binding.newPassword.setError("this field is required.");
-                } else
-                    binding.oldPassword.setError("this field is required.");
+                binding.textErrorNewPassword.setVisibility(View.GONE);
+                binding.textErrorOldPassword.setVisibility(View.GONE);
+                binding.textErrorConfirmationPassword.setVisibility(View.GONE);
+                changePasswordRequest(oldPassword, newPassword, confirmationPassword);
 
             }
         });
@@ -138,18 +138,8 @@ public class ChangePasswordFragment extends BaseFragment {
                     binding.progressBar.setVisibility(View.GONE);
 
                 } else {
-                    String errorMessage = parseError(response);
-                    Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
-                    if (errorMessage == "old password do not matched")
-                        binding.oldPassword.setError(errorMessage);
-                    else if (errorMessage == "The password confirmation and password must match.") {
-                        binding.newPassword.setError(errorMessage);
-                        binding.confirmationPassword.setError(errorMessage);
-
-                    }
+                    parseError(response, binding);
                     binding.progressBar.setVisibility(View.GONE);
-
-                    Log.e("errorMessage", errorMessage + "");
                 }
             }
 
@@ -161,14 +151,38 @@ public class ChangePasswordFragment extends BaseFragment {
 
     }
 
-    public static String parseError(Response<?> response) {
+    public static void parseError(Response<?> response, FragmentChangePasswordBinding binding) {
         String errorMsg = null;
         try {
-            JSONObject jObjError = new JSONObject(response.errorBody().string());
-            errorMsg = jObjError.getString("message");
-            return errorMsg;
+            Log.e("start", "ffff");
+            assert response.errorBody() != null;
+            JSONObject jsonObject = new JSONObject(response.errorBody().string());
+            JSONArray jsonArray = jsonObject.getJSONArray("data");
+            JSONObject jsonObject2 = jsonArray.getJSONObject(0);
+            Log.e("start", jsonObject2.getString("password_confirmation"));
+
+            if (jsonObject2.has("old_password")) {
+                JSONArray jsonArrayOldPassword = jsonObject2.getJSONArray("old_password");
+                binding.textErrorOldPassword.setText(jsonArrayOldPassword.getString(0));
+                binding.textErrorOldPassword.setVisibility(View.VISIBLE);
+//                binding.oldPassword.setError(jsonArrayOldPassword.getString(0));
+            }
+            if (jsonObject2.has("password_confirmation")) {
+                JSONArray jsonArrayPasswordConfirmation = jsonObject2.getJSONArray("password_confirmation");
+                binding.textErrorConfirmationPassword.setText(jsonArrayPasswordConfirmation.getString(0));
+                binding.textErrorConfirmationPassword.setVisibility(View.VISIBLE);
+//                binding.confirmationPassword.setError(jsonArrayPasswordConfirmation.getString(0));
+            }
+
+            if (jsonObject2.has("password")) {
+                JSONArray jsonArrayPassword = jsonObject2.getJSONArray("password");
+                binding.textErrorNewPassword.setText(jsonArrayPassword.getString(0));
+                binding.textErrorNewPassword.setVisibility(View.VISIBLE);
+//                binding.newPassword.setError(jsonArrayPassword.getString(0));
+            }
+
         } catch (Exception e) {
         }
-        return errorMsg;
+
     }
 }

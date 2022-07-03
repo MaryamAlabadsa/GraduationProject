@@ -43,20 +43,12 @@ public class SignInActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = ActivitySignInBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-//        Objects.requireNonNull(getSupportActionBar()).hide();
         serviceApi = Creator.getClient().create(ServiceApi.class);
         sharedPreferences = new AppSharedPreferences(getApplicationContext());
-//        binding.loginBtn.setShouldStartLoadingOnClick(true);
-//        LottieProgressDialog lottieProgressDialog=new LottieProgressDialog(context,true
-//                ,null,null
-//                ,null,null
-//                ,LottieProgressDialog.SAMPLE_2,"loading...",1);
-//        lottieProgressDialog.show();
+
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                binding.loginBtn.setReverseEffectEnabled(true);
-
                 String deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
                 String email = binding.email.getText().toString().trim();
                 String password = binding.password.getText().toString();
@@ -65,20 +57,16 @@ public class SignInActivity extends BaseActivity {
                 sendLogin.setPassword(password);
                 sendLogin.setFcm_token(deviceToken);/** GET List Resources **/
                 if (email != null && password != null) {
-                    //showDialog();
                     UtilMethods.launchLoadingLottieDialog(context);
-
                     login(sendLogin);
                 }
             }
         });
 
-
-
         binding.registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(context,SignUpActivity.class ));
+                startActivity(new Intent(context, SignUpActivity.class));
             }
         });
 
@@ -106,8 +94,6 @@ public class SignInActivity extends BaseActivity {
                     String errorMessage = parseError2(response);
                     Toast.makeText(SignInActivity.this, errorMessage + "", Toast.LENGTH_SHORT).show();
                     binding.email.setError(errorMessage);
-//                    binding.loginBtn.setReverseEffectEnabled(false);
-                    //progressDialog.dismiss();
                     Log.e("errorMessage", errorMessage + "");
                     UtilMethods.launchLoadingLottieDialogDismiss(context);
 
@@ -117,7 +103,6 @@ public class SignInActivity extends BaseActivity {
             @Override
             public void onFailure(@NonNull Call<RegisterResponse> call, @NonNull Throwable t) {
                 Log.e("onFailure", t.getMessage() + "");
-                //progressDialog.dismiss();
                 Toast.makeText(SignInActivity.this, t.getMessage() + "", Toast.LENGTH_SHORT).show();
                 call.cancel();
             }
@@ -126,14 +111,13 @@ public class SignInActivity extends BaseActivity {
 
     public String parseError2(Response<?> response) {
         String errorMsg = null;
-        JSONArray jsonArray;
         try {
             assert response.errorBody() != null;
             JSONObject jsonObject = new JSONObject(response.errorBody().string());
             JSONObject jsonObject2 = jsonObject.getJSONObject("errors");
-             jsonArray = jsonObject2.getJSONArray("email");
-//             jsonArray = jsonObject2.getJSONArray("password");
-            return jsonArray.getString(0);
+            JSONArray jsonArrayEmail = jsonObject2.getJSONArray("email");
+            return jsonArrayEmail.getString(0);
+
         } catch (Exception ignored) {
             Log.e(errorMsg, ignored.getMessage() + "");
             return ignored.getMessage();

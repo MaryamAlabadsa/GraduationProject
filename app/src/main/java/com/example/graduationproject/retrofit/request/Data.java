@@ -35,19 +35,20 @@ public class Data implements Serializable {
     @SerializedName("user_phone_number")
     @Expose
     private String userPhoneNumber;
-    @SerializedName("published_at")
+    @SerializedName("order_created_at")
     @Expose
-    private String publishedAt;
-    private final static long serialVersionUID = -570308776082673763L;
+    private String orderCreatedAt;
+    @SerializedName("order_updated_at")
+    @Expose
+    private String orderUpdatedAt;
 
     /**
      * No args constructor for use in serialization
-     *
      */
     public Data() {
     }
 
-    public Data(Integer id, String massage, Integer postId, Integer userId, String userName, String userImage, String createdAt, String userPhoneNumber, String publishedAt) {
+    public Data(Integer id, String massage, Integer postId, Integer userId, String userName, String userImage, String createdAt, String userPhoneNumber, String orderCreatedAt, String orderUpdatedAt) {
         this.id = id;
         this.massage = massage;
         this.postId = postId;
@@ -56,11 +57,11 @@ public class Data implements Serializable {
         this.userImage = userImage;
         this.createdAt = createdAt;
         this.userPhoneNumber = userPhoneNumber;
-        this.publishedAt = publishedAt;
+        this.orderCreatedAt = orderCreatedAt;
+        this.orderUpdatedAt = orderUpdatedAt;
     }
 
     /**
-     *
      * @param createdAt
      * @param userImage
      * @param userPhoneNumber
@@ -136,11 +137,19 @@ public class Data implements Serializable {
         this.userPhoneNumber = userPhoneNumber;
     }
 
-    public String getPublishedAt() {
-        return publishedAt;
+    public String getOrderCreatedAt() {
+        return orderCreatedAt;
     }
 
-    public void setPublishedAt(String publishedAt) {
-        this.publishedAt = publishedAt;
+    public void setOrderCreatedAt(String orderCreatedAt) {
+        this.orderCreatedAt = orderCreatedAt;
+    }
+
+    public String getOrderUpdatedAt() {
+        return orderUpdatedAt;
+    }
+
+    public void setOrderUpdatedAt(String orderUpdatedAt) {
+        this.orderUpdatedAt = orderUpdatedAt;
     }
 }
