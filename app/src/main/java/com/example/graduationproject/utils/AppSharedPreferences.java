@@ -18,9 +18,8 @@ public class AppSharedPreferences {
 
     public static String USER = "user";
     public static String DEVICE_TOKEN = "Device token";
-    public static String IS_DONATION = "IS DONATION";
-    public static String POST_CATEGORY = "category";
     public static String AUTHENTICATION = "authentication";
+    public static String LANG = "lang";
 
 
     public AppSharedPreferences(Context context) {

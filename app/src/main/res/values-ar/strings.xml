@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hopo-DonationApp</string>
+    <string name="full_name">الاسم كامل</string>
+    <string name="email">ايميلك</string>
+    <string name="phone_num">رقم الهاتف</string>
+    <string name="address">العنوان</string>
+    <string name="password">كلمة المرور</string>
+    <string name="confirm_password">تاكيد كلمة المرور</string>
+    <string name="sign_up">تسجيل بحساب جديد</string>
+    <string name="account_setting">اعدادات الحساب</string>
+    <string name="requests_massages">Requests Massages</string>
+    <string name="log_out">تسجيل خروج</string>
+    <string name="see_your_profile">ملفك الشخصي</string>
+    <string name="add_post">اضافة منشور جديد</string>
+    <string name="notification">اشعاراتك</string>
+    <string name="allPosts">جميع </string>
+    <string name="setting">Setting</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Login">تسجيل دخول</string>
+    <string name="Register">تسجيل حساب جديد</string>
+    <string name="session_was_expired_logout_processing">session was expired logout processing</string>
+    <string name="changePassword">تغيير كلمة المرور</string>
+    <string name="orders">طلبات المنشور </string>
+    <string name="finish">انهاء</string>
+    <string name="confirm">تأكيد </string>
+    <string name="confirmation_message">قبول هذا الطلب</string>
+    <string name="beneficiary">مستفيد</string>
+    <string name="donor">متبرع</string>
+    <string name="filed_operation">العملية فشلت</string>
+    <string name="success_operation">العملية نجحت</string>
+    <string name="home">الرئيسية</string>
+    <string name="write_email">ادخل ايميلك </string>
+    <string name="write_password"> ادخل كلمة المرور الخاصة بك</string>
+    <string name="write_address">ادخل عنوانك </string>
+    <string name="write_name">ادخل اسمك الكامل</string>
+    <string name="write_phone">ادخل رقم هاتفك </string>
+    <string name="create_account" >إنشاء حساب </string>
+    <string name="title">عنوان</string>
+    <string name="description">وصف </string>
+    <string name="donation"> تبرع </string>
+    <string name="post">نشر</string>
+    <string name="posts"> المنشورات </string>
+    <string name="clear">إعادة تعيين</string>
+    <string name="requests">طلبات</string>
+    <string name="donations">  تبرعات </string>
+    <string name="current_password">كلمة المرور الحالية</string>
+    <string name="new_password">كلمة مرور جديدة</string>
+    <string name="allCategory"> الكل </string>
+    <string name="cancle">إلغاء</string>
+    <string name="completed"> مكتمل </string>
+    <string name="pending"> غير مكتمل </string>
+    <string name="status">حالة المنشور </string>
+    <string name="ordersNotAvailable">طلبات هذا البوست غير متوفرة لك.</string>
+
+
+</resources>

@@ -3,16 +3,20 @@ package com.example.graduationproject.activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,10 +67,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 
+import java.util.Locale;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@SuppressLint("UseSwitchCompatOrMaterialCode")
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentSwitcher {
     private static final String TAG = "MainActivity";
     ActivityMainBinding binding;
@@ -81,7 +88,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     LayoutToolbarBinding toolbarBinding;
     private boolean connected;
     Bitmap bitmap;
-
+    Switch langSwitch;
+    String tag;
+    BaseFragment fragment = null;
+    private String currentLanguage;
+    private Locale locale;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +105,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         EventBus.getDefault().register(this);
         NavigationView navigationView = binding.navView;
         UtilMethods.checkNetwork(context);
-
         toolbarBinding = binding.mainToolbar;
         drawer = binding.mainDrawer;
 
@@ -114,14 +124,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         String post_id_notifaction = getIntent().getStringExtra("post_id");
         String user_id_notifaction = getIntent().getStringExtra("user_id");
         if (post_id_notifaction != null) {
-//            //showDialog();
-            UtilMethods.getPostDetails(Integer.parseInt(post_id_notifaction), context, serviceApi, token,this::switchFragment);
-            switchFragment(NOTIFICATION, null,"");
+            UtilMethods.getPostDetails(Integer.parseInt(post_id_notifaction), context, serviceApi, token, this::switchFragment);
+            switchFragment(NOTIFICATION, null, "");
 
         } else if (user_id_notifaction != null) {
-            switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(Integer.parseInt(user_id_notifaction)),"");
+            switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(Integer.parseInt(user_id_notifaction)), "");
         } else
-            switchFragment(ALL_POSTS, null,"");
+            switchFragment(ALL_POSTS, null, "");
 
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -147,6 +156,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         ImageView userImage = headerView.findViewById(R.id.user_image);
         TextView username = headerView.findViewById(R.id.user_profile);
+        langSwitch = headerView.findViewById(R.id.lang_switch);
         String user = sharedPreferences.readUser(AppSharedPreferences.USER);
         Gson gson = new Gson();
         if (!user.isEmpty()) {
@@ -177,9 +187,53 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 EventBus.getDefault().post(new MyTitleEventBus(SEARCH, s));
             }
         }); // this class implements OnSearchViewListener
+        setLang();
+        changeLang();
+    }
+
+    private void setLang() {
+        String lang = UtilMethods.getLang(context);
+        if (lang.isEmpty() || lang.equals("en")) {
+            currentLanguage="en";
+            langSwitch.setChecked(false);
+        } else{
+            langSwitch.setChecked(true);
+            currentLanguage="ar";
+        }
 
     }
 
+    private void changeLang() {
+        langSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String lang;
+                if (langSwitch.isChecked()){
+                    setLocale("ar");
+                    sharedPreferences.writeString(AppSharedPreferences.LANG, "ar");
+                }else {
+                    setLocale("en");
+                    sharedPreferences.writeString(AppSharedPreferences.LANG, "en");
+                }
+            }
+        });
+    }
+    private void setLocale(String localeName) {
+        if (!localeName.equals(currentLanguage)) {
+            locale = new Locale(localeName);
+            Resources res = getResources();
+            DisplayMetrics dm = res.getDisplayMetrics();
+            Configuration conf = res.getConfiguration();
+            conf.locale = locale;
+            res.updateConfiguration(conf, dm);
+            Intent refresh = new Intent(this,
+                    SplashActivity.class);
+//            refresh.putExtra(currentLang, localeName);
+            startActivity(refresh);
+        } else {
+            Toast.makeText(MainActivity.this, "Language already selected!", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -190,23 +244,23 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         switch (id) {
             case R.id.profile:
                 UtilMethods.checkNetwork(context);
-                switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(0),"");
+                switchFragment(PagesFragment.PROFILE, new PostOrdersInfo(0), "");
                 break;
 
             case R.id.notifcation:
                 UtilMethods.checkNetwork(context);
-                switchFragment(PagesFragment.NOTIFICATION, null,"");
+                switchFragment(PagesFragment.NOTIFICATION, null, "");
                 break;
 
             case R.id.allPosts:
 //                UtilMethods.checkNetwork(context);
-                switchFragment(ALL_POSTS, null,"");
+                switchFragment(ALL_POSTS, null, "");
                 isAllPost = true;
                 break;
 
             case R.id.add_post:
                 UtilMethods.checkNetwork(context);
-                switchFragment(PagesFragment.ADD_POSTS, null,"");
+                switchFragment(PagesFragment.ADD_POSTS, null, "");
                 break;
 
             case R.id.nav_logout:
@@ -216,7 +270,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
 
             case R.id.nav_change_password:
-                switchFragment(PagesFragment.CHANGE_PASSWORD, null,"");
+                switchFragment(PagesFragment.CHANGE_PASSWORD, null, "");
                 break;
 
 
@@ -225,8 +279,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return true;
     }
 
-    String tag;
-    BaseFragment fragment = null;
 
     @Subscribe
     public void onEvent(MyTitleEventBus event) {
@@ -236,7 +288,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             toolbarBinding.getRoot().setVisibility(View.VISIBLE);
             binding.marginTop.setVisibility(View.VISIBLE);
 
-        }  else if (event.getType() == ADD_POSTS) {
+        } else if (event.getType() == ADD_POSTS) {
             toolbarBinding.tvTitle.setText(event.getText());
             toolbarBinding.getRoot().setVisibility(View.VISIBLE);
             binding.marginTop.setVisibility(View.VISIBLE);
@@ -252,7 +304,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         } else if (event.getType() == PROFILE)
             binding.marginTop.setVisibility(View.GONE);
         else if (event.getType() == EDIT) {
-            switchFragment(ADD_POSTS, null,event.getText());
+            switchFragment(ADD_POSTS, null, event.getText());
 
         }
     }
@@ -261,31 +313,31 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void switchFragment(PagesFragment pagesFragment, PostOrdersInfo object, String post) {
         switch (pagesFragment) {
             case ADD_POSTS:
-                isAllPost=false;
+                isAllPost = false;
                 toolbarBinding.getRoot().setVisibility(View.VISIBLE);
-                fragment =  AddPostFragment.newInstance(post,"");
+                fragment = AddPostFragment.newInstance(post, "");
                 break;
             case ALL_POSTS:
                 toolbarBinding.getRoot().setVisibility(View.VISIBLE);
                 fragment = new AllPostsFragment();
                 break;
             case NOTIFICATION:
-                isAllPost=false;
+                isAllPost = false;
                 toolbarBinding.getRoot().setVisibility(View.VISIBLE);
                 fragment = new NotificationFragment();
                 break;
             case PROFILE:
-                isAllPost=false;
+                isAllPost = false;
                 toolbarBinding.getRoot().setVisibility(View.GONE);
                 fragment = ProfileFragment.newInstance(object.getUserId());
                 break;
             case POST_ORDERS:
-                isAllPost=false;
+                isAllPost = false;
                 toolbarBinding.getRoot().setVisibility(View.VISIBLE);
                 fragment = PostOrdersFragment.newInstance(object);
                 break;
             case CHANGE_PASSWORD:
-                isAllPost=false;
+                isAllPost = false;
                 toolbarBinding.getRoot().setVisibility(View.VISIBLE);
                 fragment = new ChangePasswordFragment();
                 break;
@@ -305,7 +357,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 binding.navView.getMenu().getItem(3).setChecked(true);
                 break;
 
-        }   
+        }
         if (ALL_POSTS == pagesFragment) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, null).commit();
         } else {
@@ -341,6 +393,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
         return true;
     }
+
     //--------------------------------------------------
     @Override
     public void onBackPressed() {
@@ -369,7 +422,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     tag).commit();
             isAllPost = true;
         } else {
-            super.onBackPressed();
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+            System.exit(0);
         }
     }
 

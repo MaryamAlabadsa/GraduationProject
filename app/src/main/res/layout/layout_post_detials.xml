@@ -43,7 +43,7 @@
 
         <TextView
             android:id="@+id/user_name_text"
-            android:layout_width="@dimen/_80sdp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_10sdp"
@@ -56,7 +56,7 @@
 
         <TextView
             android:id="@+id/post_date_text"
-            android:layout_width="@dimen/_90sdp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_10sdp"
             android:text="TextView"
@@ -103,7 +103,7 @@
 
         <TextView
             android:id="@+id/post_description_text"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_10sdp"
             android:layout_marginStart="16dp"
@@ -122,7 +122,7 @@
             android:layout_margin="@dimen/_10sdp"
             android:layout_marginStart="16dp"
             android:gravity="center|start"
-            android:text="Status"
+            android:text="@string/status"
             android:textColor="@color/dark_blue"
             android:textSize="@dimen/_15ssp"
             app:layout_constraintStart_toStartOf="parent"
@@ -147,7 +147,7 @@
                 android:layout_height="@dimen/_35sdp"
                 android:layout_gravity="center"
                 android:background="@drawable/button_complete"
-                android:text="Complete"
+                android:text="@string/completed"
                 android:textColor="@color/green"
                 android:textSize="@dimen/_8ssp" />
 
@@ -158,7 +158,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/_6sdp"
                 android:background="@drawable/button_profile2"
-                android:text="Request"
+                android:text="@string/beneficiary"
                 android:textColor="@color/color_app"
                 android:textSize="@dimen/_8ssp" />
 
@@ -169,7 +169,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/_6sdp"
                 android:background="@drawable/button_pending"
-                android:text="Pending"
+                android:text="@string/pending"
                 android:textColor="@color/red"
                 android:textSize="@dimen/_8ssp" />
 
@@ -180,7 +180,17 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/_6sdp"
                 android:background="@drawable/button_profile1"
-                android:text="Donation"
+                android:text="@string/donation"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_8ssp" />
+            <Button
+                android:id="@+id/category_name"
+                android:layout_width="@dimen/_60sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/_6sdp"
+                android:background="@drawable/button_profile1"
+                android:text="@string/donation"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_8ssp" />
         </LinearLayout>
@@ -191,7 +201,7 @@
             android:layout_height="@dimen/_30sdp"
             android:layout_margin="@dimen/_10sdp"
             android:gravity="center|start"
-            android:text="Orders"
+            android:text="@string/orders"
             android:textColor="@color/dark_blue"
             android:textSize="@dimen/_15ssp"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
@@ -204,7 +214,7 @@
             android:layout_height="@dimen/_30sdp"
             android:layout_margin="@dimen/_10sdp"
             android:gravity="center|start"
-            android:text="orders not available"
+            android:text="@string/ordersNotAvailable"
             android:textColor="@color/black"
             android:textSize="@dimen/_10ssp"
             app:layout_constraintTop_toBottomOf="@+id/orders_detials"

@@ -111,5 +111,7 @@ dependencies {
 
     implementation 'com.airbnb.android:lottie:3.4.0'
 
+    implementation 'com.github.hoomanmmd:fadeoutparticle:1.0.0'
+//    implementation 'com.github.rommansabbir:AnimationX:2.0'
 
 }

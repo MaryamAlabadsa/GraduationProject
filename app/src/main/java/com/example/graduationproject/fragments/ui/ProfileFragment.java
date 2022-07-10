@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -114,10 +115,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     ProfilePostsAdapter adapter;
     Dialog imageDialog;
     Bitmap bitmap;
+    String oldName;
     // TODO: Rename and change types of parameters
     private int userId;
     private SweetAlertDialog pDialog;
-    private Boolean isDonationPosts=false;
+    private Boolean isDonationPosts = false;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -164,7 +166,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 startActivity(intent);
             }
         });
-        Toast.makeText(context, userId+ "", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, userId + "", Toast.LENGTH_SHORT).show();
         if (userId == 0)
             binding.editUserName.setVisibility(View.VISIBLE);
         else
@@ -181,6 +183,18 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             binding.changeProfileImageBtn.setVisibility(View.INVISIBLE);
             setUserProfileInfo();
         }
+    }
+
+    private void swipeToRefresh() {
+        SwipeRefreshLayout swipeRefreshLayout = binding.scroll;
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            new Handler().postDelayed(() -> {
+                swipeRefreshLayout.setRefreshing(false);
+                binding.containerAll.setVisibility(View.INVISIBLE);
+                binding.shimmerView.setVisibility(View.VISIBLE);
+                getFragmentTitle();
+            }, 1000);
+        });
     }
 
     private void setMyProfileInfo() {
@@ -360,7 +374,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void layout(int id) {
 
-                UtilMethods.getPostDetails(id, context, serviceApi, token,fragmentSwitcher);
+                UtilMethods.getPostDetails(id, context, serviceApi, token, fragmentSwitcher);
 
             }
         }, new PostProfileAddOrderInterface() {
@@ -417,20 +431,20 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            //when user click rating button
             case R.id.btn_donation_post:
-                isDonationPosts=true;
+                isDonationPosts = true;
                 if (userId == 0)
                     getMyDonationPosts();
                 else
                     getUserDonationPosts(userId);
-                adapter.clearItems();
+                if (adapter != null)
+                    adapter.clearItems();
                 Animation anim2 = AnimationUtils.loadAnimation(context, R.anim.anim2);
                 binding.lineView.startAnimation(anim2);
                 break;
 
             case R.id.btn_request_post:
-                isDonationPosts=false;
+                isDonationPosts = false;
                 if (userId == 0)
                     getMyRequestPosts();
                 else
@@ -440,6 +454,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 binding.lineView.startAnimation(anim);
                 break;
             case R.id.edit_user_name:
+                oldName = binding.userNameText.getText().toString();
                 binding.userNameText.setClickable(true);
                 binding.userNameText.setEnabled(true);
                 binding.editUserName.setVisibility(View.GONE);
@@ -450,9 +465,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 binding.userNameText.setEnabled(false);
                 binding.editUserName.setVisibility(View.VISIBLE);
                 binding.saveEditUserName.setVisibility(View.GONE);
-//                binding.progressBar.setVisibility(View.VISIBLE);
                 String newName = binding.userNameText.getText().toString();
-                updateUserName(newName);
+                if (newName.isEmpty())
+                    binding.userNameText.setText(oldName);
+                else
+                    updateUserName(newName);
                 break;
         }
     }
@@ -476,7 +493,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             @SuppressLint("CheckResult")
             @Override
             public void onFailure(Call<RegisterResponse> call, Throwable t) {
-                Toast.makeText(context, t.getMessage()+"", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, t.getMessage() + "", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -565,7 +582,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     private void changeRemoveButton(PostsList post, int position) {
         post.setIsOrdered(false);
-        adapter.modifyBtn(post,position);
+        adapter.modifyBtn(post, position);
 //        adapter.restorePost(post, position);
     }
 
@@ -612,9 +629,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 // Set close icon drawable
                 .setCloseDrawable(R.drawable.ic_close_white_24dp)
                 // Set loading view for pager image and preview image
-            .setLoadingView(R.layout.crop_image_view)
+                .setLoadingView(R.layout.crop_image_view)
                 // Set dialog style
-            .setDialogStyle(R.style.alert_dialog_dark)
+                .setDialogStyle(R.style.alert_dialog_dark)
                 // Choose selector type, indicator or thumbnail
                 .showThumbSlider(true)
                 // Set image scale type for slider image
@@ -653,14 +670,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.e("PERMISSION_GRANTED",grantResults[0]+"");
-        if (grantResults[0]==PackageManager.PERMISSION_GRANTED){
+        Log.e("PERMISSION_GRANTED", grantResults[0] + "");
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             new ImagePicker.Builder(this)
                     .crop(83, 100)                    //Crop image(Optional), Check Customization for more option
                     .compress(1024)            //Final image size will be less than 1 MB(Optional)
                     .maxResultSize(233, 280)    //Final image resolution will be less than 1080 x 1080(Optional)
                     .start();
-        }else {
+        } else {
             Toast.makeText(context, "sssss", Toast.LENGTH_SHORT).show();
         }
     }
@@ -800,12 +817,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 Log.d("response5 code", response.code() + "");
                 UtilMethods.launchLoadingLottieDialogDismiss(context);
                 removePostFromRv(post, id, position);
-                if (isDonationPosts){
-                    int b=Integer.parseInt(binding.tvDonationPostsNum.getText()+"");
-                    binding.tvDonationPostsNum.setText((b-1)+"");
-                }else {
-                    int b=Integer.parseInt(binding.tvRequestPostsNum.getText()+"");
-                    binding.tvRequestPostsNum.setText((b-1)+"");
+                if (isDonationPosts) {
+                    int b = Integer.parseInt(binding.tvDonationPostsNum.getText() + "");
+                    binding.tvDonationPostsNum.setText((b - 1) + "");
+                } else {
+                    int b = Integer.parseInt(binding.tvRequestPostsNum.getText() + "");
+                    binding.tvRequestPostsNum.setText((b - 1) + "");
                 }
             }
 
@@ -850,12 +867,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 Log.d("response5 code", response.code() + "");
                 UtilMethods.launchLoadingLottieDialogDismiss(context);
                 binding.rvPosts.scrollToPosition(position);
-                if (isDonationPosts){
-                    int b=Integer.parseInt(binding.tvDonationPostsNum.getText()+"");
-                    binding.tvDonationPostsNum.setText((b++)+"");
-                }else {
-                    int b=Integer.parseInt(binding.tvRequestPostsNum.getText()+"");
-                    binding.tvRequestPostsNum.setText((b++)+"");
+                if (isDonationPosts) {
+                    int b = Integer.parseInt(binding.tvDonationPostsNum.getText() + "");
+                    binding.tvDonationPostsNum.setText((b++) + "");
+                } else {
+                    int b = Integer.parseInt(binding.tvRequestPostsNum.getText() + "");
+                    binding.tvRequestPostsNum.setText((b++) + "");
                 }
             }
 
@@ -883,12 +900,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                         UtilMethods.launchLoadingLottieDialog(context);
                         deleteOrderRequest(post, id, position);
                         sDialog.dismissWithAnimation();
-                        if (isDonationPosts){
-                            int b=Integer.parseInt(binding.tvDonationPostsNum.getText()+"");
-                            binding.tvDonationPostsNum.setText((b-1)+"");
-                        }else {
-                            int b=Integer.parseInt(binding.tvRequestPostsNum.getText()+"");
-                            binding.tvRequestPostsNum.setText((b-1)+"");
+                        if (isDonationPosts) {
+                            int b = Integer.parseInt(binding.tvDonationPostsNum.getText() + "");
+                            binding.tvDonationPostsNum.setText((b - 1) + "");
+                        } else {
+                            int b = Integer.parseInt(binding.tvRequestPostsNum.getText() + "");
+                            binding.tvRequestPostsNum.setText((b - 1) + "");
                         }
                     }
                 })
@@ -949,12 +966,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 Log.d("response5 code", response.code() + "");
                 UtilMethods.launchLoadingLottieDialogDismiss(context);
                 binding.rvPosts.scrollToPosition(position);
-                if (isDonationPosts){
-                    int b=Integer.parseInt(binding.tvDonationPostsNum.getText()+"");
-                    binding.tvDonationPostsNum.setText((b++)+"");
-                }else {
-                    int b=Integer.parseInt(binding.tvRequestPostsNum.getText()+"");
-                    binding.tvRequestPostsNum.setText((b++)+"");
+                if (isDonationPosts) {
+                    int b = Integer.parseInt(binding.tvDonationPostsNum.getText() + "");
+                    binding.tvDonationPostsNum.setText((b++) + "");
+                } else {
+                    int b = Integer.parseInt(binding.tvRequestPostsNum.getText() + "");
+                    binding.tvRequestPostsNum.setText((b++) + "");
                 }
             }
 
@@ -1014,8 +1031,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     //------------------------------edit order ------------------------------------------------------
     private void createEditOrderDialog(int id, PostsList post, int position) {
-        String message=post.getMassage()+"";
-        myDialogAddOrder = new MyDialogAddOrder(context,message , new Dialoginterface() {
+        String message = post.getMassage() + "";
+        myDialogAddOrder = new MyDialogAddOrder(context, message, new Dialoginterface() {
             @Override
             public void yes(String massage) {
                 EditRequest(id, post.getPost().getId(), massage, post, position);
@@ -1042,7 +1059,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
                 Log.d("response5 code", response.code() + "");
                 post.setMassage(massage);
-                adapter.modifyBtn(post,position);
+                adapter.modifyBtn(post, position);
                 pDialog.dismiss();
             }
 

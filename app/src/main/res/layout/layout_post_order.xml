@@ -41,6 +41,7 @@
             android:text="two days"
             android:gravity="center|top|start"
             android:textSize="@dimen/_10ssp"
+            android:layout_marginEnd="@dimen/_2sdp"
             app:layout_constraintTop_toBottomOf="@+id/user_name"
             app:layout_constraintStart_toStartOf="@id/user_name" />
 
@@ -54,7 +55,7 @@
             android:text="post_massage"
             android:textSize="@dimen/_10sdp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/user_image"
+            app:layout_constraintStart_toEndOf="@id/user_image"
             app:layout_constraintTop_toBottomOf="@id/user_image"
             app:layout_constraintVertical_bias="0.0"
             tools:ignore="MissingConstraints" />

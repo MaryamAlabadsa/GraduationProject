@@ -14,7 +14,7 @@
         android:id="@+id/category_image"
         android:layout_width="@dimen/_15sdp"
         android:layout_height="@dimen/_15sdp"
-        android:layout_marginRight="@dimen/_5sdp"
+        android:layout_marginEnd="@dimen/_5sdp"
         android:src="@drawable/logo"
         android:visibility="gone"
         app:tint="@color/white" />

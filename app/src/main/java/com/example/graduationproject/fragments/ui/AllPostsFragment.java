@@ -51,6 +51,7 @@ import com.example.graduationproject.listener.PostDetialsInterface;
 import com.example.graduationproject.listener.PostImageShowInterface;
 import com.example.graduationproject.listener.PostMenuInterface;
 import com.example.graduationproject.listener.PostRemoveOrderInterface;
+import com.example.graduationproject.listener.PostShowOrdersInterface;
 import com.example.graduationproject.listener.UserIdtRequestInterface;
 import com.example.graduationproject.model.PostOrdersInfo;
 import com.example.graduationproject.retrofit.categories.AllCategories;
@@ -176,6 +177,7 @@ public class AllPostsFragment extends BaseFragment {
         SwipeRefreshLayout swipeRefreshLayout = binding.scroll;
         swipeRefreshLayout.setOnRefreshListener(() -> {
             new Handler().postDelayed(() -> {
+//                page = 0;
                 swipeRefreshLayout.setRefreshing(false);
                 binding.shimmerView.setVisibility(View.VISIBLE);
                 binding.dataLayout.setVisibility(View.GONE);
@@ -301,7 +303,7 @@ public class AllPostsFragment extends BaseFragment {
 
                     }
                     dismissWaitingImage();
-                }  else {
+                } else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
                 }
@@ -337,19 +339,19 @@ public class AllPostsFragment extends BaseFragment {
             @SuppressLint("CheckResult")
             @Override
             public void layout(int id) {
-                UtilMethods.getPostDetails(id, context, serviceApi, token,fragmentSwitcher);
+                UtilMethods.getPostDetails(id, context, serviceApi, token, fragmentSwitcher);
+            }
+        }, new PostShowOrdersInterface() {
+            @Override
+            public void layout(Post post, int position) {
+                PostOrdersInfo info = new PostOrdersInfo(post.getId(), post.getIsCompleted(), post.getIsDonation(), post.getSecondUserId());
+                fragmentSwitcher.switchFragment(PagesFragment.POST_ORDERS, info, null);
             }
         }, new PostAddOrderInterface() {
             @Override
             public void layout(Post post, int position) {
-                if (post.getIsHeTheOwnerOfThePost()) {
-                    PostOrdersInfo info = new PostOrdersInfo(post.getId(), post.getIsCompleted(), post.getIsDonation(), post.getSecondUserId());
-                    fragmentSwitcher.switchFragment(PagesFragment.POST_ORDERS, info, null);
-                } else {
-                    createAddOrderDialog(post.getId(), post, position);
-                    myDialogAddOrder.show();
-                }
-
+                createAddOrderDialog(post.getId(), post, position);
+                myDialogAddOrder.show();
             }
         }, new PostRemoveOrderInterface() {
             @Override
@@ -454,7 +456,7 @@ public class AllPostsFragment extends BaseFragment {
 
     private void setCategoryRv(List<Category> data) {
 
-        data.add(0, new Category(0, "All", R.drawable.all_category));
+        data.add(0, new Category(0, this.getString(R.string.allCategory), R.drawable.all_category));
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 context, RecyclerView.HORIZONTAL, false);
         binding.rvCategory.setLayoutManager(layoutManager);
@@ -462,7 +464,7 @@ public class AllPostsFragment extends BaseFragment {
             @Override
             public void layout(int id) {
                 categoryId = id;
-
+//                page = 0;
                 if (id == 0) {
                     selectedCategory = Constant.NO_SELECTED_CATEGORY;
                     setSelectedCategory(checkedNum, postStatus);
@@ -545,7 +547,7 @@ public class AllPostsFragment extends BaseFragment {
     //----------------------------add order ------------------------------------------------
 
     private void createAddOrderDialog(int id, Post post, int position) {
-        myDialogAddOrder = new MyDialogAddOrder(context,"", new Dialoginterface() {
+        myDialogAddOrder = new MyDialogAddOrder(context, "", new Dialoginterface() {
             @Override
             public void yes(String massage) {
                 AddRequest(id, massage, post, position);
@@ -629,20 +631,20 @@ public class AllPostsFragment extends BaseFragment {
     private void getCheckedBtn(Constant checkedBtn) {
         String mainTextTitle, secondaryTitle;
         if (checkedBtn == Constant.ALL_CHECKED) {
-            mainTextTitle = "Our Posts";
+            mainTextTitle = this.getString(R.string.allPosts);
         } else if (checkedBtn == Constant.DONATION_CHECKED) {
-            mainTextTitle = "Donation Posts";
+            mainTextTitle =" "+ this.getString(R.string.donation);
         } else {
-            mainTextTitle = "Request Posts";
+            mainTextTitle =" "+ this.getString(R.string.requests);
         }
         if (postStatus == Constant.ALL_CHECKED) {
-            secondaryTitle = "";
+            secondaryTitle = " ";
         } else if (postStatus == Constant.COMPLETE_POST) {
-            secondaryTitle = " / complete post";
+            secondaryTitle =" / "+ this.getString(R.string.completed);
         } else {
-            secondaryTitle = " / pending post";
+            secondaryTitle =" / "+ this.getString(R.string.pending);
         }
-        binding.filterText.setText(mainTextTitle + secondaryTitle);
+        binding.filterText.setText(mainTextTitle+" " + secondaryTitle+" "+this.getString(R.string.posts));
 
     }
 
@@ -760,7 +762,7 @@ public class AllPostsFragment extends BaseFragment {
                     Gson gson = new Gson();
                     String postString = gson.toJson(post);
 //                    EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.EDIT, postString));
-                    fragmentSwitcher.switchFragment(ADD_POSTS,null, postString);
+                    fragmentSwitcher.switchFragment(ADD_POSTS, null, postString);
 
 //                    openFragment(fragmentA);
 //                    fragmentSwitcher.switchFragment(ADD_POSTS,null);
@@ -855,7 +857,7 @@ public class AllPostsFragment extends BaseFragment {
                 Log.d("Success", new Gson().toJson(response.body()));
                 AllPosts getAllPosts = response.body();
 
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     assert response.body() != null;
 
                     if (getAllPosts.getData().size() == 0) {
@@ -873,7 +875,7 @@ public class AllPostsFragment extends BaseFragment {
                             isLastPage = false;
                         }
                     }
-                }else if (response.code()==422){
+                } else if (response.code() == 422) {
                     pDialog = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
                     pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
                     pDialog.setTitleText("Loading ...");
@@ -911,7 +913,6 @@ public class AllPostsFragment extends BaseFragment {
         binding.lottieImg.setVisibility(View.GONE);
         binding.rvPost.setVisibility(View.VISIBLE);
     }
-
 
 
 }

@@ -4,35 +4,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
     android:backgroundTint="@color/colorPrimaryDark"
-    tools:context=".activities.SplashActivity"
-    android:layout_gravity="center">
+    tools:context=".activities.SplashActivity">
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="@dimen/_100sdp"
-        android:layout_height="@dimen/_100sdp"
+    <com.appgozar.fadeoutparticle.FadeOutParticleFrameLayout
+        android:id="@+id/fade_out_particle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.456"
-        app:srcCompat="@drawable/logo" />
+        app:layout_constraintVertical_bias="0.456">
 
-    <TextView
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.456"
+            app:srcCompat="@drawable/logo" />
+
+    </com.appgozar.fadeoutparticle.FadeOutParticleFrameLayout>
+
+    <com.appgozar.fadeoutparticle.FadeOutParticleFrameLayout
+        android:id="@+id/fade_out_particle2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_15sdp"
-        android:text="@string/app_name"
-        android:textColor="@color/color_app"
-        android:textSize="@dimen/_20ssp"
-        android:textStyle="bold"
-        android:typeface="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image" />
+        app:layout_constraintTop_toBottomOf="@id/fade_out_particle">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:text="@string/app_name"
+            android:textColor="@color/color_app"
+            android:textSize="@dimen/_20ssp"
+            android:textStyle="bold"
+            android:typeface="normal" />
+
+    </com.appgozar.fadeoutparticle.FadeOutParticleFrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

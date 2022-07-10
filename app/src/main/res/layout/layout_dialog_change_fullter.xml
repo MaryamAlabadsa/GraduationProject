@@ -57,7 +57,7 @@
                     android:gravity="center|start"
                     android:scaleX="0.75"
                     android:scaleY="0.75"
-                    android:text="Donation"
+                    android:text="@string/donation"
                     android:textColor="@color/color_app"
                     android:textSize="@dimen/_14sdp"
                     android:textStyle="bold" />
@@ -71,7 +71,7 @@
                     android:paddingStart="@dimen/_2sdp"
                     android:scaleX="0.75"
                     android:scaleY="0.75"
-                    android:text="Request"
+                    android:text="@string/requests"
                     android:textColor="@color/color_app"
                     android:textSize="@dimen/_14sdp"
                     android:textStyle="bold"/>
@@ -91,7 +91,7 @@
                     android:gravity="center|start"
                     android:scaleX="0.75"
                     android:scaleY="0.75"
-                    android:text="completed"
+                    android:text="@string/completed"
                     android:textColor="@color/color_app"
                     android:textSize="@dimen/_14sdp"
                     android:textStyle="bold" />
@@ -103,7 +103,7 @@
                     android:gravity="center|start"
                     android:scaleX="0.75"
                     android:scaleY="0.75"
-                    android:text="pending"
+                    android:text="@string/pending"
                     android:textColor="@color/color_app"
                     android:textSize="@dimen/_14sdp"
                     android:textStyle="bold" />
@@ -130,7 +130,7 @@
                     android:layout_marginRight="@dimen/_10sdp"
                     android:layout_weight="1"
                     android:background="@drawable/button_profile1"
-                    android:text="Ok"
+                    android:text="@string/confirm"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_10ssp"
@@ -144,7 +144,7 @@
                     android:layout_marginRight="@dimen/_10sdp"
                     android:layout_weight="1"
                     android:background="@drawable/button_style"
-                    android:text="Cancel"
+                    android:text="@string/cancle"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/color_app"
                     android:textSize="@dimen/_10ssp"

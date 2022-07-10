@@ -49,6 +49,8 @@ public class SignInActivity extends BaseActivity {
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                binding.textErrorPassword.setVisibility(View.GONE);
+                binding.textErrorEmail.setVisibility(View.GONE);
                 String deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
                 String email = binding.email.getText().toString().trim();
                 String password = binding.password.getText().toString();
@@ -56,10 +58,8 @@ public class SignInActivity extends BaseActivity {
                 sendLogin.setEmail(email);
                 sendLogin.setPassword(password);
                 sendLogin.setFcm_token(deviceToken);/** GET List Resources **/
-                if (email != null && password != null) {
-                    UtilMethods.launchLoadingLottieDialog(context);
-                    login(sendLogin);
-                }
+                UtilMethods.launchLoadingLottieDialog(context);
+                login(sendLogin);
             }
         });
 
@@ -73,8 +73,8 @@ public class SignInActivity extends BaseActivity {
     }
 
     private void login(SendLogin sendLogin) {
-
-        Call<RegisterResponse> call = serviceApi.login("application/json", sendLogin);
+        lang = sharedPreferences.readString(AppSharedPreferences.LANG);
+        Call<RegisterResponse> call = serviceApi.login("application/json", lang, sendLogin);
         call.enqueue(new Callback<RegisterResponse>() {
 
             @Override
@@ -91,12 +91,8 @@ public class SignInActivity extends BaseActivity {
                     startActivity(new Intent(context, MainActivity.class));
                     finish();
                 } else {
-                    String errorMessage = parseError2(response);
-                    Toast.makeText(SignInActivity.this, errorMessage + "", Toast.LENGTH_SHORT).show();
-                    binding.email.setError(errorMessage);
-                    Log.e("errorMessage", errorMessage + "");
+                    parseError2(response);
                     UtilMethods.launchLoadingLottieDialogDismiss(context);
-
                 }
             }
 
@@ -109,18 +105,27 @@ public class SignInActivity extends BaseActivity {
         });
     }
 
-    public String parseError2(Response<?> response) {
+    public void parseError2(Response<?> response) {
         String errorMsg = null;
         try {
             assert response.errorBody() != null;
             JSONObject jsonObject = new JSONObject(response.errorBody().string());
             JSONObject jsonObject2 = jsonObject.getJSONObject("errors");
-            JSONArray jsonArrayEmail = jsonObject2.getJSONArray("email");
-            return jsonArrayEmail.getString(0);
+            if (jsonObject2.has("email")) {
+                JSONArray jsonArrayEmail = jsonObject2.getJSONArray("email");
+                binding.textErrorEmail.setText(jsonArrayEmail.getString(0));
+                binding.textErrorEmail.setVisibility(View.VISIBLE);
+            }
+            if (jsonObject2.has("password")) {
+                JSONArray jsonArrayEmail = jsonObject2.getJSONArray("password");
+                binding.textErrorPassword.setText(jsonArrayEmail.getString(0));
+                binding.textErrorPassword.setVisibility(View.VISIBLE);
+            }
+//            return jsonArrayEmail.getString(0);
 
         } catch (Exception ignored) {
             Log.e(errorMsg, ignored.getMessage() + "");
-            return ignored.getMessage();
+//            return ignored.getMessage();
         }
     }
 

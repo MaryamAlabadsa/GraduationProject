@@ -18,6 +18,7 @@ import com.example.graduationproject.listener.PostDetialsInterface;
 import com.example.graduationproject.listener.PostImageShowInterface;
 import com.example.graduationproject.listener.PostMenuInterface;
 import com.example.graduationproject.listener.PostRemoveOrderInterface;
+import com.example.graduationproject.listener.PostShowOrdersInterface;
 import com.example.graduationproject.listener.SliderInterface;
 import com.example.graduationproject.listener.UserIdtRequestInterface;
 import com.example.graduationproject.retrofit.post.Post;
@@ -39,9 +40,11 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     PostDetialsInterface postDetialsInterface;
     PostImageShowInterface postImageShowInterface;
     PostMenuInterface postMenuInterface;
+    PostShowOrdersInterface postShowOrdersInterface;
 
     public PostsAdapter(Context context,
                         PostDetialsInterface postDetialsInterface,
+                        PostShowOrdersInterface postShowOrdersInterface,
                         PostAddOrderInterface addOrderInterface,
                         PostRemoveOrderInterface removeOrderInterface,
                         UserIdtRequestInterface userIdtRequestInterface,
@@ -50,6 +53,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         list = new ArrayList<>();
         this.context = context;
         this.postDetialsInterface = postDetialsInterface;
+        this.postShowOrdersInterface = postShowOrdersInterface;
         this.addOrderInterface = addOrderInterface;
         this.removeOrderInterface = removeOrderInterface;
         this.userIdtRequestInterface = userIdtRequestInterface;
@@ -110,58 +114,52 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     @Override
     public void onBindViewHolder(@NonNull PostsAdapter.MyViewHolder holder,
                                  @SuppressLint("RecyclerView") final int position) {
-        holder.binding.uDatePost.setText(list.get(position).getPostCreatedAt());
-        holder.binding.uNamePost.setText("" + list.get(position).getFirstUserName());
-        holder.binding.tvPostTitleImageSlider.setText("" + list.get(position).getTitle());
-        holder.binding.tvPostDesImageSlider.setText("" + list.get(position).getDescription());
-        Glide.with(context).load(list.get(position).getFirstUserImageLink()).circleCrop()
-                .placeholder(R.drawable.usericon).into(holder.binding.uImgPost);
-
-        setPostImages(holder, position);
-        setOrderButton(holder, position);
-        setPostStatus(holder, position);
-
-        holder.binding.uNamePost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int user_Id;
-                if (list.get(position).getTheOwnerIsLogin())
-                    user_Id = 0;
-                else
-                    user_Id = list.get(position).getFirstUserId();
-
-                userIdtRequestInterface.layout(user_Id);
-            }
-        });
-        holder.binding.sliderLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                postImageShowInterface.layout(list.get(position).getPostMedia());
-            }
-        });
-        holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                postDetialsInterface.layout(list.get(position).getId());
-            }
-        });
-        setPostMenu(holder, position);
+        setPostData(holder, position);
 
     }
 
-    private void setPostMenu(PostsAdapter.MyViewHolder holder, int position) {
+    private void setPostData(PostsAdapter.MyViewHolder holder, int position) {
+        holder.binding.uDatePost.setText(list.get(position).getPostCreatedAt());
+        holder.binding.uNamePost.setText(list.get(position).getFirstUserName());
+        holder.binding.tvPostTitleImageSlider.setText(list.get(position).getTitle());
+        holder.binding.tvPostDesImageSlider.setText(list.get(position).getDescription());
+        Glide.with(context).load(list.get(position).getFirstUserImageLink()).circleCrop()
+                .placeholder(R.drawable.usericon).into(holder.binding.uImgPost);
+        setPostImages(holder, position);
+        setPostMenu(holder, position);
+        setPostCommentBtn(holder, position);
+        setPostDetails(holder, position);
+        setUserProfile(holder, position);
+        setPostStatus(holder, position);
+    }
+
+    private void setUserProfile(MyViewHolder holder, int position) {
+        holder.binding.uImgPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userIdtRequestInterface.layout(list.get(position).getFirstUserId());
+            }
+        });
+        holder.binding.uNamePost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userIdtRequestInterface.layout(list.get(position).getFirstUserId());
+            }
+        });
+    }
+
+    private void setPostMenu(MyViewHolder holder, int position) {
+        if (!list.get(position).getIsHeTheOwnerOfThePost() || list.get(position).getIsCompleted())
+            holder.binding.postMenu.setVisibility(View.INVISIBLE);
         holder.binding.postMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 postMenuInterface.layout(list.get(position), position, holder.binding.postMenu);
             }
         });
-
-        if (!list.get(position).getIsHeTheOwnerOfThePost()||list.get(position).getIsCompleted())
-            holder.binding.postMenu.setVisibility(View.INVISIBLE);
     }
 
-    private void setPostImages(MyViewHolder holder, int position) {
+    private void setPostImages(PostsAdapter.MyViewHolder holder, int position) {
         SliderView sliderView = holder.binding.imageSlider;
         SliderAdapter adapter = new SliderAdapter(context, new SliderInterface() {
             @Override
@@ -169,11 +167,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
                 postImageShowInterface.layout(list.get(position).getPostMedia());
             }
         });
-
         sliderView.setSliderAdapter(adapter);
-
         adapter.addItem(list.get(position).getPostMedia());
-
         sliderView.setIndicatorAnimation(IndicatorAnimationType.SCALE_DOWN); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
         sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
         sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
@@ -181,50 +176,56 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         sliderView.setIndicatorUnselectedColor(context.getColor(R.color.colorPrimaryDark));
         sliderView.setScrollTimeInSec(4); //set scroll delay in seconds :
         sliderView.startAutoCycle();
-
     }
 
-    private void setOrderButton(MyViewHolder holder, int position) {
+    private void setPostDetails(PostsAdapter.MyViewHolder holder, int position) {
+        holder.binding.getRoot().setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                postDetialsInterface.layout(list.get(position).getId());
+                return false;
+            }
+        });
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setPostCommentBtn(PostsAdapter.MyViewHolder holder, int position) {
         if (list.get(position).getIsHeTheOwnerOfThePost()) {
+            holder.binding.commentBtn.setText("Show Requests");
             holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    addOrderInterface.layout(list.get(position), position);
-                    notifyDataSetChanged();
+                    postShowOrdersInterface.layout(list.get(position), position);
                 }
             });
-            holder.binding.commentBtn.setText("Show orders");
-
         } else {
             if (list.get(position).getIsCompleted()) {
                 holder.binding.commentBtn.setVisibility(View.INVISIBLE);
-                holder.binding.postMenu.setVisibility(View.INVISIBLE);
-            } else if (list.get(position).getIsOrdered()) {
-                holder.binding.commentBtn.setText("Remove order");
-                holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        removeOrderInterface.layout(list.get(position), position);
-                        notifyDataSetChanged();
-                    }
-                });
             } else {
-                holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        addOrderInterface.layout(list.get(position), position);
-                        notifyDataSetChanged();
-                    }
-                });
-                holder.binding.commentBtn.setText("Add Comment");
+                if (list.get(position).getIsOrdered()) {
+                    holder.binding.commentBtn.setText("Remove Request");
+                    holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            removeOrderInterface.layout(list.get(position), position);
+                        }
+                    });
+                } else {
+                    holder.binding.commentBtn.setText("Add Requests");
+                    holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            addOrderInterface.layout(list.get(position), position);
+                        }
+                    });
+                }
             }
         }
+
     }
 
-    private void setPostStatus(MyViewHolder holder, int position) {
+    private void setPostStatus(PostsAdapter.MyViewHolder holder, int position) {
         if (list.get(position).getSecondUserName().equals("not found")) {
-//            holder.binding.postStatus.setBackgroundColor(Color.WHITE);
-//            holder.binding.postStatus.setti(Color.RED);
             holder.binding.postStatus.setBackgroundResource(R.drawable.deadline);
             holder.binding.postStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -241,14 +242,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
                 }
             });
         }
+    }
+
+        @Override
+        public int getItemCount () {
+            return list != null ? list.size() : 0;
+        }
 
 
     }
-
-    @Override
-    public int getItemCount() {
-        return list != null ? list.size() : 0;
-    }
-
-
-}

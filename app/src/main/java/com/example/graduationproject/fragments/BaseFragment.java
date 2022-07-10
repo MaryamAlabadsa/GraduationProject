@@ -33,7 +33,7 @@ import retrofit2.Response;
 public abstract class BaseFragment extends Fragment {
 
     public AppSharedPreferences sharedPreferences;
-    public String token;
+    public String token,lang;
     public ServiceApi serviceApi;
     public ProgressDialog progressDialog;
 
@@ -52,6 +52,7 @@ public abstract class BaseFragment extends Fragment {
         serviceApi = Creator.getClient().create(ServiceApi.class);
         sharedPreferences = new AppSharedPreferences(getActivity().getApplicationContext());
         token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
+        lang = sharedPreferences.readString(AppSharedPreferences.LANG);
 
     }
 

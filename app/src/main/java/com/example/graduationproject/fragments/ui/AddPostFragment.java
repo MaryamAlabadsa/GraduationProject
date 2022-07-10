@@ -57,6 +57,7 @@ import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -172,17 +173,6 @@ AddPostFragment extends BaseFragment {
 
         EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ADD_POSTS, "Add Post"));
 
-//
-//        String user = sharedPreferences.readUser(AppSharedPreferences.USER);
-//        Gson gson = new Gson();
-//        if (!user.isEmpty()) {
-//            User user1 = gson.fromJson(user, User.class);
-//            Glide.with(context).load(user1.getImageLink()).circleCrop()
-//                    .placeholder(R.drawable.ic_launcher_foreground).into(binding.imageProfile);
-//            binding.userName.setText(user1.getName());
-//        }
-
-
         binding.postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -191,7 +181,7 @@ AddPostFragment extends BaseFragment {
                 pTitle = binding.titlePost.getText().toString();
                 pDescription = binding.descriptionPost.getText().toString();
 
-                if (validationAllFields().equals("")) {
+//                if (validationAllFields()./equals("")) {
                     if (binding.radioDon.isChecked())
                         isDonation = 1;
                     else if (binding.radioReq.isChecked())
@@ -204,11 +194,12 @@ AddPostFragment extends BaseFragment {
                     } else {
                         Toast.makeText(context, "What is the post status?", Toast.LENGTH_SHORT).show();
                     }
-                }
+//                }
             }
         });
 
         binding.clearButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
                 clearAllFields();
@@ -241,29 +232,6 @@ AddPostFragment extends BaseFragment {
         });
     }
 
-    public String validationAllFields() {
-
-        if (binding.spinner.getSelectedItem().toString().trim().equals("Pick one")) {
-            Toasty.error(context, "Error Spinner", Toast.LENGTH_SHORT).show();
-            return "error1";
-        } else if (pTitle.isEmpty()) {
-            binding.titlePost.requestFocus();
-            binding.titlePost.setError("FIELD CANNOT BE EMPTY IN TITTLE");
-            return "error1";
-
-        } else if (pDescription.isEmpty()) {
-            binding.descriptionPost.requestFocus();
-            binding.descriptionPost.setError("FIELD CANNOT BE EMPTY IN DESCRIPTION");
-            return "error2";
-        } else if (isDonation == -1) {
-            Toasty.error(context, "PLEASE SELECTED REQUEST OR DONATION", Toast.LENGTH_SHORT).show();
-            return "error 5 ";
-        } else {
-            return "";
-        }
-
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     @SuppressLint("UseCompatLoadingForDrawables")
     public void clearAllFields() {
@@ -293,7 +261,7 @@ AddPostFragment extends BaseFragment {
             RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), uDescription);
             RequestBody is_donation = RequestBody.create(MediaType.parse("multipart/form-data"), pIsDonation + "");
             RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), pCategory + "");
-            Call<AllPosts> call = serviceApi.addPost("Bearer " + token
+            Call<AllPosts> call = serviceApi.addPost("Bearer " + token,lang
                     , title
                     , description
                     , is_donation
@@ -309,11 +277,8 @@ AddPostFragment extends BaseFragment {
                         UtilMethods.launchLoadingLottieDialogDismiss(context);
 
                     } else {
-                        String errorMessage = parseError(response);
-                        Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
+                         parseError(response,binding);
                         UtilMethods.launchLoadingLottieDialogDismiss(context);
-
-                        Log.e("errorMessage", errorMessage + "");
                     }
                 }
 
@@ -336,17 +301,28 @@ AddPostFragment extends BaseFragment {
 
     }
 
-    public static String parseError(Response<?> response) {
-        String errorMsg = null;
+    @SuppressLint("SetTextI18n")
+    public static void parseError(Response<?> response, FragmentAddPostBinding binding) {
+//        String errorMsg = null;
         try {
             assert response.errorBody() != null;
-            JSONObject jObjError = new JSONObject(response.errorBody().string());
-            errorMsg = jObjError.getString("message");
-            return errorMsg;
+            JSONObject jsonObject = new JSONObject(response.errorBody().string());
+            JSONObject jsonObject2 = jsonObject.getJSONObject("errors");
+
+            if (jsonObject2.has("title")) {
+                JSONArray jsonArrayEmail = jsonObject2.getJSONArray("title");
+                binding.textErrorTitle.setText(jsonArrayEmail.getString(0)+" *");
+                binding.textErrorTitle.setVisibility(View.VISIBLE);
+            }  if (jsonObject2.has("description")) {
+                JSONArray jsonArrayEmail = jsonObject2.getJSONArray("description");
+                binding.textErrorDec.setText(jsonArrayEmail.getString(0)+" *");
+                binding.textErrorDec.setVisibility(View.VISIBLE);
+            }
+//            return errorMsg;
         } catch (Exception ignored) {
 
         }
-        return errorMsg;
+//        return errorMsg;
     }
 
 
@@ -371,8 +347,7 @@ AddPostFragment extends BaseFragment {
                     //progressDialog.dismiss();
 
                 } else {
-                    String errorMessage = parseError(response);
-                    Log.e("errorMessage", errorMessage + "");
+                    parseError(response,binding);
                 }
             }
 
@@ -459,7 +434,7 @@ AddPostFragment extends BaseFragment {
             RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), pDescription);
             RequestBody is_donation = RequestBody.create(MediaType.parse("multipart/form-data"), isDonation + "");
             RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), category + "");
-            Call<MessageResponse> call = serviceApi.updatePost(post.getId(), "Bearer " + token
+            Call<MessageResponse> call = serviceApi.updatePost(post.getId(), "Bearer " + token,lang
                     , title
                     , description
                     , is_donation
@@ -475,11 +450,8 @@ AddPostFragment extends BaseFragment {
                         UtilMethods.launchLoadingLottieDialogDismiss(context);
 
                     } else {
-                        String errorMessage = parseError(response);
-                        Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
+                        parseError(response,binding);
                         UtilMethods.launchLoadingLottieDialogDismiss(context);
-
-                        Log.e("errorMessage", errorMessage + "");
                     }
                 }
 

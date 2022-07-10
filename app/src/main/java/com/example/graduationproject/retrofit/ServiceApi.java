@@ -44,16 +44,13 @@ public interface ServiceApi {
     Call<AllPosts> getAllPosts(
             @Header("Authorization") String token);
 
-//    @GET("donationPosts")
-//    Call<AllDonationsPosts> getDonationPosts(
-//            @Header("Authorization") String token);
-
     //  post
     @Multipart
     @POST("post")
     Call<AllPosts> addPost(
-            @Header("Authorization") String token,
-            @Part("title") RequestBody title
+            @Header("Authorization") String token
+            , @Query("lang") String lang
+            ,@Part("title") RequestBody title
             , @Part("description") RequestBody description
             , @Part("is_donation") RequestBody is_donation
             , @Part("category_id") RequestBody category_id
@@ -81,11 +78,13 @@ public interface ServiceApi {
     @POST("login")
     Call<RegisterResponse> login
             (@Header("Accept") String accept
+                    , @Query("lang") String lang
                     , @Body SendLogin fields);
 
     @POST("changePassword")
     Call<RegisterResponse> changePassword
             (@Header("Authorization") String token
+                    , @Query("lang") String lang
                     , @Body ChangePassword fields);
 
     @POST("logout")
@@ -103,6 +102,7 @@ public interface ServiceApi {
     @Multipart
     @POST("register")
     Call<RegisterResponse> register(@Header("Accept") String accept
+            , @Query("lang") String lang
             , @Part("name") RequestBody name
             , @Part("email") RequestBody email
             , @Part("phone_number") RequestBody phoneNumber
@@ -124,6 +124,7 @@ public interface ServiceApi {
     Call<MessageResponse> updatePost(
             @Path("post") int post
             , @Header("Authorization") String token
+            , @Query("lang") String lang
             , @Part("title") RequestBody title
             , @Part("description") RequestBody description
             , @Part("is_donation") RequestBody is_donation

@@ -128,7 +128,7 @@ public class ChangePasswordFragment extends BaseFragment {
         changePassword.setPassword(password);
         changePassword.setPasswordConfirmation(passwordConfirmation);
         Call<RegisterResponse> call = serviceApi.changePassword(
-                "Bearer " + token, changePassword);
+                "Bearer " + token,lang, changePassword);
         call.enqueue(new Callback<RegisterResponse>() {
             @Override
             public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {

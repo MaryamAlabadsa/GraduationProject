@@ -21,8 +21,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_170sdp"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="40dp"
                 android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="40dp"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:orientation="horizontal">
 
@@ -147,22 +147,35 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:background="@color/color_app"
-                app:cardCornerRadius="@dimen/_50sdp"
-               >
+                app:cardCornerRadius="@dimen/_50sdp">
 
                 <EditText
                     android:id="@+id/title_post"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="#FCFCFC"
-                    android:hint="Title"
+                    android:hint="@string/title"
                     android:padding="@dimen/_15sdp"
                     android:textAlignment="viewStart"
                     android:textColor="@color/black"
                     android:textColorHint="@color/hint"
                     android:textSize="@dimen/_13ssp" />
 
+
             </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/textError_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@id/title"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="@dimen/_16sdp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:text="@string/account_setting"
+                android:textColor="@color/red"
+                android:visibility="gone" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/dec"
@@ -170,7 +183,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/title"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_17sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:background="@color/color_app"
                 app:cardCornerRadius="@dimen/_50sdp">
@@ -180,8 +193,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="#FCFCFC"
-
-                    android:hint="Description"
+                    android:hint="@string/description"
                     android:padding="@dimen/_15sdp"
                     android:textAlignment="viewStart"
                     android:textColor="@color/black"
@@ -190,6 +202,18 @@
 
             </androidx.cardview.widget.CardView>
 
+            <TextView
+                android:id="@+id/textError_dec"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@id/dec"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="@dimen/_16sdp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:text="@string/account_setting"
+                android:textColor="@color/red"
+                android:visibility="gone" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/spinner_post"
@@ -197,7 +221,7 @@
                 android:layout_height="@dimen/_45sdp"
                 android:layout_below="@+id/dec"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_17sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:background="@color/color_app"
                 app:cardCornerRadius="@dimen/_50sdp">
@@ -223,34 +247,36 @@
                 android:layout_marginStart="@dimen/_23sdp"
                 android:layout_marginTop="27dp"
                 android:layout_marginEnd="@dimen/_10sdp"
+                android:gravity="start"
                 android:orientation="horizontal">
 
                 <RadioButton
                     android:id="@+id/radio_don"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start"
                     android:layout_weight="2"
                     android:buttonTint="@color/dark_blue"
-                    android:text="Donation"
+                    android:text="@string/donation"
                     android:textColor="@color/color_app"
                     android:textSize="@dimen/_14ssp"
                     android:textStyle="bold"
-                    android:theme="@style/mySwitch"
-              />
+                    android:theme="@style/mySwitch" />
 
                 <RadioButton
                     android:id="@+id/radio_req"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="end"
                     android:layout_weight="1"
                     android:buttonTint="@color/dark_blue"
-                    android:text="Receipt"
+                    android:text="@string/beneficiary"
                     android:textAlignment="textStart"
                     android:textColor="@color/color_app"
                     android:textSize="@dimen/_14ssp"
                     android:textStyle="bold"
                     android:theme="@style/mySwitch"
-                />
+                    tools:ignore="RtlCompat" />
             </RadioGroup>
 
             <LinearLayout
@@ -259,22 +285,21 @@
                 android:layout_below="@+id/radio_group"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical"
-                android:layout_marginEnd="20dp"
                 android:layout_marginStart="@dimen/_16sdp"
-                >
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="20dp"
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/post_button"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_43sdp"
 
+                    android:layout_marginBottom="@dimen/_10sdp"
                     android:layout_weight="1"
                     android:background="@drawable/button_publish"
                     android:backgroundTint="@color/color_app"
-                    android:text="post"
-                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:text="@string/post"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_12ssp"
                     android:textStyle="bold"
@@ -286,7 +311,7 @@
                     android:layout_height="@dimen/_43sdp"
                     android:layout_weight="1"
                     android:background="@drawable/button_profile2"
-                    android:text="clear"
+                    android:text="@string/clear"
                     android:textColor="@color/color_app"
                     android:textSize="@dimen/_12ssp"
                     android:textStyle="bold"

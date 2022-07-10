@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -81,28 +82,30 @@ public class SignUpActivity extends BaseActivity {
         binding.lottieImg.loop(true);
         binding.lottieImg.playAnimation();
 
-
         binding.register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                binding.textErrorAddress.setVisibility(View.GONE);
+                binding.textErrorPhone.setVisibility(View.GONE);
+                binding.textErrorEmail.setVisibility(View.GONE);
+                binding.textErrorUserName.setVisibility(View.GONE);
+                binding.textErrorPassword.setVisibility(View.GONE);
+
                 String email = binding.email.getText().toString();
                 String password = binding.password.getText().toString();
                 String location = binding.location.getText().toString();
                 String phone = binding.phone.getText().toString();
                 String userName = binding.username.getText().toString();
                 RegisterRequest request = new RegisterRequest(email, password, location, phone, userName);
-                if (validation(request) != null) {
                     UtilMethods.launchLoadingLottieDialog(context);
-                    register(file, validation(request));
-                    //showDialog();
-                }
-
+                    register(file,request);
             }
         });
     }
 
     private void register(File resourceFile, RegisterRequest request) {
         String deviceToken = sharedPreferences.readString(AppSharedPreferences.DEVICE_TOKEN);
+        lang = sharedPreferences.readString(AppSharedPreferences.LANG);
 
         MultipartBody.Part body = null;
         if (resourceFile != null) {
@@ -117,7 +120,7 @@ public class SignUpActivity extends BaseActivity {
         RequestBody password = RequestBody.create(MediaType.parse("multipart/form-data"), request.getPassword());
         RequestBody passwordConfirmation = RequestBody.create(MediaType.parse("multipart/form-data"), request.getPassword());
         RequestBody fcm_token = RequestBody.create(MediaType.parse("multipart/form-data"), deviceToken);
-        Call<RegisterResponse> call = serviceApi.register("application/json"
+        Call<RegisterResponse> call = serviceApi.register("application/json",lang
                 , name
                 , email
                 , phoneNumber
@@ -142,7 +145,7 @@ public class SignUpActivity extends BaseActivity {
 //                    finish();
                     finishAffinity();
                 } else {
-                   parseError2(response);
+                    parseError2(response);
 //                    Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
                     UtilMethods.launchLoadingLottieDialogDismiss(context);
                 }
@@ -159,56 +162,43 @@ public class SignUpActivity extends BaseActivity {
 //
     }
 
+    @SuppressLint("SetTextI18n")
     public void parseError2(Response<?> response) {
         String errorMsg = null;
         try {
             assert response.errorBody() != null;
             JSONObject jsonObject = new JSONObject(response.errorBody().string());
             JSONObject jsonObject2 = jsonObject.getJSONObject("errors");
-            JSONArray jsonArrayEmail = jsonObject2.getJSONArray("email");
-            JSONArray jsonArrayName = jsonObject2.getJSONArray("name");
-            JSONArray jsonArrayPhone = jsonObject2.getJSONArray("phone_number");
-            JSONArray jsonArrayAddress = jsonObject2.getJSONArray("address");
-            if (jsonArrayName.getString(0) != null)
-                binding.username.setError(jsonArrayName.getString(0));
 
-            if (jsonArrayEmail.getString(0) != null)
-                binding.email.setError(jsonArrayEmail.getString(0));
-
-            if (jsonArrayAddress.getString(0) != null)
-                binding.location.setError(jsonArrayAddress.getString(0));
-            if (jsonArrayPhone.getString(0) != null)
-                binding.phone.setError(jsonArrayPhone.getString(0));
-            Log.e("errorMessage", jsonObject + "");
-
-//            return jsonArrayEmail.getString(0);
+            if (jsonObject2.has("email")) {
+                JSONArray jsonArrayEmail = jsonObject2.getJSONArray("email");
+                binding.textErrorEmail.setText(jsonArrayEmail.getString(0));
+                binding.textErrorEmail.setVisibility(View.VISIBLE);
+            }
+            if (jsonObject2.has("name")) {
+                JSONArray jsonArrayName = jsonObject2.getJSONArray("name");
+                binding.textErrorUserName.setText(jsonArrayName.getString(0)+" *");
+                binding.textErrorUserName.setVisibility(View.VISIBLE);
+            }
+            if (jsonObject2.has("phone_number")) {
+                JSONArray jsonArrayPhone = jsonObject2.getJSONArray("phone_number");
+                binding.textErrorPhone.setText(jsonArrayPhone.getString(0)+" *");
+                binding.textErrorPhone.setVisibility(View.VISIBLE);
+            }
+            if (jsonObject2.has("address")) {
+                JSONArray jsonArrayAddress = jsonObject2.getJSONArray("address");
+                binding.textErrorAddress.setText(jsonArrayAddress.getString(0)+" *");
+                binding.textErrorAddress.setVisibility(View.VISIBLE);
+            }if (jsonObject2.has("password")) {
+                JSONArray jsonArrayAddress = jsonObject2.getJSONArray("password");
+                binding.textErrorPassword.setText(jsonArrayAddress.getString(0)+" *");
+                binding.textErrorPassword.setVisibility(View.VISIBLE);
+            }
         } catch (Exception ignored) {
             Log.e(errorMsg, ignored.getMessage() + "");
             Toast.makeText(context, ignored.getMessage() + "", Toast.LENGTH_SHORT).show();
 //            return ignored.getMessage();
         }
-    }
-
-
-    private RegisterRequest validation(RegisterRequest request) {
-        if (request.getEmail().trim().isEmpty()) {
-            binding.email.setError("can not be empty");
-            return null;
-        } else if (request.getPassword().trim().isEmpty()) {
-            binding.password.setError("can not be empty");
-            return null;
-        } else if (request.getLocation().trim().isEmpty()) {
-            binding.location.setError("can not be empty");
-            return null;
-        } else if (request.getUser_name().trim().isEmpty()) {
-            binding.username.setError("can not be empty");
-            return null;
-        } else if (request.getPhone().trim().isEmpty()) {
-            binding.phone.setError("can not be empty");
-            return null;
-        } else
-            return request;
-
     }
 
     // camera cooooode

@@ -63,6 +63,7 @@ public class UtilMethods {
         Button pendingBtn = bottomSheetDialog.findViewById(R.id.pending_btn);
         Button donationBtn = bottomSheetDialog.findViewById(R.id.donation_btn);
         Button requestBtn = bottomSheetDialog.findViewById(R.id.request_btn);
+        Button categoryBtn = bottomSheetDialog.findViewById(R.id.category_name);
         RecyclerView orderRv = bottomSheetDialog.findViewById(R.id.order_rv);
         //set data
         Glide.with(context).load(postDetails.getPost().getFirstUserImageLink()).circleCrop()
@@ -72,6 +73,7 @@ public class UtilMethods {
         postRequestText.setText(postDetails.getPost().getNumberOfRequests() + " requests");
         postTitleText.setText(postDetails.getPost().getTitle());
         postDescriptionText.setText(postDetails.getPost().getDescription() + "");
+        categoryBtn.setText(postDetails.getPost().getCategoryName());
         if (postDetails.getPost().getIsCompleted()) {
             completeBtn.setBackground(context.getDrawable(R.drawable.button_complete2));
             completeBtn.setTextColor(context.getColor(R.color.white));
@@ -98,7 +100,7 @@ public class UtilMethods {
             PostOrdersAdapter adapter = new PostOrdersAdapter(context, new PostOrderRequestInterface() {
                 @Override
                 public void layout(int userId) {
-                    createAcceptOrderDialog(userId, context, serviceApi, postId, token, fragmentSwitcher,bottomSheetDialog);
+                    createAcceptOrderDialog(userId, context, serviceApi, postId, token, fragmentSwitcher, bottomSheetDialog);
                 }
             }, postDetails.getPost().getIsCompleted(), postDetails.getPost().getIsDonation(), postDetails.getPost().getSecondUserId());
             adapter.setList(postDetails.getOrders());
@@ -122,14 +124,14 @@ public class UtilMethods {
             public void onClick(SweetAlertDialog sweetAlertDialog) {
                 pDialog.dismiss();
 
-                changePostStatusRequest(userId, serviceApi, postId, token, fragmentSwitcher,sweetAlertDialog,bottomSheetDialog);
+                changePostStatusRequest(userId, serviceApi, postId, token, fragmentSwitcher, sweetAlertDialog, bottomSheetDialog);
             }
         });
         pDialog.show();
     }
 
     public static void changePostStatusRequest(int user_id, ServiceApi serviceApi, int postId, String token,
-                                               FragmentSwitcher fragmentSwitcher,SweetAlertDialog sweetAlertDialog, BottomSheetDialog bottomSheetDialog) {
+                                               FragmentSwitcher fragmentSwitcher, SweetAlertDialog sweetAlertDialog, BottomSheetDialog bottomSheetDialog) {
 
         Call<Post> call = serviceApi.changePostStatus(postId,
                 "Bearer " + token, user_id);
@@ -142,7 +144,7 @@ public class UtilMethods {
                     Log.d("Success", new Gson().toJson(response.body()));
                     if (fragmentSwitcher != null) {
                         fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null, null);
-                    }else if(bottomSheetDialog!=null)
+                    } else if (bottomSheetDialog != null)
                         bottomSheetDialog.dismiss();
                     sweetAlertDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                     sweetAlertDialog.dismiss();
@@ -161,7 +163,7 @@ public class UtilMethods {
     }
 
     public static void getPostDetails(int postId, Context context, ServiceApi serviceApi, String token, FragmentSwitcher fragmentSwitcher) {
-      launchLoadingLottieDialog(context);
+        launchLoadingLottieDialog(context);
         Call<PostDetails> call = serviceApi.getPostDetails("Bearer " + token, postId);
         call.enqueue(new Callback<PostDetails>() {
             @Override
@@ -194,6 +196,12 @@ public class UtilMethods {
         AppSharedPreferences sharedPreferences = new AppSharedPreferences(context);
         String userToken = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
         return !userToken.equals("");
+    }
+
+    public static String getLang(Context context) {
+        AppSharedPreferences sharedPreferences = new AppSharedPreferences(context);
+        String lang = sharedPreferences.readString(AppSharedPreferences.LANG);
+        return lang;
     }
 
     public static void launchLoadingLottieDialog(Context context) {

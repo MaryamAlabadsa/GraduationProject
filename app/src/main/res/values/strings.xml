@@ -13,17 +13,9 @@
     <string name="see_your_profile">My Profile</string>
     <string name="add_post"> Add New Post</string>
     <string name="notification">Notification</string>
-    <string name="allPosts">Our Donation Posts</string>
+    <string name="allPosts">All</string>
     <string name="setting">Setting</string>
-
-
-    <!--    <string-array name="Donations">-->
-    <!--        <item>cash</item>-->
-    <!--        <item>clothes</item>-->
-    <!--        <item>books</item>-->
-    <!--        <item>Kitchen tools</item>-->
-
-    <!--    </string-array>-->
+    <string name="posts">Posts</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -31,7 +23,7 @@
     <string name="Register">Register</string>
     <string name="session_was_expired_logout_processing">session was expired logout processing</string>
     <string name="changePassword">Change Password</string>
-    <string name="orders">My Orders</string>
+    <string name="orders">post Orders</string>
     <string name="finish">finish</string>
     <string name="confirm">Confirm</string>
     <string name="confirmation_message">accept this order</string>
@@ -40,5 +32,26 @@
     <string name="filed_operation">Failed operation</string>
     <string name="success_operation">success operation</string>
     <string name="home">Home</string>
+    <string name="write_email">Write your email</string>
+    <string name="write_password">Write Your Password</string>
+    <string name="write_name">Write Your Username</string>
+    <string name="write_address">Write Your Address</string>
+    <string name="write_phone">Write Your Phone</string>
+    <string name="create_account" >Create Account</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="donation">Donation</string>
+    <string name="post">Post</string>
+    <string name="clear">clear</string>
+    <string name="requests">Requests</string>
+    <string name="donations">Donations</string>
+    <string name="current_password">Current Password</string>
+    <string name="new_password">New Password</string>
+    <string name="allCategory">All</string>
+    <string name="cancle">Cancle</string>
+    <string name="completed">completed</string>
+    <string name="pending">Pending</string>
+    <string name="status">Status</string>
+    <string name="ordersNotAvailable">orders not available</string>
 
 </resources>

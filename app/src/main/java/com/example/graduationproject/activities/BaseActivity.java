@@ -18,29 +18,16 @@ import retrofit2.Response;
 
 public class BaseActivity extends AppCompatActivity {
     AppSharedPreferences sharedPreferences;
-    String token;
+    String token,lang;
     static ServiceApi serviceApi;
-    public ProgressDialog progressDialog;
-
-
-    //    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        serviceApi = Creator.getClient().create(ServiceApi.class);
-//        sharedPreferences = new AppSharedPreferences(getApplicationContext());
-//        token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
-//
-//    }
-//    public void //showDialog() {
-//        progressDialog = new ProgressDialog(this, R.style.mySwitch);
-//        progressDialog.setMessage("Please Wait");
-//        progressDialog.setCancelable(false);
-//        progressDialog.show();
-//    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
+        serviceApi = Creator.getClient().create(ServiceApi.class);
+        sharedPreferences = new AppSharedPreferences(getApplicationContext());
+        token = sharedPreferences.readString(AppSharedPreferences.AUTHENTICATION);
+        lang = sharedPreferences.readString(AppSharedPreferences.LANG);
 
     }
 
