@@ -162,9 +162,9 @@ public class UtilMethods {
         });
     }
 
-    public static void getPostDetails(int postId, Context context, ServiceApi serviceApi, String token, FragmentSwitcher fragmentSwitcher) {
+    public static void getPostDetails(int postId, Context context, ServiceApi serviceApi, String token, FragmentSwitcher fragmentSwitcher,String lang) {
         launchLoadingLottieDialog(context);
-        Call<PostDetails> call = serviceApi.getPostDetails("Bearer " + token, postId);
+        Call<PostDetails> call = serviceApi.getPostDetails("Bearer " + token, postId,lang);
         call.enqueue(new Callback<PostDetails>() {
             @Override
             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {

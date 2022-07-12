@@ -146,7 +146,6 @@ public class SignUpActivity extends BaseActivity {
                     finishAffinity();
                 } else {
                     parseError2(response);
-//                    Toast.makeText(context, errorMessage + "", Toast.LENGTH_SHORT).show();
                     UtilMethods.launchLoadingLottieDialogDismiss(context);
                 }
             }

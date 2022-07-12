@@ -333,7 +333,7 @@ AddPostFragment extends BaseFragment {
 
     private void getAllCategories() {
         Call<AllCategories> call = serviceApi.getAllCategories(
-                "Bearer " + token);
+                "Bearer " + token,lang);
         call.enqueue(new Callback<AllCategories>() {
             @Override
             public void onResponse(Call<AllCategories> call, Response<AllCategories> response) {

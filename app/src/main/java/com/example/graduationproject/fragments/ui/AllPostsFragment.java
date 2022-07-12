@@ -193,7 +193,7 @@ public class AllPostsFragment extends BaseFragment {
 
     private void getAllCategories() {
         Call<AllCategories> call = serviceApi.getAllCategories(
-                "Bearer " + token);
+                "Bearer " + token,lang);
         call.enqueue(new Callback<AllCategories>() {
             @Override
             public void onResponse(Call<AllCategories> call, Response<AllCategories> response) {
@@ -339,7 +339,7 @@ public class AllPostsFragment extends BaseFragment {
             @SuppressLint("CheckResult")
             @Override
             public void layout(int id) {
-                UtilMethods.getPostDetails(id, context, serviceApi, token, fragmentSwitcher);
+                UtilMethods.getPostDetails(id, context, serviceApi, token, fragmentSwitcher,lang);
             }
         }, new PostShowOrdersInterface() {
             @Override

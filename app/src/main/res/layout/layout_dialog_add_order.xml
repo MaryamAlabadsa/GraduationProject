@@ -52,7 +52,8 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:background="@drawable/button_profile2"
-                android:hint="Add Comment"
+
+                android:hint="@string/add_comment"
                 android:padding="@dimen/_10sdp" />
 
 
@@ -73,7 +74,7 @@
                     android:layout_marginRight="@dimen/_10sdp"
                     android:layout_weight="1"
                     android:background="@drawable/button_profile1"
-                    android:text="Send"
+                    android:text="@string/send"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_10ssp"
@@ -87,7 +88,7 @@
                     android:layout_marginRight="@dimen/_10sdp"
                     android:layout_weight="1"
                     android:background="@drawable/button_style"
-                    android:text="Cancel"
+                    android:text="@string/cancle"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/color_app"
                     android:textSize="@dimen/_10ssp"

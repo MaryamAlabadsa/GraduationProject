@@ -134,22 +134,38 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     }
 
     private void setUserProfile(MyViewHolder holder, int position) {
+
         holder.binding.uImgPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                userIdtRequestInterface.layout(list.get(position).getFirstUserId());
+                if (list.get(position).getFirstUserName().equals("user not found")) {
+                    Toast.makeText(context, context.getText(R.string.deletedUser), Toast.LENGTH_SHORT).show();
+                } else
+                    userIdtRequestInterface.layout(list.get(position).getFirstUserId());
             }
         });
         holder.binding.uNamePost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                userIdtRequestInterface.layout(list.get(position).getFirstUserId());
+                if (list.get(position).getFirstUserName().equals("user not found")) {
+                    Toast.makeText(context, context.getText(R.string.deletedUser), Toast.LENGTH_SHORT).show();
+                } else{
+                    if (list.get(position).getTheOwnerIsLogin())
+                        userIdtRequestInterface.layout(0);
+                    else
+                    userIdtRequestInterface.layout(list.get(position).getFirstUserId());
+
+                }
             }
         });
+
+
     }
 
     private void setPostMenu(MyViewHolder holder, int position) {
-        if (!list.get(position).getIsHeTheOwnerOfThePost() || list.get(position).getIsCompleted())
+        if (list.get(position).getIsHeTheOwnerOfThePost() && !list.get(position).getIsCompleted())
+            holder.binding.postMenu.setVisibility(View.VISIBLE);
+        else if (!list.get(position).getIsHeTheOwnerOfThePost() || list.get(position).getIsCompleted())
             holder.binding.postMenu.setVisibility(View.INVISIBLE);
         holder.binding.postMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,36 +206,42 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
 
     @SuppressLint("SetTextI18n")
     private void setPostCommentBtn(PostsAdapter.MyViewHolder holder, int position) {
-        if (list.get(position).getIsHeTheOwnerOfThePost()) {
-            holder.binding.commentBtn.setText("Show Requests");
-            holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    postShowOrdersInterface.layout(list.get(position), position);
-                }
-            });
+        if (list.get(position).getFirstUserName().equals("user not found")) {
+            holder.binding.commentBtn.setVisibility(View.INVISIBLE);
         } else {
-            if (list.get(position).getIsCompleted()) {
-                holder.binding.commentBtn.setVisibility(View.INVISIBLE);
+            if (list.get(position).getIsHeTheOwnerOfThePost()) {
+                holder.binding.commentBtn.setText("Show Requests");
+                holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        postShowOrdersInterface.layout(list.get(position), position);
+                    }
+                });
             } else {
-                if (list.get(position).getIsOrdered()) {
-                    holder.binding.commentBtn.setText("Remove Request");
-                    holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            removeOrderInterface.layout(list.get(position), position);
-                        }
-                    });
+                if (list.get(position).getIsCompleted()) {
+                    holder.binding.commentBtn.setVisibility(View.INVISIBLE);
                 } else {
-                    holder.binding.commentBtn.setText("Add Requests");
-                    holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            addOrderInterface.layout(list.get(position), position);
-                        }
-                    });
+                    holder.binding.commentBtn.setVisibility(View.VISIBLE);
+                    if (list.get(position).getIsOrdered()) {
+                        holder.binding.commentBtn.setText("Remove Request");
+                        holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                removeOrderInterface.layout(list.get(position), position);
+                            }
+                        });
+                    } else {
+                        holder.binding.commentBtn.setText("Add Requests");
+                        holder.binding.commentBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                addOrderInterface.layout(list.get(position), position);
+                            }
+                        });
+                    }
                 }
             }
+
         }
 
     }
@@ -244,10 +266,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
         }
     }
 
-        @Override
-        public int getItemCount () {
-            return list != null ? list.size() : 0;
-        }
-
-
+    @Override
+    public int getItemCount() {
+        return list != null ? list.size() : 0;
     }
+
+
+}

@@ -38,7 +38,8 @@ public interface ServiceApi {
 
     @GET("Category")
     Call<AllCategories> getAllCategories(
-            @Header("Authorization") String token);
+            @Header("Authorization") String token
+            , @Query("lang") String lang);
 
     @GET("post")
     Call<AllPosts> getAllPosts(
@@ -50,7 +51,7 @@ public interface ServiceApi {
     Call<AllPosts> addPost(
             @Header("Authorization") String token
             , @Query("lang") String lang
-            ,@Part("title") RequestBody title
+            , @Part("title") RequestBody title
             , @Part("description") RequestBody description
             , @Part("is_donation") RequestBody is_donation
             , @Part("category_id") RequestBody category_id
@@ -181,13 +182,18 @@ public interface ServiceApi {
     @GET("post/{id}")
     Call<PostDetails> getPostDetails(
             @Header("Authorization") String token, @Path("id") int userId
-    );
+            , @Query("lang") String lang);
 
     @DELETE("order/{id}")
     Call<MessageResponse> deleteOrder(@Path("id") int id, @Header("Authorization") String token);
 
-    @POST("UpdateUserName")
-    Call<RegisterResponse> updateUserName(@Header("Authorization") String token, @Query("name") String name);
+    @POST("UpdateUserData")
+    Call<RegisterResponse> updateUserData(@Header("Authorization") String token
+            , @Query("name") String name
+            , @Query("email") String email
+            , @Query("phone_number") String phone_number
+            , @Query("address") String address
+            , @Query("lang") String lang);
 
     @DELETE("post/{id}")
     Call<MessageResponse> deletePost(@Path("id") int id, @Header("Authorization") String token);

@@ -53,5 +53,9 @@
     <string name="pending">Pending</string>
     <string name="status">Status</string>
     <string name="ordersNotAvailable">orders not available</string>
+    <string name="deletedUser">"this user was deleted "</string>
+    <string name="add_comment">Add Comment</string>
+    <string name="send">Send</string>
+    <string name="save_changes">Save changes</string>
 
 </resources>

@@ -109,7 +109,7 @@ public class NotificationFragment extends BaseFragment {
         context = getActivity();
         swipeToRefresh();
         //event bus
-        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ALL_POSTS, TAG));
+        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.NOTIFICATION, TAG));
         showWaitingImage();
         getNotification();
         return view;
@@ -210,7 +210,7 @@ public class NotificationFragment extends BaseFragment {
 
     private void getPostDetails(String post_id) {
         Call<PostDetails> call = serviceApi.getPostDetails(
-                "Bearer " + token, Integer.parseInt(post_id));
+                "Bearer " + token, Integer.parseInt(post_id),lang);
         call.enqueue(new Callback<PostDetails>() {
             @Override
             public void onResponse(Call<PostDetails> call, Response<PostDetails> response) {

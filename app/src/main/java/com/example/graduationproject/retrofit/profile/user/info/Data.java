@@ -17,6 +17,15 @@ public class Data implements Serializable {
     @SerializedName("user_name")
     @Expose
     private String userName;
+    @SerializedName("user_email")
+    @Expose
+    private String userEmail;
+    @SerializedName("user_phone")
+    @Expose
+    private String userPhone;
+    @SerializedName("user_address")
+    @Expose
+    private String userAddress;
     @SerializedName("num_donation_post")
     @Expose
     private String numDonationPost;
@@ -70,5 +79,29 @@ public class Data implements Serializable {
 
     public void setNumRequestPost(String numRequestPost) {
         this.numRequestPost = numRequestPost;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
+    }
+
+    public String getUserAddress() {
+        return userAddress;
+    }
+
+    public void setUserAddress(String userAddress) {
+        this.userAddress = userAddress;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 }

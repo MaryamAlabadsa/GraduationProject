@@ -124,7 +124,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         String post_id_notifaction = getIntent().getStringExtra("post_id");
         String user_id_notifaction = getIntent().getStringExtra("user_id");
         if (post_id_notifaction != null) {
-            UtilMethods.getPostDetails(Integer.parseInt(post_id_notifaction), context, serviceApi, token, this::switchFragment);
+            UtilMethods.getPostDetails(Integer.parseInt(post_id_notifaction), context, serviceApi, token, this::switchFragment,lang);
             switchFragment(NOTIFICATION, null, "");
 
         } else if (user_id_notifaction != null) {

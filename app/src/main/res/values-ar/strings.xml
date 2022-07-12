@@ -54,6 +54,10 @@
     <string name="pending"> غير مكتمل </string>
     <string name="status">حالة المنشور </string>
     <string name="ordersNotAvailable">طلبات هذا البوست غير متوفرة لك.</string>
+    <string name="deletedUser">"نم حذف هذا المستخدم "</string>
+    <string name="add_comment">إضافة تعليق</string>
+    <string name="send">إرسال </string>
+    <string name="save_changes">حفظ التغييرات</string>
 
 
 </resources>

@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,12 +38,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.graduationproject.R;
 import com.example.graduationproject.activities.MainActivity;
 import com.example.graduationproject.adapters.CategoryAdapter;
+import com.example.graduationproject.adapters.PostOrdersAdapter;
 import com.example.graduationproject.adapters.PostsAdapter;
 import com.example.graduationproject.adapters.ProfilePostsAdapter;
 import com.example.graduationproject.database.DatabaseClient;
@@ -58,6 +61,7 @@ import com.example.graduationproject.listener.PostAddOrderInterface;
 import com.example.graduationproject.listener.PostDetialsInterface;
 import com.example.graduationproject.listener.PostImageShowInterface;
 import com.example.graduationproject.listener.PostMenuInterface;
+import com.example.graduationproject.listener.PostOrderRequestInterface;
 import com.example.graduationproject.listener.PostProfileAddOrderInterface;
 import com.example.graduationproject.listener.PostProfileMenuInterface;
 import com.example.graduationproject.listener.PostProfileRemoveOrderInterface;
@@ -67,8 +71,10 @@ import com.example.graduationproject.model.PostOrdersInfo;
 import com.example.graduationproject.retrofit.Creator;
 import com.example.graduationproject.retrofit.ServiceApi;
 import com.example.graduationproject.retrofit.post.Post;
+import com.example.graduationproject.retrofit.post.PostDetails;
 import com.example.graduationproject.retrofit.profile.donation.posts.PostsList;
 import com.example.graduationproject.retrofit.profile.donation.posts.ProfilePosts;
+import com.example.graduationproject.retrofit.profile.user.info.Data;
 import com.example.graduationproject.retrofit.profile.user.info.UserProfileInfo;
 import com.example.graduationproject.retrofit.register.RegisterResponse;
 import com.example.graduationproject.retrofit.register.User;
@@ -80,16 +86,21 @@ import com.example.graduationproject.utils.UtilMethods;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.kodmap.app.library.PopopDialogBuilder;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import es.dmoral.toasty.Toasty;
@@ -116,6 +127,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     Dialog imageDialog;
     Bitmap bitmap;
     String oldName;
+    Data myProfileInfo;
     // TODO: Rename and change types of parameters
     private int userId;
     private SweetAlertDialog pDialog;
@@ -157,8 +169,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         getProfileData();
         binding.btnDonationPost.setOnClickListener(this::onClick);
         binding.btnRequestPost.setOnClickListener(this::onClick);
-        binding.editUserName.setOnClickListener(this::onClick);
-        binding.saveEditUserName.setOnClickListener(this::onClick);
+        binding.editUserData.setOnClickListener(this::onClick);
+//        binding.saveEditUserName.setOnClickListener(this::onClick);
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -166,36 +178,32 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 startActivity(intent);
             }
         });
-        Toast.makeText(context, userId + "", Toast.LENGTH_SHORT).show();
         if (userId == 0)
-            binding.editUserName.setVisibility(View.VISIBLE);
+            binding.editUserData.setVisibility(View.VISIBLE);
         else
-            binding.editUserName.setVisibility(View.INVISIBLE);
-
+            binding.editUserData.setVisibility(View.INVISIBLE);
         return view;
     }
 
     private void getProfileData() {
         if (userId == 0) {
-            changeUserImage();
             setMyProfileInfo();
         } else {
-            binding.changeProfileImageBtn.setVisibility(View.INVISIBLE);
             setUserProfileInfo();
         }
     }
 
-    private void swipeToRefresh() {
-        SwipeRefreshLayout swipeRefreshLayout = binding.scroll;
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            new Handler().postDelayed(() -> {
-                swipeRefreshLayout.setRefreshing(false);
-                binding.containerAll.setVisibility(View.INVISIBLE);
-                binding.shimmerView.setVisibility(View.VISIBLE);
-                getFragmentTitle();
-            }, 1000);
-        });
-    }
+//    private void swipeToRefresh() {
+//        SwipeRefreshLayout swipeRefreshLayout = binding.scroll;
+//        swipeRefreshLayout.setOnRefreshListener(() -> {
+//            new Handler().postDelayed(() -> {
+//                swipeRefreshLayout.setRefreshing(false);
+//                binding.containerAll.setVisibility(View.INVISIBLE);
+//                binding.shimmerView.setVisibility(View.VISIBLE);
+//                getFragmentTitle();
+//            }, 1000);
+//        });
+//    }
 
     private void setMyProfileInfo() {
 
@@ -207,11 +215,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 Log.d("response1 code", response.code() + "");
                 if (response.isSuccessful()) {
                     Log.d("Success", new Gson().toJson(response.body()));
-                    Glide.with(context).load(response.body().getData().getUserImage()).circleCrop()
+                    myProfileInfo = response.body().getData();
+                    Glide.with(context).load(myProfileInfo.getUserImage()).circleCrop()
                             .placeholder(R.drawable.usericon).into(binding.profileImage);
-                    binding.userNameText.setText(response.body().getData().getUserName());
-                    binding.tvDonationPostsNum.setText(response.body().getData().getNumDonationPost() + "");
-                    binding.tvRequestPostsNum.setText(response.body().getData().getNumRequestPost() + "");
+                    binding.userNameText.setText(myProfileInfo.getUserName());
+                    binding.userEmailText.setText(myProfileInfo.getUserEmail());
+                    binding.tvDonationPostsNum.setText(myProfileInfo.getNumDonationPost() + "");
+                    binding.tvRequestPostsNum.setText(myProfileInfo.getNumRequestPost() + "");
                     getMyRequestPosts();
                 } else {
 //                    String errorMessage
@@ -241,6 +251,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     Glide.with(context).load(response.body().getData().getUserImage()).circleCrop()
                             .placeholder(R.drawable.usericon).into(binding.profileImage);
                     binding.userNameText.setText(response.body().getData().getUserName());
+                    binding.userEmailText.setText(response.body().getData().getUserEmail());
                     binding.tvDonationPostsNum.setText(response.body().getData().getNumDonationPost() + "");
                     binding.tvRequestPostsNum.setText(response.body().getData().getNumRequestPost() + "");
                     getUserRequestPosts(userId);
@@ -374,7 +385,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             @Override
             public void layout(int id) {
 
-                UtilMethods.getPostDetails(id, context, serviceApi, token, fragmentSwitcher);
+                UtilMethods.getPostDetails(id, context, serviceApi, token, fragmentSwitcher, lang);
 
             }
         }, new PostProfileAddOrderInterface() {
@@ -453,50 +464,28 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 Animation anim = AnimationUtils.loadAnimation(context, R.anim.anim);
                 binding.lineView.startAnimation(anim);
                 break;
-            case R.id.edit_user_name:
+            case R.id.edit_user_data:
                 oldName = binding.userNameText.getText().toString();
                 binding.userNameText.setClickable(true);
                 binding.userNameText.setEnabled(true);
-                binding.editUserName.setVisibility(View.GONE);
-                binding.saveEditUserName.setVisibility(View.VISIBLE);
+                showBottomSheetDialog();
+//                binding.editUserName.setVisibility(View.GONE);
+//                binding.saveEditUserName.setVisibility(View.VISIBLE);
                 break;
-            case R.id.save_edit_user_name:
-                binding.userNameText.setClickable(false);
-                binding.userNameText.setEnabled(false);
-                binding.editUserName.setVisibility(View.VISIBLE);
-                binding.saveEditUserName.setVisibility(View.GONE);
-                String newName = binding.userNameText.getText().toString();
-                if (newName.isEmpty())
-                    binding.userNameText.setText(oldName);
-                else
-                    updateUserName(newName);
-                break;
+//            case R.id.save_edit_user_name:
+//                binding.userNameText.setClickable(false);
+//                binding.userNameText.setEnabled(false);
+//                binding.editUserName.setVisibility(View.VISIBLE);
+//                binding.saveEditUserName.setVisibility(View.GONE);
+//                String newName = binding.userNameText.getText().toString();
+//                if (newName.isEmpty())
+//                    binding.userNameText.setText(oldName);
+//                else
+//                    updateUserName(newName);
+//                break;
         }
     }
 
-    private void updateUserName(String newName) {
-        Call<RegisterResponse> call = serviceApi.updateUserName(
-                "Bearer " + token, newName
-        );
-
-        call.enqueue(new Callback<RegisterResponse>() {
-            @SuppressLint("CheckResult")
-            @Override
-            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
-                Log.d("response5 code", response.code() + "");
-                User user = response.body().getData().getUser();
-                Gson gson = new Gson();
-                String userString = gson.toJson(user);
-                sharedPreferences.writeString(AppSharedPreferences.USER, userString);
-            }
-
-            @SuppressLint("CheckResult")
-            @Override
-            public void onFailure(Call<RegisterResponse> call, Throwable t) {
-                Toast.makeText(context, t.getMessage() + "", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -629,7 +618,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 // Set close icon drawable
                 .setCloseDrawable(R.drawable.ic_close_white_24dp)
                 // Set loading view for pager image and preview image
-                .setLoadingView(R.layout.crop_image_view)
+//                .setLoadingView(R.layout.crop_image_view)
                 // Set dialog style
                 .setDialogStyle(R.style.alert_dialog_dark)
                 // Choose selector type, indicator or thumbnail
@@ -647,8 +636,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     // change user image
     File file;
 
-    private void changeUserImage() {
-        binding.editUserImage.setOnClickListener(new View.OnClickListener() {
+    private void changeUserImage(View view) {
+        view.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
@@ -677,8 +666,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     .compress(1024)            //Final image size will be less than 1 MB(Optional)
                     .maxResultSize(233, 280)    //Final image resolution will be less than 1080 x 1080(Optional)
                     .start();
-        } else {
-            Toast.makeText(context, "sssss", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -712,6 +699,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     assert response.body() != null;
                     UtilMethods.launchLoadingLottieDialogDismiss(context);
                     binding.profileImage.setImageBitmap(bitmap);
+                    profileImage.setImageBitmap(bitmap);
                     User user = response.body().getData().getUser();
                     Gson gson = new Gson();
                     String userString = gson.toJson(user);
@@ -1071,63 +1059,132 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         });
     }
 
-//    private void storeInOrdersTable(List<Post> posts) {
-//        Log.e("read1", "read1");
-//
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Log.e("read1", "read1");
-//
-//
-//                long[] i = DatabaseClient.getInstance(context)
-//                        .getAppDatabase()
-//                        .postDao()
-//                        .insertToPostList(posts);
-//                Log.e("inserst " + i, "Inserted");
-//            }
-//        });
-//        thread.start();
-//    }
-//
-//    private void clearDataFromTable() {
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                DatabaseClient.getInstance(context)
-//                        .getAppDatabase()
-//                        .postDao()
-//                        .clearAllData();
-//                Log.e("clearAllData ", "Done");
-//
-//            }
-//        });
-//        thread.start();
-//    }
-//
-//    private void readFromOrdersTable() {
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                List<Post> ordersList = DatabaseClient
-//                        .getInstance(context)
-//                        .getAppDatabase()
-//                        .postDao()
-//                        .readAll();
-//                Log.e("read2", ordersList.size() + "");
-//                if (ordersList.size() != 0) {
-//                    //this code is to run my code in main thread
-//                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            adapter.addToList(ordersList);
-//                        }
-//                    });
-//                }
-//            }
-//        });
-//        thread.start();
-//    }
+    //----------------------------------------------edit user data -------------------------------------------------------
+    ImageView profileImage;
+    BottomSheetDialog bottomSheetDialog;
+    TextView textViewEmail, textViewPhone, textViewName, textViewAddress;
+
+    public void showBottomSheetDialog() {
+
+        bottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.MyTransparentBottomSheetDialogTheme);
+        bottomSheetDialog.setContentView(R.layout.layout_dialog_edit_profile);
+        bottomSheetDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        //
+        profileImage = bottomSheetDialog.findViewById(R.id.profile_image);
+        ImageView btnChangeImage = bottomSheetDialog.findViewById(R.id.change_profile_image_btn);
+        TextInputEditText inputEmail = bottomSheetDialog.findViewById(R.id.email);
+        TextInputEditText inputName = bottomSheetDialog.findViewById(R.id.username);
+        TextInputEditText inputPhone = bottomSheetDialog.findViewById(R.id.phone);
+        TextInputEditText inputAddress = bottomSheetDialog.findViewById(R.id.address);
+        textViewEmail = bottomSheetDialog.findViewById(R.id.textError_email);
+        textViewAddress = bottomSheetDialog.findViewById(R.id.textError_address);
+        textViewName = bottomSheetDialog.findViewById(R.id.textError_userName);
+        textViewPhone = bottomSheetDialog.findViewById(R.id.textError_phone);
+
+        Button btnSave = bottomSheetDialog.findViewById(R.id.save);
+        inputEmail.setText(myProfileInfo.getUserEmail());
+        inputName.setText(myProfileInfo.getUserName());
+        inputPhone.setText(myProfileInfo.getUserPhone());
+        inputAddress.setText(myProfileInfo.getUserAddress());
+        assert btnChangeImage != null;
+        changeUserImage(btnChangeImage);
+        //set data
+        assert profileImage != null;
+        Glide.with(context).load(myProfileInfo.getUserImage()).circleCrop()
+                .placeholder(R.drawable.usericon).into(profileImage);
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                textViewEmail.setVisibility(View.GONE);
+                textViewAddress.setVisibility(View.GONE);
+                textViewName.setVisibility(View.GONE);
+                textViewPhone.setVisibility(View.GONE);
+                String name = inputName.getText().toString();
+                String email = inputEmail.getText().toString();
+                String phone = inputPhone.getText().toString();
+                String address = inputAddress.getText().toString();
+                updateUserData(name, email, phone, address);
+                UtilMethods.launchLoadingLottieDialog(context);
+            }
+        });
+
+        bottomSheetDialog.show();
+    }
+
+    private void updateUserData(String newName, String newEmail, String newPhone, String newAddress) {
+        Call<RegisterResponse> call = serviceApi.updateUserData(
+                "Bearer " + token, newName, newEmail, newPhone, newAddress, lang
+        );
+
+        call.enqueue(new Callback<RegisterResponse>() {
+            @SuppressLint("CheckResult")
+            @Override
+            public void onResponse(@NonNull Call<RegisterResponse> call, @NonNull Response<RegisterResponse> response) {
+                Log.d("response5 code", response.code() + "");
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    User user = response.body().getData().getUser();
+                    Gson gson = new Gson();
+                    String userString = gson.toJson(user);
+                    sharedPreferences.writeString(AppSharedPreferences.USER, userString);
+                    binding.userEmailText.setText(user.getEmail());
+                    binding.userNameText.setText(user.getName());
+                    bottomSheetDialog.dismiss();
+                    myProfileInfo.setUserAddress(user.getAddress());
+                    myProfileInfo.setUserEmail(user.getEmail());
+                    myProfileInfo.setUserName(user.getName());
+                    myProfileInfo.setUserPhone(user.getPhoneNumber());
+                    UtilMethods.launchLoadingLottieDialogDismiss(context);
+                } else {
+                    parseError2(response);
+                    UtilMethods.launchLoadingLottieDialogDismiss(context);
+                }
+            }
+
+            @SuppressLint("CheckResult")
+            @Override
+            public void onFailure(@NonNull Call<RegisterResponse> call, @NonNull Throwable t) {
+                Toast.makeText(context, t.getMessage() + "", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void parseError2(Response<?> response) {
+        String errorMsg = null;
+        try {
+            assert response.errorBody() != null;
+            JSONObject jsonObject = new JSONObject(response.errorBody().string());
+            JSONObject jsonObject2 = jsonObject.getJSONObject("errors");
+
+            if (jsonObject2.has("email")) {
+                JSONArray jsonArrayEmail = jsonObject2.getJSONArray("email");
+                textViewEmail.setText(jsonArrayEmail.getString(0));
+                textViewEmail.setVisibility(View.VISIBLE);
+            }
+            if (jsonObject2.has("name")) {
+                JSONArray jsonArrayName = jsonObject2.getJSONArray("name");
+                textViewName.setText(jsonArrayName.getString(0) + " *");
+                textViewName.setVisibility(View.VISIBLE);
+            }
+            if (jsonObject2.has("phone_number")) {
+                JSONArray jsonArrayPhone = jsonObject2.getJSONArray("phone_number");
+//                TextView textView = bottomSheetDialog.findViewById(R.id.textError_phone);
+                textViewPhone.setText(jsonArrayPhone.getString(0) + " *");
+                textViewPhone.setVisibility(View.VISIBLE);
+            }
+            if (jsonObject2.has("address")) {
+                JSONArray jsonArrayAddress = jsonObject2.getJSONArray("address");
+//                TextView textView = bottomSheetDialog.findViewById(R.id.textError_address);
+                textViewAddress.setText(jsonArrayAddress.getString(0) + " *");
+                textViewAddress.setVisibility(View.VISIBLE);
+
+            }
+        } catch (Exception ignored) {
+            Log.e(errorMsg, ignored.getMessage() + "");
+            Toast.makeText(context, ignored.getMessage() + "", Toast.LENGTH_SHORT).show();
+//            return ignored.getMessage();
+        }
+    }
 
 }
