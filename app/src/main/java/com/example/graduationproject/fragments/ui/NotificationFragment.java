@@ -109,7 +109,8 @@ public class NotificationFragment extends BaseFragment {
         context = getActivity();
         swipeToRefresh();
         //event bus
-        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.NOTIFICATION, TAG));
+        String s = this.getString(R.string.notification);
+        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.NOTIFICATION, s));
         showWaitingImage();
         getNotification();
         return view;

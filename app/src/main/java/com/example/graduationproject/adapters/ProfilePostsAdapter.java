@@ -227,31 +227,36 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private void setOrderPostImages(LayoutPostItemBinding binding, Post list) {
-        SliderView sliderView = binding.imageSlider;
-        SliderAdapter adapter = new SliderAdapter(context, new SliderInterface() {
-            @Override
-            public void layout() {
-                postImageShowInterface.layout(list.getPostMedia());
-            }
-        });
-        binding.postMenu.setVisibility(View.INVISIBLE);
-        sliderView.setSliderAdapter(adapter);
-        SliderItem sliderItem = new SliderItem(list.getTitle(), list.getDescription(), list.getPostMedia());
-        adapter.addItem(list.getPostMedia());
+        if (list.getPostMedia().get(0).equals("")) {
+            binding.imageSlider.setVisibility(View.GONE);
+        } else {
+            binding.imageSlider.setVisibility(View.VISIBLE);
+            SliderView sliderView = binding.imageSlider;
+            SliderAdapter adapter = new SliderAdapter(context, new SliderInterface() {
+                @Override
+                public void layout() {
+                    postImageShowInterface.layout(list.getPostMedia());
+                }
+            });
+            binding.postMenu.setVisibility(View.INVISIBLE);
+            sliderView.setSliderAdapter(adapter);
+            SliderItem sliderItem = new SliderItem(list.getTitle(), list.getDescription(), list.getPostMedia());
+            adapter.addItem(list.getPostMedia());
 
-        sliderView.setIndicatorAnimation(IndicatorAnimationType.SCALE_DOWN); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
-        sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-        sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
-        sliderView.setIndicatorSelectedColor(Color.BLUE);
-        sliderView.setIndicatorUnselectedColor(Color.WHITE);
-        sliderView.setScrollTimeInSec(4); //set scroll delay in seconds :
-        sliderView.startAutoCycle();
-        sliderView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                postImageShowInterface.layout(list.getPostMedia());
-            }
-        });
+            sliderView.setIndicatorAnimation(IndicatorAnimationType.SCALE_DOWN); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
+            sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+            sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
+            sliderView.setIndicatorSelectedColor(Color.BLUE);
+            sliderView.setIndicatorUnselectedColor(Color.WHITE);
+            sliderView.setScrollTimeInSec(4); //set scroll delay in seconds :
+            sliderView.startAutoCycle();
+            sliderView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    postImageShowInterface.layout(list.getPostMedia());
+                }
+            });
+        }
     }
 
     private void setOrderPostOrderButton(LayoutPostItemBinding binding, Post list, int position) {
@@ -328,43 +333,50 @@ public class ProfilePostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private void setPostImages(ProfilePostsAdapter.MyPostViewHolder holder, int position) {
-        SliderView sliderView = holder.binding.imageSlider;
-        SliderAdapter adapter = new SliderAdapter(context, new SliderInterface() {
-            @Override
-            public void layout() {
-                postImageShowInterface.layout(list.get(position).getPostMedia());
-            }
-        });
-        sliderView.setSliderAdapter(adapter);
-        SliderItem sliderItem = new SliderItem(list.get(position).getTitle(), list.get(position).getDescription(), list.get(position).getPostMedia());
-        adapter.addItem(list.get(position).getPostMedia());
+        if (list.get(position).getPostMedia().get(0).equals("")) {
+            holder.binding.imageSlider.setVisibility(View.GONE);
+        } else {
+            holder.binding.imageSlider.setVisibility(View.VISIBLE);
+            SliderView sliderView = holder.binding.imageSlider;
+            SliderAdapter adapter = new SliderAdapter(context, new SliderInterface() {
+                @Override
+                public void layout() {
+                    postImageShowInterface.layout(list.get(position).getPostMedia());
+                }
+            });
+            sliderView.setSliderAdapter(adapter);
+            SliderItem sliderItem = new SliderItem(list.get(position).getTitle(), list.get(position).getDescription(), list.get(position).getPostMedia());
+            adapter.addItem(list.get(position).getPostMedia());
 
-        sliderView.setIndicatorAnimation(IndicatorAnimationType.SCALE_DOWN); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
-        sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-        sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
-        sliderView.setIndicatorSelectedColor(context.getColor(R.color.pink));
-        sliderView.setIndicatorUnselectedColor(Color.WHITE);
-        sliderView.setScrollTimeInSec(4); //set scroll delay in seconds :
-        sliderView.startAutoCycle();
-        sliderView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                postImageShowInterface.layout(list.get(position).getPostMedia());
-            }
-        });
+            sliderView.setIndicatorAnimation(IndicatorAnimationType.SCALE_DOWN); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
+            sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+            sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
+            sliderView.setIndicatorSelectedColor(context.getColor(R.color.pink));
+            sliderView.setIndicatorUnselectedColor(Color.WHITE);
+            sliderView.setScrollTimeInSec(4); //set scroll delay in seconds :
+            sliderView.startAutoCycle();
+            sliderView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    postImageShowInterface.layout(list.get(position).getPostMedia());
+                }
+            });
+        }
     }
 
     private void setOrderButton(ProfilePostsAdapter.MyPostViewHolder holder, int position) {
-        if (list.get(position).getFirstUserName().equals("user not found")) {
-            Toast.makeText(context, context.getText(R.string.deletedUser), Toast.LENGTH_SHORT).show();
-        } else {
-            holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
 
-                    postDetialsInterface.layout(list.get(position).getId());
-                }
-            });
+        holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                postDetialsInterface.layout(list.get(position).getId());
+            }
+        });
+        if (list.get(position).getFirstUserName().equals("user not found")) {
+            holder.binding.commentBtn.setVisibility(View.INVISIBLE);
+//            Toast.makeText(context, context.getText(R.string.deletedUser), Toast.LENGTH_SHORT).show();
+        } else {
             if (list.get(position).getIsHeTheOwnerOfThePost()) {
                 holder.binding.commentBtn.setText("Show orders");
             } else {

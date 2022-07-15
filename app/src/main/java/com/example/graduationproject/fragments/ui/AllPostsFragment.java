@@ -33,6 +33,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.amrdeveloper.lottiedialog.LottieDialog;
 import com.example.graduationproject.R;
+import com.example.graduationproject.activities.SplashActivity;
 import com.example.graduationproject.adapters.CategoryAdapter;
 import com.example.graduationproject.adapters.PostsAdapter;
 import com.example.graduationproject.databinding.FragmentAllPostsBinding;
@@ -60,6 +61,7 @@ import com.example.graduationproject.retrofit.post.AllPosts;
 import com.example.graduationproject.retrofit.post.Post;
 import com.example.graduationproject.retrofit.request.Order;
 import com.example.graduationproject.retrofit.token.MessageResponse;
+import com.example.graduationproject.utils.AppSharedPreferences;
 import com.example.graduationproject.utils.Constant;
 import com.example.graduationproject.utils.UtilMethods;
 import com.google.android.material.snackbar.Snackbar;
@@ -155,11 +157,12 @@ public class AllPostsFragment extends BaseFragment {
         EventBus.getDefault().register(this);
         checkNetwork(context);
         binding.shimmerView.setVisibility(View.VISIBLE);
-
-        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ALL_POSTS, "All Posts"));
+        String s = this.getString(R.string.allPostsTitle);
+//        Toast.makeText(context, s + "", Toast.LENGTH_SHORT).show();
+        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ALL_POSTS, s));
 
         filterDialog();
-        setPostsRv(new ArrayList<>());
+//        setPostsRv(new ArrayList<>());
         swipeToRefresh();
         return view;
     }
@@ -193,7 +196,7 @@ public class AllPostsFragment extends BaseFragment {
 
     private void getAllCategories() {
         Call<AllCategories> call = serviceApi.getAllCategories(
-                "Bearer " + token,lang);
+                "Bearer " + token, lang);
         call.enqueue(new Callback<AllCategories>() {
             @Override
             public void onResponse(Call<AllCategories> call, Response<AllCategories> response) {
@@ -203,7 +206,14 @@ public class AllPostsFragment extends BaseFragment {
                     AllCategories getAllCategories = response.body();
                     data = getAllCategories.getData();
                     setCategoryRv(data);
-                } else {
+                }else if (response.code()==401){
+                    sharedPreferences.writeString(AppSharedPreferences.AUTHENTICATION, "");
+                    Intent i = new Intent(context, SplashActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
+                }
+                else {
                     String errorMessage = parseError(response);
                     Log.e("errorMessage", errorMessage + "");
                 }
@@ -339,7 +349,7 @@ public class AllPostsFragment extends BaseFragment {
             @SuppressLint("CheckResult")
             @Override
             public void layout(int id) {
-                UtilMethods.getPostDetails(id, context, serviceApi, token, fragmentSwitcher,lang);
+                UtilMethods.getPostDetails(id, context, serviceApi, token, fragmentSwitcher, lang);
             }
         }, new PostShowOrdersInterface() {
             @Override
@@ -455,8 +465,9 @@ public class AllPostsFragment extends BaseFragment {
 
 
     private void setCategoryRv(List<Category> data) {
-
-        data.add(0, new Category(0, this.getString(R.string.allCategory), R.drawable.all_category));
+        setPostsRv(new ArrayList<>());
+        if (context != null)
+            data.add(0, new Category(0, this.getString(R.string.allCategory), R.drawable.all_category));
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                 context, RecyclerView.HORIZONTAL, false);
         binding.rvCategory.setLayoutManager(layoutManager);
@@ -633,18 +644,18 @@ public class AllPostsFragment extends BaseFragment {
         if (checkedBtn == Constant.ALL_CHECKED) {
             mainTextTitle = this.getString(R.string.allPosts);
         } else if (checkedBtn == Constant.DONATION_CHECKED) {
-            mainTextTitle =" "+ this.getString(R.string.donation);
+            mainTextTitle = " " + this.getString(R.string.donation);
         } else {
-            mainTextTitle =" "+ this.getString(R.string.requests);
+            mainTextTitle = " " + this.getString(R.string.requests);
         }
         if (postStatus == Constant.ALL_CHECKED) {
             secondaryTitle = " ";
         } else if (postStatus == Constant.COMPLETE_POST) {
-            secondaryTitle =" / "+ this.getString(R.string.completed);
+            secondaryTitle = " / " + this.getString(R.string.completed);
         } else {
-            secondaryTitle =" / "+ this.getString(R.string.pending);
+            secondaryTitle = " / " + this.getString(R.string.pending);
         }
-        binding.filterText.setText(mainTextTitle+" " + secondaryTitle+" "+this.getString(R.string.posts));
+        binding.filterText.setText(mainTextTitle + " " + secondaryTitle + " " + this.getString(R.string.posts));
 
     }
 

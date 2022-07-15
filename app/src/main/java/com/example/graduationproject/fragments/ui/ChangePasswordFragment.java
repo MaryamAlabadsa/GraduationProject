@@ -95,7 +95,9 @@ public class ChangePasswordFragment extends BaseFragment {
         binding = FragmentChangePasswordBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         context = getActivity();
-        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.CHANGE_PASSWORD, "change password"));
+
+        String s = this.getString(R.string.changePassword);
+        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.CHANGE_PASSWORD, s));
 
         serviceApi = Creator.getClient().create(ServiceApi.class);
         sharedPreferences = new AppSharedPreferences(getActivity().getApplicationContext());

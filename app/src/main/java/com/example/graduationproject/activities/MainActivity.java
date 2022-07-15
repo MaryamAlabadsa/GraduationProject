@@ -356,6 +356,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case PROFILE:
                 binding.navView.getMenu().getItem(3).setChecked(true);
                 break;
+            case CHANGE_PASSWORD:
+                binding.navView.getMenu().getItem(4).setChecked(true);
+                binding.navView.getMenu().getItem(0).setChecked(false);
+
+                break;
 
         }
         if (ALL_POSTS == pagesFragment) {

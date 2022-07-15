@@ -176,22 +176,28 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyViewHolder
     }
 
     private void setPostImages(PostsAdapter.MyViewHolder holder, int position) {
-        SliderView sliderView = holder.binding.imageSlider;
-        SliderAdapter adapter = new SliderAdapter(context, new SliderInterface() {
-            @Override
-            public void layout() {
-                postImageShowInterface.layout(list.get(position).getPostMedia());
-            }
-        });
-        sliderView.setSliderAdapter(adapter);
-        adapter.addItem(list.get(position).getPostMedia());
-        sliderView.setIndicatorAnimation(IndicatorAnimationType.SCALE_DOWN); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
-        sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-        sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
-        sliderView.setIndicatorSelectedColor(context.getColor(R.color.pink));
-        sliderView.setIndicatorUnselectedColor(context.getColor(R.color.colorPrimaryDark));
-        sliderView.setScrollTimeInSec(4); //set scroll delay in seconds :
-        sliderView.startAutoCycle();
+       if ( list.get(position).getPostMedia().get(0).equals("")){
+            holder.binding.imageSlider.setVisibility(View.GONE);
+        }else{
+           holder.binding.imageSlider.setVisibility(View.VISIBLE);
+           SliderView sliderView = holder.binding.imageSlider;
+            SliderAdapter adapter = new SliderAdapter(context, new SliderInterface() {
+                @Override
+                public void layout() {
+                    postImageShowInterface.layout(list.get(position).getPostMedia());
+                }
+            });
+            sliderView.setSliderAdapter(adapter);
+            adapter.addItem(list.get(position).getPostMedia());
+            sliderView.setIndicatorAnimation(IndicatorAnimationType.SCALE_DOWN); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
+            sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+            sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
+            sliderView.setIndicatorSelectedColor(context.getColor(R.color.pink));
+            sliderView.setIndicatorUnselectedColor(context.getColor(R.color.colorPrimaryDark));
+            sliderView.setScrollTimeInSec(4); //set scroll delay in seconds :
+            sliderView.startAutoCycle();
+        }
+
     }
 
     private void setPostDetails(PostsAdapter.MyViewHolder holder, int position) {

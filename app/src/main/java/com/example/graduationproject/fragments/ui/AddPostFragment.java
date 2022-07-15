@@ -3,10 +3,12 @@ package com.example.graduationproject.fragments.ui;
 import static com.example.graduationproject.fragments.PagesFragment.EDIT;
 import static com.example.graduationproject.fragments.PagesFragment.SEARCH;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -53,6 +55,7 @@ import com.example.graduationproject.retrofit.token.MessageResponse;
 import com.example.graduationproject.utils.AppSharedPreferences;
 import com.example.graduationproject.utils.FileUtil;
 import com.example.graduationproject.utils.UtilMethods;
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -167,11 +170,12 @@ AddPostFragment extends BaseFragment {
 
         getAllCategories();
         if (isEdit)
-            setFields();
+            setEditData();
         else
             setAddImagesAction();
 
-        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ADD_POSTS, "Add Post"));
+        String s = this.getString(R.string.add_post);
+        EventBus.getDefault().post(new MyTitleEventBus(PagesFragment.ADD_POSTS, s));
 
         binding.postButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,18 +186,18 @@ AddPostFragment extends BaseFragment {
                 pDescription = binding.descriptionPost.getText().toString();
 
 //                if (validationAllFields()./equals("")) {
-                    if (binding.radioDon.isChecked())
-                        isDonation = 1;
-                    else if (binding.radioReq.isChecked())
-                        isDonation = 0;
-                    if (isDonation != 2) {
-                        UtilMethods.launchLoadingLottieDialog(context);
-                        if (isEdit)
-                            editPostRequest(pTitle, pDescription, category, isDonation);
-                        else addPostRequest(pTitle, pDescription, category, isDonation);
-                    } else {
-                        Toast.makeText(context, "What is the post status?", Toast.LENGTH_SHORT).show();
-                    }
+                if (binding.radioDon.isChecked())
+                    isDonation = 1;
+                else if (binding.radioReq.isChecked())
+                    isDonation = 0;
+                if (isDonation != 2) {
+                    UtilMethods.launchLoadingLottieDialog(context);
+                    if (isEdit)
+                        editPostRequest(pTitle, pDescription, category, isDonation);
+                    else addPostRequest(pTitle, pDescription, category, isDonation);
+                } else {
+                    Toast.makeText(context, "What is the post status?", Toast.LENGTH_SHORT).show();
+                }
 //                }
             }
         });
@@ -238,7 +242,7 @@ AddPostFragment extends BaseFragment {
 
         myImageHashMap.entrySet().removeIf(entries -> entries.getValue().getUploaded().equals(false));
         setImageView();
-         imageNum = 0;
+        imageNum = 0;
         binding.titlePost.setText(null);
         binding.descriptionPost.setText(null);
         if (binding.radioDon.isChecked())
@@ -256,48 +260,48 @@ AddPostFragment extends BaseFragment {
             uploadUriImage1(body, resourceBody);
             uploadUriImage2(body, resourceBody);
             uploadUriImage3(body, resourceBody);
-
-            RequestBody title = RequestBody.create(MediaType.parse("multipart/form-data"), uTitle);
-            RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), uDescription);
-            RequestBody is_donation = RequestBody.create(MediaType.parse("multipart/form-data"), pIsDonation + "");
-            RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), pCategory + "");
-            Call<AllPosts> call = serviceApi.addPost("Bearer " + token,lang
-                    , title
-                    , description
-                    , is_donation
-                    , category_id
-                    , resourceBody);
-            call.enqueue(new Callback<AllPosts>() {
-                @Override
-                public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
-                    Log.d("response code", response.code() + "");
-                    if (response.isSuccessful()) {
-                        Log.d("Success", new Gson().toJson(response.body()));
-                        fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null, null);
-                        UtilMethods.launchLoadingLottieDialogDismiss(context);
-
-                    } else {
-                         parseError(response,binding);
-                        UtilMethods.launchLoadingLottieDialogDismiss(context);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<AllPosts> call, Throwable t) {
-                    Log.d("onFailure", t.getMessage() + "");
+        }
+        RequestBody title = RequestBody.create(MediaType.parse("multipart/form-data"), uTitle);
+        RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), uDescription);
+        RequestBody is_donation = RequestBody.create(MediaType.parse("multipart/form-data"), pIsDonation + "");
+        RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), pCategory + "");
+        Call<AllPosts> call = serviceApi.addPost("Bearer " + token, lang
+                , title
+                , description
+                , is_donation
+                , category_id
+                , resourceBody);
+        call.enqueue(new Callback<AllPosts>() {
+            @Override
+            public void onResponse(Call<AllPosts> call, Response<AllPosts> response) {
+                Log.d("response code", response.code() + "");
+                if (response.isSuccessful()) {
+                    Log.d("Success", new Gson().toJson(response.body()));
+                    fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null, null);
                     UtilMethods.launchLoadingLottieDialogDismiss(context);
 
-                    call.cancel();
+                } else {
+                    parseError(response, binding);
+                    UtilMethods.launchLoadingLottieDialogDismiss(context);
                 }
-            });
-        } else {
-            UtilMethods.launchLoadingLottieDialogDismiss(context);
-            pDialog = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
-            pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
-            pDialog.setTitleText("you must choose one image at least ");
-            pDialog.setCancelable(true);
-            pDialog.show();
-        }
+            }
+
+            @Override
+            public void onFailure(Call<AllPosts> call, Throwable t) {
+                Log.d("onFailure", t.getMessage() + "");
+                UtilMethods.launchLoadingLottieDialogDismiss(context);
+
+                call.cancel();
+            }
+        });
+//        } else {
+//            UtilMethods.launchLoadingLottieDialogDismiss(context);
+//            pDialog = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
+//            pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
+//            pDialog.setTitleText("you must choose one image at least ");
+//            pDialog.setCancelable(true);
+//            pDialog.show();
+//        }
 
     }
 
@@ -311,11 +315,12 @@ AddPostFragment extends BaseFragment {
 
             if (jsonObject2.has("title")) {
                 JSONArray jsonArrayEmail = jsonObject2.getJSONArray("title");
-                binding.textErrorTitle.setText(jsonArrayEmail.getString(0)+" *");
+                binding.textErrorTitle.setText(jsonArrayEmail.getString(0) + " *");
                 binding.textErrorTitle.setVisibility(View.VISIBLE);
-            }  if (jsonObject2.has("description")) {
+            }
+            if (jsonObject2.has("description")) {
                 JSONArray jsonArrayEmail = jsonObject2.getJSONArray("description");
-                binding.textErrorDec.setText(jsonArrayEmail.getString(0)+" *");
+                binding.textErrorDec.setText(jsonArrayEmail.getString(0) + " *");
                 binding.textErrorDec.setVisibility(View.VISIBLE);
             }
 //            return errorMsg;
@@ -333,7 +338,7 @@ AddPostFragment extends BaseFragment {
 
     private void getAllCategories() {
         Call<AllCategories> call = serviceApi.getAllCategories(
-                "Bearer " + token,lang);
+                "Bearer " + token, lang);
         call.enqueue(new Callback<AllCategories>() {
             @Override
             public void onResponse(Call<AllCategories> call, Response<AllCategories> response) {
@@ -347,7 +352,7 @@ AddPostFragment extends BaseFragment {
                     //progressDialog.dismiss();
 
                 } else {
-                    parseError(response,binding);
+                    parseError(response, binding);
                 }
             }
 
@@ -429,50 +434,72 @@ AddPostFragment extends BaseFragment {
             uploadUriImage1(body, resourceBody);
             uploadUriImage2(body, resourceBody);
             uploadUriImage3(body, resourceBody);
-
-            RequestBody title = RequestBody.create(MediaType.parse("multipart/form-data"), pTitle);
-            RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), pDescription);
-            RequestBody is_donation = RequestBody.create(MediaType.parse("multipart/form-data"), isDonation + "");
-            RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), category + "");
-            Call<MessageResponse> call = serviceApi.updatePost(post.getId(), "Bearer " + token,lang
-                    , title
-                    , description
-                    , is_donation
-                    , category_id
-                    , resourceBody);
-            call.enqueue(new Callback<MessageResponse>() {
-                @Override
-                public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
-                    Log.d("response code", response.code() + "");
-                    if (response.isSuccessful()) {
-                        Log.d("Success", new Gson().toJson(response.body()));
-                        fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null, null);
-                        UtilMethods.launchLoadingLottieDialogDismiss(context);
-
-                    } else {
-                        parseError(response,binding);
-                        UtilMethods.launchLoadingLottieDialogDismiss(context);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<MessageResponse> call, Throwable t) {
-                    Log.d("onFailure", t.getMessage() + "");
+        }
+        RequestBody title = RequestBody.create(MediaType.parse("multipart/form-data"), pTitle);
+        RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), pDescription);
+        RequestBody is_donation = RequestBody.create(MediaType.parse("multipart/form-data"), isDonation + "");
+        RequestBody category_id = RequestBody.create(MediaType.parse("multipart/form-data"), category + "");
+        Call<MessageResponse> call = serviceApi.updatePost(post.getId(), "Bearer " + token, lang
+                , title
+                , description
+                , is_donation
+                , category_id
+                , resourceBody);
+        call.enqueue(new Callback<MessageResponse>() {
+            @Override
+            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                Log.d("response code", response.code() + "");
+                if (response.isSuccessful()) {
+                    Log.d("Success", new Gson().toJson(response.body()));
+                    fragmentSwitcher.switchFragment(PagesFragment.ALL_POSTS, null, null);
                     UtilMethods.launchLoadingLottieDialogDismiss(context);
 
-                    call.cancel();
+                } else {
+                    parseError(response, binding);
+                    UtilMethods.launchLoadingLottieDialogDismiss(context);
                 }
-            });
-        } else {
-            UtilMethods.launchLoadingLottieDialogDismiss(context);
-            pDialog = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
-            pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
-            pDialog.setTitleText("you must choose one image at least ");
-            pDialog.setCancelable(true);
-            pDialog.show();
+            }
+
+            @Override
+            public void onFailure(Call<MessageResponse> call, Throwable t) {
+                Log.d("onFailure", t.getMessage() + "");
+                UtilMethods.launchLoadingLottieDialogDismiss(context);
+
+                call.cancel();
+            }
+        });
+//        } else {
+//            UtilMethods.launchLoadingLottieDialogDismiss(context);
+//            pDialog = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
+//            pDialog.getProgressHelper().setBarColor(Color.parseColor("#E60F5DAB"));
+//            pDialog.setTitleText("you must choose one image at least ");
+//            pDialog.setCancelable(true);
+//            pDialog.show();
+//        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.e("PERMISSION_GRANTED", grantResults[0] + "");
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        openGallery(1);
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestCameraPermission() {
+        requestPermissions(new String[]{Manifest.permission.CAMERA,
+                Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
+    }
+
+    private boolean checkCameraPermission() {
+        boolean res1 = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED;
+        boolean res2 = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
+        return res1 && res2;
+    }
 
     ActivityResultLauncher<Intent> someActivityResultLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -506,7 +533,7 @@ AddPostFragment extends BaseFragment {
 
 
     //-------------------------------edit images-----------------------------------------------
-    private void setFields() {
+    private void setEditData() {
         binding.descriptionPost.setText(post.getDescription());
         binding.titlePost.setText(post.getTitle());
         if (post.getIsDonation())
@@ -514,15 +541,17 @@ AddPostFragment extends BaseFragment {
         else
             binding.radioDon.setChecked(true);
         appendEditImageToMap(post.getPostMedia());
-        setImageView();
-        setAddImagesAction();
     }
 
     private void appendEditImageToMap(List<String> editImage) {
-        for (int i = 0; i < editImage.size(); i++) {
-            MyImage myImage = new MyImage(editImage.get(i), true);
-            String mapKey = "image" + (i + 1);
-            myImageHashMap.put(mapKey, myImage);
+        if (!editImage.get(0).equals("")) {
+            for (int i = 0; i < editImage.size(); i++) {
+                MyImage myImage = new MyImage(editImage.get(i), true);
+                String mapKey = "image" + (i + 1);
+                myImageHashMap.put(mapKey, myImage);
+            }
+            setImageView();
+            setAddImagesAction();
         }
     }
 
@@ -689,12 +718,17 @@ AddPostFragment extends BaseFragment {
         binding.imagePost1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (myImageHashMap.get(IMAGE1) != null) {
-                    if (!isImage1Uploaded())
+                if (!checkCameraPermission()) {
+                    requestCameraPermission();
+                } else {
+                    if (myImageHashMap.get(IMAGE1) != null) {
+                        if (!isImage1Uploaded())
+                            openGallery(1);
+                    } else
                         openGallery(1);
-                } else
-                    openGallery(1);
+                }
             }
+
         });
         binding.imagePost2.setOnClickListener(new View.OnClickListener() {
             @Override

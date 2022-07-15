@@ -10,28 +10,30 @@
     app:cardElevation="@dimen/_4sdp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/slider_layout"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:paddingBottom="@dimen/_12sdp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_post_des_image_slider">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_post_des_image_slider">
 
             <com.smarteist.autoimageslider.SliderView
                 android:id="@+id/imageSlider"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_140sdp"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:layout_marginBottom="@dimen/_12sdp"
                 android:background="@color/color_app"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/comment_btn"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_post_des_image_slider"
                 app:sliderAnimationDuration="600"
                 app:sliderAutoCycleEnabled="true"
                 app:sliderIndicatorAnimationDuration="600"
@@ -46,42 +48,53 @@
                 app:sliderStartAutoCycle="true"
                 tools:ignore="MissingConstraints" />
 
-            <ImageButton
-                android:id="@+id/post_status"
-                android:layout_width="@dimen/_16sdp"
-                android:layout_height="@dimen/_16sdp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="26dp"
-                android:layout_marginEnd="24dp"
-                android:background="@drawable/deadline"
-                android:gravity="center"
-                android:textSize="@dimen/_10sdp"
-                android:tint="@color/red"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageSlider" />
-
-            <TextView
-                android:id="@+id/comment_btn"
-                android:layout_width="@dimen/_90sdp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/comment"
-                android:backgroundTint="@color/color_app"
-                android:gravity="center"
-                android:paddingStart="@dimen/_10sdp"
-                android:paddingTop="@dimen/_7sdp"
-                android:paddingEnd="@dimen/_10sdp"
-                android:paddingBottom="@dimen/_7sdp"
-                android:text="Add Comment"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_9sdp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageSlider" />
+                android:layout_marginTop="@dimen/_16sdp"
+                android:layout_marginBottom="@dimen/_16sdp">
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                    <ImageButton
+                        android:id="@+id/post_status"
+                        android:layout_width="@dimen/_16sdp"
+                        android:layout_height="@dimen/_16sdp"
+                        android:layout_gravity="end"
+                        android:background="@drawable/deadline"
+                        android:gravity="center"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/comment_btn"
+                        app:layout_constraintBottom_toBottomOf="@id/comment_btn"
+                        android:textSize="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_16sdp"
+                        app:tint="@color/red" />
 
+                    <TextView
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:id="@+id/comment_btn"
+                        android:layout_marginStart="@dimen/_16sdp"
+                        android:layout_width="@dimen/_90sdp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:background="@drawable/comment"
+                        android:backgroundTint="@color/color_app"
+                        android:gravity="center"
+                        android:paddingStart="@dimen/_10sdp"
+                        android:paddingTop="@dimen/_7sdp"
+                        android:paddingEnd="@dimen/_10sdp"
+                        android:paddingBottom="@dimen/_7sdp"
+                        android:text="Add Comment"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_9sdp" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_post_title_image_slider"
@@ -151,12 +164,12 @@
             android:id="@+id/post_menu"
             android:layout_width="@dimen/_25sdp"
             android:layout_height="@dimen/_25sdp"
-            android:layout_marginTop="24dp"
             android:layout_marginEnd="16dp"
             android:padding="@dimen/_8sdp"
             android:src="@drawable/post_menu"
+            app:layout_constraintBottom_toBottomOf="@id/u_img_post"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/u_img_post" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

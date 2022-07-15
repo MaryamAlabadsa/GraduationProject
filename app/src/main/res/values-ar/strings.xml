@@ -8,7 +8,7 @@
     <string name="password">كلمة المرور</string>
     <string name="confirm_password">تاكيد كلمة المرور</string>
     <string name="sign_up">تسجيل بحساب جديد</string>
-    <string name="account_setting">اعدادات الحساب</string>
+    <string name="account_setting">   اعدادات الحساب</string>
     <string name="requests_massages">Requests Massages</string>
     <string name="log_out">تسجيل خروج</string>
     <string name="see_your_profile">ملفك الشخصي</string>
@@ -58,6 +58,13 @@
     <string name="add_comment">إضافة تعليق</string>
     <string name="send">إرسال </string>
     <string name="save_changes">حفظ التغييرات</string>
+    <string name="allPostsTitle">جميع المنشورات</string>
+    <string name="accept_request_msg">" قام/ت بقبول الطلب الخاص بك ع منشوره "</string>
+    <string name="delete_post_msg">" قام/ت بحذف البوست الخاص به "</string>
+    <string name="add_request_msg">"  قام/ت باضافة طلب جديد لمنشورك "</string>
+    <string name="update_post_msg">"  قام/ت بعمل تحديث ع البوست الخاص بك "</string>
+    <string name="delete_request_msg">" قام/ت بحذف الطلب الخاص به/ها ع منشورك  </string>
+    <string name="delete_post_admin_msg">لقد قمنا بحذف البوست الخاص بك لاحتوائه ع خطا ما</string>
 
 
 </resources>

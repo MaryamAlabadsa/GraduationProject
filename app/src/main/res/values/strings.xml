@@ -37,7 +37,7 @@
     <string name="write_name">Write Your Username</string>
     <string name="write_address">Write Your Address</string>
     <string name="write_phone">Write Your Phone</string>
-    <string name="create_account" >Create Account</string>
+    <string name="create_account">Create Account</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="donation">Donation</string>
@@ -57,5 +57,12 @@
     <string name="add_comment">Add Comment</string>
     <string name="send">Send</string>
     <string name="save_changes">Save changes</string>
+    <string name="allPostsTitle">All posts</string>
+    <string name="accept_request_msg">" accept your request"</string>
+    <string name="delete_post_msg">" delete his  post"</string>
+    <string name="add_request_msg">" add request to your post"</string>
+    <string name="update_post_msg">" update his post"</string>
+    <string name="delete_request_msg">" delete his  request"</string>
+    <string name="delete_post_admin_msg">" we delete your post because we saw something wrong"</string>
 
 </resources>

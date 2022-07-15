@@ -17,7 +17,7 @@ public class AppSharedPreferences {
 
 
     public static String USER = "user";
-    public static String DEVICE_TOKEN = "Device token";
+    public static String DEVICE_TOKEN = "Device_token";
     public static String AUTHENTICATION = "authentication";
     public static String LANG = "lang";
 
